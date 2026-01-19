@@ -6,7 +6,6 @@ import {
   HomeIcon,
   UserIcon,
   FolderIcon,
-  DocumentTextIcon,
   EnvelopeIcon,
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
@@ -15,7 +14,6 @@ const navItems = [
   { name: "Home", href: "/", icon: HomeIcon },
   { name: "About", href: "/about", icon: UserIcon },
   { name: "Projects", href: "/projects", icon: FolderIcon },
-  { name: "Services", href: "/services", icon: DocumentTextIcon },
   { name: "Contact", href: "/contact", icon: EnvelopeIcon },
 ];
 
