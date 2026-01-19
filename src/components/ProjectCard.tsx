@@ -62,9 +62,9 @@ export default function ProjectCard({
   return (
     <CardWrapper
       {...linkProps}
-      className="flex gap-6 p-5 bg-white rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer"
+      className="flex flex-col sm:flex-row gap-4 sm:gap-6 p-4 sm:p-5 bg-white rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer"
     >
-      <div className="w-[180px] h-[120px] rounded-lg overflow-hidden flex-shrink-0 relative bg-gray-100">
+      <div className="w-full sm:w-[180px] h-[160px] sm:h-[120px] rounded-lg overflow-hidden flex-shrink-0 relative bg-gray-100">
         {renderPreview()}
       </div>
       <div className="flex-1">

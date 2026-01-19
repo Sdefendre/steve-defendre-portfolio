@@ -8,7 +8,7 @@ import {
   FolderIcon,
   DocumentTextIcon,
   EnvelopeIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 
 const navItems = [
@@ -53,7 +53,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[200px] bg-white border-r border-gray-200 p-6 fixed h-screen flex flex-col">
+    <aside className="hidden lg:flex w-[200px] bg-white border-r border-gray-200 p-6 fixed h-screen flex-col">
       {/* Profile */}
       <div className="flex items-center gap-3 mb-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -1,4 +1,5 @@
 import ProjectCard from "@/components/ProjectCard";
+import MobileProjectCard from "@/components/MobileProjectCard";
 
 const projects = [
   {
@@ -39,25 +40,57 @@ const projects = [
 export default function Home() {
   return (
     <div>
-      <div className="text-4xl mb-2">👋</div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-4">
-        Hello there! I&apos;m Steve
-      </h1>
-      <p className="text-base text-gray-600 mb-3 max-w-xl">
-        I&apos;m a full-stack developer that loves building products and web apps that
-        can impact millions of lives.
-      </p>
-      <p className="text-[15px] text-gray-500 mb-12 max-w-xl">
-        I&apos;m a veteran and founder of Defendre Solutions, transforming ideas into
-        production-ready applications that drive real business results. Military
-        discipline meets modern technology.
-      </p>
+      {/* Mobile Header */}
+      <div className="lg:hidden mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/headshot.jpg"
+            alt="Steve Defendre"
+            className="w-14 h-14 rounded-full object-cover object-top"
+          />
+          <div>
+            <h1 className="text-xl font-bold text-gray-900">Steve Defendre</h1>
+            <p className="text-sm text-gray-500">Full-Stack Developer</p>
+          </div>
+        </div>
+        <p className="text-sm text-gray-600 leading-relaxed">
+          Veteran & founder of Defendre Solutions. Transforming ideas into production-ready applications.
+        </p>
+      </div>
 
+      {/* Desktop Header */}
+      <div className="hidden lg:block">
+        <div className="text-4xl mb-2">👋</div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          Hello there! I&apos;m Steve
+        </h1>
+        <p className="text-base text-gray-600 mb-3 max-w-xl">
+          I&apos;m a full-stack developer that loves building products and web apps that
+          can impact millions of lives.
+        </p>
+        <p className="text-[15px] text-gray-500 mb-12 max-w-xl">
+          I&apos;m a veteran and founder of Defendre Solutions, transforming ideas into
+          production-ready applications that drive real business results. Military
+          discipline meets modern technology.
+        </p>
+      </div>
+
+      {/* Projects Section */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-900 mb-6">
-          What I&apos;ve been working on
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 lg:mb-6">
+          Projects
         </h2>
-        <div className="flex flex-col gap-6">
+
+        {/* Mobile Projects */}
+        <div className="lg:hidden grid grid-cols-1 gap-4">
+          {projects.map((project) => (
+            <MobileProjectCard key={project.title} {...project} />
+          ))}
+        </div>
+
+        {/* Desktop Projects */}
+        <div className="hidden lg:flex flex-col gap-6">
           {projects.map((project) => (
             <ProjectCard key={project.title} {...project} />
           ))}

@@ -31,8 +31,22 @@ const values = [
 export default function About() {
   return (
     <div>
-      {/* Header with headshot */}
-      <div className="flex items-start gap-6 mb-8">
+      {/* Mobile Header */}
+      <div className="lg:hidden text-center mb-8">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/headshot.jpg"
+          alt="Steve Defendre"
+          className="w-24 h-24 rounded-full object-cover object-top mx-auto mb-4"
+        />
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">About Me</h1>
+        <p className="text-sm text-gray-600 leading-relaxed">
+          Military veteran turned full-stack engineer. Founder of Defendre Solutions, combining military discipline with modern technology.
+        </p>
+      </div>
+
+      {/* Desktop Header */}
+      <div className="hidden lg:flex items-start gap-6 mb-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/headshot.jpg"
@@ -50,20 +64,20 @@ export default function About() {
       </div>
 
       {/* Core Values */}
-      <section className="mb-12">
-        <h2 className="text-lg font-semibold text-gray-900 mb-6">Core Values</h2>
-        <div className="grid gap-4">
+      <section className="mb-8 lg:mb-12">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 lg:mb-6">Core Values</h2>
+        <div className="grid gap-3 lg:gap-4">
           {values.map((value) => (
             <div
               key={value.title}
-              className="flex gap-4 p-5 bg-white rounded-xl border border-gray-200"
+              className="flex gap-3 lg:gap-4 p-4 lg:p-5 bg-white rounded-xl border border-gray-100 lg:border-gray-200"
             >
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
                 <value.icon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-1">{value.title}</h3>
-                <p className="text-sm text-gray-600">{value.description}</p>
+                <h3 className="font-semibold text-gray-900 mb-1 text-sm lg:text-base">{value.title}</h3>
+                <p className="text-xs lg:text-sm text-gray-600">{value.description}</p>
               </div>
             </div>
           ))}
@@ -72,12 +86,12 @@ export default function About() {
 
       {/* Skills */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-900 mb-6">Technical Skills</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 lg:mb-6">Skills</h2>
         <div className="flex flex-wrap gap-2">
           {skills.map((skill) => (
             <span
               key={skill}
-              className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-gray-300 transition-colors"
+              className="px-3 py-1.5 lg:px-4 lg:py-2 bg-white border border-gray-100 lg:border-gray-200 rounded-full lg:rounded-lg text-xs lg:text-sm text-gray-700"
             >
               {skill}
             </span>
