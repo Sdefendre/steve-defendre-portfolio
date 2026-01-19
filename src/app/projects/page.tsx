@@ -6,14 +6,16 @@ const projects = [
     title: "BraidsbyRose",
     description: "A complete booking system that increased client bookings by 300%. Streamlined appointment management for a growing beauty business with automated reminders and calendar integration.",
     tags: ["React", "PostgreSQL", "Node.js"],
-    gradient: "from-pink-500 to-rose-600"
+    gradient: "from-pink-500 to-rose-600",
+    url: "https://braidsbyrose.com"
   },
   {
     initials: "VC",
     title: "Velocity Care LLC",
     description: "Professional medical services website designed for healthcare accessibility and patient engagement. Features include appointment scheduling, service information, and patient resources.",
     tags: ["Next.js", "Tailwindcss", "Vercel"],
-    gradient: "from-blue-500 to-cyan-600"
+    gradient: "from-blue-500 to-cyan-600",
+    url: "https://velocitycarellc.com"
   },
   {
     initials: "CA",
@@ -27,7 +29,8 @@ const projects = [
     title: "Krystin Sylvia",
     description: "Personal brand portfolio showcasing creative work with elegant design and seamless user experience. Built with performance and accessibility in mind.",
     tags: ["React", "Docker", "TypeScript"],
-    gradient: "from-violet-500 to-purple-600"
+    gradient: "from-violet-500 to-purple-600",
+    url: "https://krystinsylvia.com"
   },
 ];
 

@@ -4,6 +4,7 @@ interface ProjectCardProps {
   description: string;
   tags: string[];
   gradient?: string;
+  url?: string;
 }
 
 export default function ProjectCard({
@@ -11,10 +12,17 @@ export default function ProjectCard({
   title,
   description,
   tags,
-  gradient = "from-indigo-500 to-purple-600"
+  gradient = "from-indigo-500 to-purple-600",
+  url
 }: ProjectCardProps) {
+  const CardWrapper = url ? 'a' : 'div';
+  const linkProps = url ? { href: url, target: "_blank", rel: "noopener noreferrer" } : {};
+
   return (
-    <div className="flex gap-6 p-5 bg-white rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer">
+    <CardWrapper
+      {...linkProps}
+      className="flex gap-6 p-5 bg-white rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer"
+    >
       <div className={`w-[180px] h-[120px] rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-semibold text-lg flex-shrink-0`}>
         {initials}
       </div>
@@ -32,6 +40,6 @@ export default function ProjectCard({
           ))}
         </div>
       </div>
-    </div>
+    </CardWrapper>
   );
 }
