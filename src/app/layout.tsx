@@ -34,10 +34,25 @@ export default function RootLayout({
 
         <div className="flex min-h-screen w-full overflow-x-hidden">
           <Sidebar />
-          <main className="flex-1 w-full lg:ml-[200px] px-4 py-6 pb-24 lg:px-12 lg:py-12 lg:pb-12 lg:pr-12 xl:pr-24 2xl:pr-32">
+          <main className="flex-1 w-full lg:ml-[200px] px-4 py-6 pb-32 lg:px-12 lg:py-12 lg:pb-12 lg:pr-12 xl:pr-24 2xl:pr-32">
             <div className="w-full max-w-full lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl">
               {children}
             </div>
+
+            {/* Footer */}
+            <footer className="mt-12 pt-6 border-t border-gray-200 text-center lg:text-left">
+              <p className="text-sm text-gray-500">
+                Made by{" "}
+                <a
+                  href="https://defendresolutions.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-600 hover:text-indigo-700 font-medium"
+                >
+                  Defendre Solutions
+                </a>
+              </p>
+            </footer>
           </main>
         </div>
 
