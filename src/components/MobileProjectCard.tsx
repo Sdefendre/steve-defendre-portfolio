@@ -1,5 +1,7 @@
 "use client";
 
+import { memo, useMemo } from "react";
+
 interface MobileProjectCardProps {
   initials: string;
   title: string;
@@ -11,7 +13,30 @@ interface MobileProjectCardProps {
   useIframe?: boolean;
 }
 
-export default function MobileProjectCard({
+// Memoized iframe component to prevent reloading
+const CachedIframe = memo(function CachedIframe({
+  url,
+  title
+}: {
+  url: string;
+  title: string;
+}) {
+  return (
+    <iframe
+      src={url}
+      title={title}
+      className="w-[1440px] h-[900px] origin-top-left pointer-events-none border-0"
+      style={{
+        transform: 'scale(0.28)',
+        transformOrigin: 'top left'
+      }}
+      loading="eager"
+      sandbox="allow-scripts allow-same-origin"
+    />
+  );
+});
+
+function MobileProjectCard({
   initials,
   title,
   description,
@@ -24,7 +49,8 @@ export default function MobileProjectCard({
   const CardWrapper = url ? 'a' : 'div';
   const linkProps = url ? { href: url, target: "_blank", rel: "noopener noreferrer" } : {};
 
-  const renderPreview = () => {
+  // Memoize the preview to prevent unnecessary re-renders
+  const preview = useMemo(() => {
     // If there's a custom image, use it
     if (image) {
       return (
@@ -37,18 +63,9 @@ export default function MobileProjectCard({
       );
     }
 
-    // If there's a URL and iframe is enabled, show iframe
+    // If there's a URL and iframe is enabled, show cached iframe
     if (url && useIframe) {
-      return (
-        <iframe
-          src={url}
-          title={title}
-          className="w-[1200px] h-[800px] origin-top-left pointer-events-none border-0"
-          style={{ transform: 'scale(0.29)' }}
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin"
-        />
-      );
+      return <CachedIframe url={url} title={title} />;
     }
 
     // Fallback to gradient
@@ -57,16 +74,16 @@ export default function MobileProjectCard({
         <span className="text-white text-3xl font-bold opacity-50">{initials}</span>
       </div>
     );
-  };
+  }, [image, url, useIframe, title, gradient, initials]);
 
   return (
     <CardWrapper
       {...linkProps}
       className="block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden active:scale-[0.98] transition-transform"
     >
-      {/* Preview */}
-      <div className="w-full h-56 relative bg-gray-100 overflow-hidden">
-        {renderPreview()}
+      {/* Preview - sized for iPhone Pro Max (430px width - 32px padding = 398px container) */}
+      <div className="w-full h-[250px] relative bg-gray-100 overflow-hidden">
+        {preview}
       </div>
 
       {/* Content */}
@@ -87,3 +104,5 @@ export default function MobileProjectCard({
     </CardWrapper>
   );
 }
+
+export default memo(MobileProjectCard);
