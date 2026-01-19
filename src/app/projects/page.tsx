@@ -15,14 +15,16 @@ const projects = [
     description: "Professional medical services website designed for healthcare accessibility and patient engagement. Features include appointment scheduling, service information, and patient resources.",
     tags: ["Next.js", "Tailwindcss", "Vercel"],
     gradient: "from-blue-500 to-cyan-600",
-    url: "https://velocitycarellc.com"
+    url: "https://velocitycarellc.com",
+    image: "/velocity-care.png"
   },
   {
     initials: "CA",
     title: "Command.AI",
     description: "Veteran education platform helping service members transition to civilian careers through AI-powered learning paths. Personalized skill mapping and job matching capabilities.",
     tags: ["AI/ML", "AWS", "Python", "React"],
-    gradient: "from-emerald-500 to-teal-600"
+    gradient: "from-emerald-500 to-teal-600",
+    url: "https://trycommand.vercel.app"
   },
   {
     initials: "KS",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
+        <AnimatedBackground />
         <div className="flex min-h-screen">
           <Sidebar />
           <main className="flex-1 ml-[200px] p-12 max-w-[900px]">
