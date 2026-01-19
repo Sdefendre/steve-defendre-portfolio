@@ -8,6 +8,7 @@ interface MobileProjectCardProps {
   gradient?: string;
   url?: string;
   image?: string;
+  useIframe?: boolean;
 }
 
 export default function MobileProjectCard({
@@ -18,29 +19,54 @@ export default function MobileProjectCard({
   gradient = "from-indigo-500 to-purple-600",
   url,
   image,
+  useIframe = true,
 }: MobileProjectCardProps) {
   const CardWrapper = url ? 'a' : 'div';
   const linkProps = url ? { href: url, target: "_blank", rel: "noopener noreferrer" } : {};
+
+  const renderPreview = () => {
+    // If there's a custom image, use it
+    if (image) {
+      return (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover object-top"
+        />
+      );
+    }
+
+    // If there's a URL and iframe is enabled, show iframe
+    if (url && useIframe) {
+      return (
+        <iframe
+          src={url}
+          title={title}
+          className="w-[1200px] h-[800px] origin-top-left pointer-events-none border-0"
+          style={{ transform: 'scale(0.29)' }}
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin"
+        />
+      );
+    }
+
+    // Fallback to gradient
+    return (
+      <div className={`w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center`}>
+        <span className="text-white text-3xl font-bold opacity-50">{initials}</span>
+      </div>
+    );
+  };
 
   return (
     <CardWrapper
       {...linkProps}
       className="block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden active:scale-[0.98] transition-transform"
     >
-      {/* Preview Image */}
-      <div className="w-full h-44 relative bg-gray-100">
-        {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover object-top"
-          />
-        ) : (
-          <div className={`w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center`}>
-            <span className="text-white text-3xl font-bold opacity-50">{initials}</span>
-          </div>
-        )}
+      {/* Preview */}
+      <div className="w-full h-56 relative bg-gray-100 overflow-hidden">
+        {renderPreview()}
       </div>
 
       {/* Content */}
