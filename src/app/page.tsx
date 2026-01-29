@@ -3,6 +3,14 @@ import MobileProjectCard from "@/components/MobileProjectCard";
 
 const projects = [
   {
+    initials: "DS",
+    title: "Defendre Solutions",
+    description: "My development studio transforming ideas into production-ready applications. Full-stack development, consulting, and custom software solutions.",
+    tags: ["Next.js", "React", "TypeScript"],
+    gradient: "from-slate-600 to-indigo-600",
+    url: "https://defendresolutions.com"
+  },
+  {
     initials: "BR",
     title: "BraidsbyRose",
     description: "A complete booking system that increased client bookings by 300%. Streamlined appointment management for a growing beauty business.",
@@ -55,7 +63,16 @@ export default function Home() {
           </div>
         </div>
         <p className="text-sm text-gray-600 leading-relaxed">
-          Veteran & founder of Defendre Solutions. Transforming ideas into production-ready applications.
+          Veteran & founder of{" "}
+          <a
+            href="https://defendresolutions.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-700 underline underline-offset-2 font-medium"
+          >
+            Defendre Solutions
+          </a>
+          . Transforming ideas into production-ready applications.
         </p>
       </div>
 
@@ -70,9 +87,17 @@ export default function Home() {
           can impact millions of lives.
         </p>
         <p className="text-[15px] text-gray-500 mb-12 max-w-xl">
-          I&apos;m a veteran and founder of Defendre Solutions, transforming ideas into
-          production-ready applications that drive real business results. Military
-          discipline meets modern technology.
+          I&apos;m a veteran and founder of{" "}
+          <a
+            href="https://defendresolutions.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-700 underline underline-offset-2 font-medium"
+          >
+            Defendre Solutions
+          </a>
+          , transforming ideas into production-ready applications that drive real
+          business results. Military discipline meets modern technology.
         </p>
       </div>
 

@@ -3,6 +3,14 @@ import MobileProjectCard from "@/components/MobileProjectCard";
 
 const projects = [
   {
+    initials: "DS",
+    title: "Defendre Solutions",
+    description: "My development studio transforming ideas into production-ready applications. Full-stack development, consulting, and custom software solutions.",
+    tags: ["Next.js", "React", "TypeScript"],
+    gradient: "from-slate-600 to-indigo-600",
+    url: "https://defendresolutions.com"
+  },
+  {
     initials: "BR",
     title: "BraidsbyRose",
     description: "A complete booking system that increased client bookings by 300%. Streamlined appointment management for a growing beauty business with automated reminders and calendar integration.",
