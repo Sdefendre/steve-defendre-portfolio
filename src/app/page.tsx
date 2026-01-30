@@ -8,7 +8,8 @@ const projects = [
     description: "My development studio transforming ideas into production-ready applications. Full-stack development, consulting, and custom software solutions.",
     tags: ["Next.js", "React", "TypeScript"],
     gradient: "from-slate-600 to-indigo-600",
-    url: "https://defendresolutions.com"
+    url: "https://defendresolutions.com",
+    image: "/defendre-solutions.png"
   },
   {
     initials: "BR",
