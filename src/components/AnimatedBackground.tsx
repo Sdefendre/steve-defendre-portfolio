@@ -8,6 +8,7 @@ export default function AnimatedBackground() {
 
   useEffect(() => {
     if (!containerRef.current) return;
+    const container = containerRef.current;
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -22,7 +23,7 @@ export default function AnimatedBackground() {
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    containerRef.current.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
     // Create floating particles
     const particlesGeometry = new THREE.BufferGeometry();
@@ -107,6 +108,7 @@ export default function AnimatedBackground() {
 
     // Animation loop
     const clock = new THREE.Clock();
+    let frameId = 0;
 
     const animate = () => {
       const elapsedTime = clock.getElapsedTime();
@@ -131,16 +133,19 @@ export default function AnimatedBackground() {
       });
 
       renderer.render(scene, camera);
-      requestAnimationFrame(animate);
+      frameId = requestAnimationFrame(animate);
     };
 
     animate();
 
     // Cleanup
     return () => {
+      cancelAnimationFrame(frameId);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
-      containerRef.current?.removeChild(renderer.domElement);
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
       renderer.dispose();
       particlesGeometry.dispose();
       particlesMaterial.dispose();

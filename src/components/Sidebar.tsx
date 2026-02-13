@@ -67,13 +67,14 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="mb-8">
+      <nav className="mb-8" aria-label="Primary navigation">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.name}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all ${
                 isActive
                   ? "bg-gray-100 text-gray-900 font-medium"
