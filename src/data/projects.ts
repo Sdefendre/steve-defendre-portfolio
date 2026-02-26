@@ -18,7 +18,9 @@ export const projects: Project[] = [
     tags: ["Next.js", "React", "TypeScript"],
     gradient: "from-slate-600 to-indigo-600",
     url: "https://defendresolutions.com",
-    image: "/defendre-solutions.png",
+    image:
+      "https://api.microlink.io/?screenshot=true&meta=false&embed=screenshot.url&url=https://www.defendresolutions.com",
+    useIframe: false,
   },
   {
     initials: "BR",
@@ -56,6 +58,8 @@ export const projects: Project[] = [
     tags: ["React", "Docker", "TypeScript"],
     gradient: "from-violet-500 to-purple-600",
     url: "https://krystinsylvia.com",
+    image:
+      "https://api.microlink.io/?screenshot=true&meta=false&embed=screenshot.url&url=https://www.krystinsylvia.com",
     useIframe: false,
   },
 ];
