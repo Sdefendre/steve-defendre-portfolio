@@ -10,9 +10,43 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
+const previewImage = "/defendre-solutions.png";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Steve Defendre | Full-Stack Developer",
   description: "Veteran-owned software development. Transforming ideas into production-ready applications.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteUrl,
+    title: "Steve Defendre | Full-Stack Developer",
+    description:
+      "Veteran-owned software development. Transforming ideas into production-ready applications.",
+    siteName: "Steve Defendre Portfolio",
+    images: [
+      {
+        url: previewImage,
+        width: 1280,
+        height: 720,
+        alt: "Steve Defendre portfolio preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Steve Defendre | Full-Stack Developer",
+    description:
+      "Veteran-owned software development. Transforming ideas into production-ready applications.",
+    images: [previewImage],
+  },
 };
 
 export const viewport: Viewport = {
