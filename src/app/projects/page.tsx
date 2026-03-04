@@ -9,7 +9,8 @@ export default function Projects() {
         A collection of projects I&apos;ve built for clients and personal ventures.
       </p>
 
-      <div className="flex flex-col gap-4 sm:gap-6">
+      {/* Responsive Projects Container */}
+      <div className="grid grid-cols-1 gap-4 lg:flex lg:flex-col lg:gap-6">
         {projects.map((project) => (
           <ProjectCard key={project.title} {...project} />
         ))}
