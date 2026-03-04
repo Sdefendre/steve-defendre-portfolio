@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useMemo } from "react";
+import Image from "next/image";
 
 interface MobileProjectCardProps {
   initials: string;
@@ -54,11 +55,12 @@ function MobileProjectCard({
     // If there's a custom image, use it
     if (image) {
       return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={image}
           alt={title}
-          className="w-full h-full object-cover object-top"
+          fill
+          sizes="(max-width: 768px) 100vw, 400px"
+          className="object-cover object-top"
         />
       );
     }

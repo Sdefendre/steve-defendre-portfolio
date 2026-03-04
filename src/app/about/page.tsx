@@ -3,6 +3,7 @@ import {
   WrenchScrewdriverIcon,
   LightBulbIcon
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 const skills = [
   "React", "Next.js", "TypeScript", "Node.js",
@@ -33,11 +34,12 @@ export default function About() {
     <div>
       {/* Mobile Header */}
       <div className="lg:hidden text-center mb-8">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/headshot.jpg"
           alt="Steve Defendre"
-          className="w-24 h-24 rounded-full object-cover object-top mx-auto mb-4"
+          width={96}
+          height={96}
+          className="rounded-full object-cover object-top mx-auto mb-4"
         />
         <h1 className="text-2xl font-bold text-gray-900 mb-2">About Me</h1>
         <p className="text-sm text-gray-600 leading-relaxed">
@@ -47,11 +49,12 @@ export default function About() {
 
       {/* Desktop Header */}
       <div className="hidden lg:flex items-start gap-6 mb-8">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/headshot.jpg"
           alt="Steve Defendre"
-          className="w-32 h-32 rounded-xl object-cover flex-shrink-0"
+          width={128}
+          height={128}
+          className="rounded-xl object-cover flex-shrink-0"
         />
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-4">About Me</h1>
