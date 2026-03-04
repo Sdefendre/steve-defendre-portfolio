@@ -31,8 +31,8 @@ const CachedIframe = memo(function CachedIframe({
         transform: 'scale(0.28)',
         transformOrigin: 'top left'
       }}
-      loading="eager"
-      sandbox="allow-scripts"
+      loading="lazy"
+      sandbox="allow-scripts allow-same-origin"
     />
   );
 });
