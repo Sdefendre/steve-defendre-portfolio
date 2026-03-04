@@ -63,13 +63,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        {/* Background - hidden on mobile for performance */}
-        <div className="hidden lg:block">
-          <AnimatedBackground />
-        </div>
-
-        {/* Mobile background */}
-        <div className="lg:hidden fixed inset-0 -z-10 bg-gray-50" />
+        <AnimatedBackground />
 
         <div className="flex min-h-screen w-full overflow-x-hidden">
           <Sidebar />
