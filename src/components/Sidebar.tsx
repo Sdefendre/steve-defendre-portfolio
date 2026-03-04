@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   HomeIcon,
@@ -54,11 +55,12 @@ export default function Sidebar() {
     <aside className="hidden lg:flex w-[200px] bg-white border-r border-gray-200 p-6 fixed h-screen flex-col">
       {/* Profile */}
       <div className="flex items-center gap-3 mb-8">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/headshot.jpg"
           alt="Steve Defendre"
-          className="w-10 h-10 rounded-full object-cover object-top"
+          width={40}
+          height={40}
+          className="rounded-full object-cover object-top"
         />
         <div>
           <h2 className="text-sm font-semibold text-gray-900">Steve Defendre</h2>

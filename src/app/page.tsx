@@ -1,6 +1,7 @@
 import ProjectCard from "@/components/ProjectCard";
 import MobileProjectCard from "@/components/MobileProjectCard";
 import { projects } from "@/data/projects";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -8,11 +9,12 @@ export default function Home() {
       {/* Mobile Header */}
       <div className="lg:hidden mb-6">
         <div className="flex items-center gap-3 mb-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/headshot.jpg"
             alt="Steve Defendre"
-            className="w-14 h-14 rounded-full object-cover object-top"
+            width={56}
+            height={56}
+            className="rounded-full object-cover object-top"
           />
           <div>
             <h1 className="text-xl font-bold text-gray-900">Steve Defendre</h1>

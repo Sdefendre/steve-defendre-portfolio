@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 interface ProjectCardProps {
   initials: string;
   title: string;
@@ -28,11 +30,12 @@ export default function ProjectCard({
     // If there's a custom image, use it
     if (image) {
       return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={image}
           alt={title}
-          className="w-full h-full object-cover object-top"
+          fill
+          sizes="(max-width: 640px) 100vw, 180px"
+          className="object-cover object-top"
         />
       );
     }
