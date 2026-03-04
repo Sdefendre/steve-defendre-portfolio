@@ -30,7 +30,7 @@ const CachedIframe = memo(function CachedIframe({
         transform: 'scale(0.28)',
         transformOrigin: 'top left'
       }}
-      loading="eager"
+      loading="lazy"
       sandbox="allow-scripts allow-same-origin"
     />
   );
