@@ -1,5 +1,4 @@
 import ProjectCard from "@/components/ProjectCard";
-import MobileProjectCard from "@/components/MobileProjectCard";
 import { projects } from "@/data/projects";
 
 export default function Home() {
@@ -64,15 +63,8 @@ export default function Home() {
           Projects
         </h2>
 
-        {/* Mobile Projects */}
-        <div className="lg:hidden grid grid-cols-1 gap-4">
-          {projects.map((project) => (
-            <MobileProjectCard key={project.title} {...project} />
-          ))}
-        </div>
-
-        {/* Desktop Projects */}
-        <div className="hidden lg:flex flex-col gap-6">
+        {/* Responsive Projects Container */}
+        <div className="grid grid-cols-1 gap-4 lg:flex lg:flex-col lg:gap-6">
           {projects.map((project) => (
             <ProjectCard key={project.title} {...project} />
           ))}
