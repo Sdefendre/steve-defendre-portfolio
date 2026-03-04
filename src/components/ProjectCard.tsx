@@ -46,7 +46,7 @@ export default function ProjectCard({
           className="w-[900px] h-[600px] origin-top-left pointer-events-none border-0"
           style={{ transform: 'scale(0.2)' }}
           loading="lazy"
-          sandbox="allow-scripts allow-same-origin"
+          sandbox="allow-scripts"
         />
       );
     }
