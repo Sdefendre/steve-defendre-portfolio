@@ -37,39 +37,40 @@ test("renders Projects page with correct title and description", () => {
 test("renders all projects from the data", () => {
   render(<Projects />);
 
-  // Should render both desktop and mobile versions
-  // Each project title should appear twice (once for desktop, once for mobile)
-  const project1Titles = screen.getAllByText("Test Project 1");
-  const project2Titles = screen.getAllByText("Test Project 2");
+  expect(screen.getAllByRole("heading", { level: 3 }).length).toBe(projects.length);
 
-  expect(project1Titles.length).toBe(2);
-  expect(project2Titles.length).toBe(2);
+  projects.forEach((project) => {
+    expect(screen.getByText(project.title)).toBeDefined();
+  });
 });
 
 test("renders project links with correct attributes", () => {
   render(<Projects />);
 
   const links = screen.getAllByRole("link");
+  const linkedProjects = projects.filter((project) => project.url);
 
-  // 2 projects * 2 versions (desktop/mobile) = 4 links
-  expect(links.length).toBe(4);
+  expect(links.length).toBe(linkedProjects.length);
 
-  const project1Links = links.filter(link => link.getAttribute("href") === "https://test1.com");
-  expect(project1Links.length).toBe(2);
+  linkedProjects.forEach((project) => {
+    const projectLinks = links.filter(
+      (link) => link.getAttribute("href") === project.url
+    );
+    expect(projectLinks.length).toBe(1);
 
-  project1Links.forEach(link => {
-    expect(link.getAttribute("target")).toBe("_blank");
-    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+    projectLinks.forEach((link) => {
+      expect(link.getAttribute("target")).toBe("_blank");
+      expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+    });
   });
 });
 
 test("renders tags for projects", () => {
   render(<Projects />);
 
-  // Tags from Test Project 1: Tag1, Tag2
-  // Tags from Test Project 2: Tag3
-  // Each should appear twice
-  expect(screen.getAllByText("Tag1").length).toBe(2);
-  expect(screen.getAllByText("Tag2").length).toBe(2);
-  expect(screen.getAllByText("Tag3").length).toBe(2);
+  projects
+    .flatMap((project) => project.tags)
+    .forEach((tag) => {
+      expect(screen.getAllByText(tag).length).toBe(1);
+    });
 });

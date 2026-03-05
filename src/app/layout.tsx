@@ -10,14 +10,26 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+const localSiteUrl = "http://localhost:3000";
+const vercelSiteUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : localSiteUrl;
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? vercelSiteUrl;
+
+const metadataBase = (() => {
+  try {
+    return new URL(siteUrl);
+  } catch {
+    try {
+      return new URL(vercelSiteUrl);
+    } catch {
+      return new URL(localSiteUrl);
+    }
+  }
+})();
 
 const previewImage = "/defendre-solutions.png";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase,
   title: "Steve Defendre | Full-Stack Developer",
   description: "Veteran-owned software development. Transforming ideas into production-ready applications.",
   alternates: {

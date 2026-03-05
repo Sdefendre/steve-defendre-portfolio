@@ -62,4 +62,15 @@ export const projects: Project[] = [
       "https://api.microlink.io/?screenshot=true&meta=false&embed=screenshot.url&url=https://www.krystinsylvia.com",
     useIframe: false,
   },
+  {
+    initials: "NP",
+    title: "Nayka's Portfolio",
+    description:
+      "A personal portfolio site highlighting work, presentation, and overall web presence with a clean, focused browsing experience.",
+    tags: ["Portfolio", "Vercel", "Responsive Design"],
+    gradient: "from-amber-500 to-orange-600",
+    url: "https://nayka-portfolio.vercel.app/",
+    image: "/nayka-portfolio.png",
+    useIframe: false,
+  },
 ];

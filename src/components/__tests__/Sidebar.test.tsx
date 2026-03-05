@@ -1,7 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import Sidebar from '../Sidebar';
 import { usePathname } from 'next/navigation';
+
+type MockLinkProps = {
+  children: ReactNode;
+  href: string;
+  className?: string;
+} & Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'children' | 'className'>;
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
@@ -10,7 +17,7 @@ vi.mock('next/navigation', () => ({
 
 // Mock next/link
 vi.mock('next/link', () => ({
-  default: ({ children, href, className, ...props }: any) => (
+  default: ({ children, href, className, ...props }: MockLinkProps) => (
     <a href={href} className={className} {...props}>
       {children}
     </a>
@@ -18,8 +25,10 @@ vi.mock('next/link', () => ({
 }));
 
 describe('Sidebar', () => {
+  const mockUsePathname = vi.mocked(usePathname);
+
   it('renders all navigation items', () => {
-    (usePathname as any).mockReturnValue('/');
+    mockUsePathname.mockReturnValue('/');
     render(<Sidebar />);
 
     expect(screen.getByText('Home')).toBeInTheDocument();
@@ -29,7 +38,7 @@ describe('Sidebar', () => {
   });
 
   it('highlights the active link based on pathname', () => {
-    (usePathname as any).mockReturnValue('/about');
+    mockUsePathname.mockReturnValue('/about');
     render(<Sidebar />);
 
     const aboutLink = screen.getByRole('link', { name: /about/i });
@@ -42,7 +51,7 @@ describe('Sidebar', () => {
   });
 
   it('renders social links correctly', () => {
-    (usePathname as any).mockReturnValue('/');
+    mockUsePathname.mockReturnValue('/');
     render(<Sidebar />);
 
     expect(screen.getByText('GitHub')).toBeInTheDocument();
@@ -55,13 +64,15 @@ describe('Sidebar', () => {
   });
 
   it('renders the profile information', () => {
-    (usePathname as any).mockReturnValue('/');
+    mockUsePathname.mockReturnValue('/');
     render(<Sidebar />);
 
     expect(screen.getByText('Steve Defendre')).toBeInTheDocument();
     expect(screen.getByText('Developer')).toBeInTheDocument();
     const headshot = screen.getByAltText('Steve Defendre');
     expect(headshot).toBeInTheDocument();
-    expect(headshot).toHaveAttribute('src', '/headshot.jpg');
+    const headshotSrc = headshot.getAttribute('src');
+    expect(headshotSrc).not.toBeNull();
+    expect(decodeURIComponent(headshotSrc ?? '')).toContain('/headshot.jpg');
   });
 });

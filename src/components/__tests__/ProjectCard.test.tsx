@@ -42,7 +42,9 @@ describe('ProjectCard', () => {
     render(<ProjectCard {...props} />);
 
     const img = screen.getByRole('img');
-    expect(img).toHaveAttribute('src', props.image);
+    const imgSrc = img.getAttribute('src');
+    expect(imgSrc).not.toBeNull();
+    expect(decodeURIComponent(imgSrc ?? '')).toContain(props.image);
     expect(img).toHaveAttribute('alt', props.title);
   });
 
@@ -59,9 +61,10 @@ describe('ProjectCard', () => {
     render(<ProjectCard {...defaultProps} />);
 
     expect(screen.getByText(defaultProps.initials)).toBeInTheDocument();
-    // Verify it's in a div with gradient classes
-    const initialsContainer = screen.getByText(defaultProps.initials);
-    expect(initialsContainer).toHaveClass('bg-gradient-to-br');
+    // Gradient class is applied to the wrapper div, not the initials span
+    const gradientContainer = screen.getByText(defaultProps.initials).closest('div');
+    expect(gradientContainer).not.toBeNull();
+    expect(gradientContainer).toHaveClass('bg-gradient-to-br');
   });
 
   it('renders fallback gradient with initials when useIframe is false and no image', () => {

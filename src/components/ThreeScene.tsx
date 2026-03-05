@@ -68,7 +68,8 @@ export default function ThreeScene() {
 
     for (let i = 0; i < 15; i++) {
       const geometry = shapeGeometries[Math.floor(Math.random() * shapeGeometries.length)];
-      const mesh = new THREE.Mesh(geometry, shapeMaterial.clone());
+      const meshMaterial = shapeMaterial.clone();
+      const mesh = new THREE.Mesh(geometry, meshMaterial);
 
       mesh.position.x = (Math.random() - 0.5) * 60;
       mesh.position.y = (Math.random() - 0.5) * 60;
@@ -150,6 +151,13 @@ export default function ThreeScene() {
       particlesGeometry.dispose();
       particlesMaterial.dispose();
       shapeGeometries.forEach(g => g.dispose());
+      shapes.forEach(shape => {
+        if (Array.isArray(shape.material)) {
+          shape.material.forEach(material => material.dispose());
+          return;
+        }
+        shape.material.dispose();
+      });
       shapeMaterial.dispose();
     };
   }, []);
