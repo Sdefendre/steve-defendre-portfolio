@@ -2,25 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  HomeIcon,
-  UserIcon,
-  FolderIcon,
-  EnvelopeIcon,
-} from "@heroicons/react/24/outline";
-import {
-  HomeIcon as HomeIconSolid,
-  UserIcon as UserIconSolid,
-  FolderIcon as FolderIconSolid,
-  EnvelopeIcon as EnvelopeIconSolid,
-} from "@heroicons/react/24/solid";
-
-const navItems = [
-  { name: "Home", href: "/", icon: HomeIcon, activeIcon: HomeIconSolid },
-  { name: "About", href: "/about", icon: UserIcon, activeIcon: UserIconSolid },
-  { name: "Projects", href: "/projects", icon: FolderIcon, activeIcon: FolderIconSolid },
-  { name: "Contact", href: "/contact", icon: EnvelopeIcon, activeIcon: EnvelopeIconSolid },
-];
+import { navItems } from "@/data/navigation";
 
 export default function MobileNav() {
   const pathname = usePathname();
