@@ -18,8 +18,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "React", "TypeScript"],
     gradient: "from-slate-600 to-indigo-600",
     url: "https://defendresolutions.com",
-    image:
-      "https://api.microlink.io/?screenshot=true&meta=false&embed=screenshot.url&url=https://www.defendresolutions.com",
+    image: "/defendre-solutions.png",
     useIframe: false,
   },
   {
