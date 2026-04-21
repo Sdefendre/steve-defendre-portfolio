@@ -27,7 +27,11 @@ describe('ProjectCard', () => {
   });
 
   it('renders as an anchor tag when url is provided', () => {
-    const props = { ...defaultProps, url: 'https://example.com' };
+    const props = {
+      ...defaultProps,
+      url: 'https://example.com',
+      useIframe: false,
+    };
     const { container } = render(<ProjectCard {...props} />);
 
     const anchor = container.firstChild as HTMLAnchorElement;
@@ -46,15 +50,23 @@ describe('ProjectCard', () => {
     expect(imgSrc).not.toBeNull();
     expect(decodeURIComponent(imgSrc ?? '')).toContain(props.image);
     expect(img).toHaveAttribute('alt', props.title);
+    expect(img).toHaveAttribute('sizes', '(max-width: 1023px) 100vw, 180px');
   });
 
-  it('renders an iframe when url is provided and useIframe is true (default)', () => {
+  it('renders an iframe preview with a sibling overlay link when url is provided and useIframe is true (default)', () => {
     const props = { ...defaultProps, url: 'https://example.com' };
-    render(<ProjectCard {...props} />);
+    const { container } = render(<ProjectCard {...props} />);
 
+    expect(container.firstChild?.nodeName).toBe('DIV');
+    const link = screen.getByRole('link', { name: `Open ${props.title}` });
+    expect(link).toHaveAttribute('href', props.url);
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     const iframe = screen.getByTitle(props.title);
     expect(iframe.nodeName).toBe('IFRAME');
     expect(iframe).toHaveAttribute('src', props.url);
+    expect(iframe.closest('a')).toBeNull();
+    expect(link).not.toContainElement(iframe);
   });
 
   it('renders fallback gradient with initials when image and url are missing', () => {
@@ -86,6 +98,7 @@ describe('ProjectCard', () => {
     render(<ProjectCard {...props} />);
 
     expect(screen.getByRole('img')).toBeInTheDocument();
+    expect(screen.getByRole('link')).toHaveAttribute('href', props.url);
     expect(screen.queryByTitle(props.title)).not.toBeInTheDocument();
   });
 });

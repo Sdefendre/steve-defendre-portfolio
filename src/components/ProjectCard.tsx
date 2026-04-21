@@ -28,6 +28,7 @@ const CachedIframe = memo(function CachedIframe({
       title={title}
       className="w-[1440px] h-[960px] origin-top-left pointer-events-none border-0 scale-[0.28] lg:scale-[0.125]"
       loading="lazy"
+      tabIndex={-1}
       sandbox="allow-scripts allow-same-origin"
     />
   );
@@ -43,10 +44,13 @@ function ProjectCard({
   image,
   useIframe = true,
 }: ProjectCardProps) {
-  const CardWrapper = url ? "a" : "div";
-  const linkProps = url
+  const hasLinkedIframePreview = Boolean(url && useIframe && !image);
+  const CardWrapper = url && !hasLinkedIframePreview ? "a" : "div";
+  const linkProps = url && !hasLinkedIframePreview
     ? { href: url, target: "_blank", rel: "noopener noreferrer" }
     : {};
+  const cardClassName =
+    "flex flex-col lg:flex-row gap-4 lg:gap-6 p-4 lg:p-5 bg-white rounded-2xl lg:rounded-xl border border-gray-100 lg:border-gray-200 shadow-sm lg:shadow-none hover:shadow-lg active:scale-[0.98] lg:active:scale-100 lg:hover:-translate-y-0.5 transition-all overflow-hidden";
 
   // Memoize the preview to prevent unnecessary re-renders
   const preview = useMemo(() => {
@@ -57,7 +61,7 @@ function ProjectCard({
           src={image}
           alt={title}
           fill
-          sizes="(max-width: 640px) 100vw, 180px"
+          sizes="(max-width: 1023px) 100vw, 180px"
           className="object-cover object-top"
         />
       );
@@ -80,11 +84,8 @@ function ProjectCard({
     );
   }, [image, url, useIframe, title, gradient, initials]);
 
-  return (
-    <CardWrapper
-      {...linkProps}
-      className="flex flex-col lg:flex-row gap-4 lg:gap-6 p-4 lg:p-5 bg-white rounded-2xl lg:rounded-xl border border-gray-100 lg:border-gray-200 shadow-sm lg:shadow-none hover:shadow-lg active:scale-[0.98] lg:active:scale-100 lg:hover:-translate-y-0.5 transition-all cursor-pointer overflow-hidden"
-    >
+  const cardContent = (
+    <>
       <div className="w-full lg:w-[180px] h-[250px] lg:h-[120px] rounded-lg overflow-hidden flex-shrink-0 relative bg-gray-100">
         {preview}
       </div>
@@ -108,6 +109,30 @@ function ProjectCard({
           ))}
         </div>
       </div>
+    </>
+  );
+
+  if (hasLinkedIframePreview && url) {
+    return (
+      <div className={`${cardClassName} relative cursor-pointer`}>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Open ${title}`}
+          className="absolute inset-0 z-10 rounded-2xl lg:rounded-xl"
+        />
+        {cardContent}
+      </div>
+    );
+  }
+
+  return (
+    <CardWrapper
+      {...linkProps}
+      className={`${cardClassName} ${url ? "cursor-pointer" : ""}`}
+    >
+      {cardContent}
     </CardWrapper>
   );
 }

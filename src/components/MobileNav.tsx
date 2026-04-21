@@ -22,13 +22,18 @@ const navItems = [
   { name: "Contact", href: "/contact", icon: EnvelopeIcon, activeIcon: EnvelopeIconSolid },
 ];
 
+const mobileNavSafeAreaStyle = {
+  paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))",
+};
+
 export default function MobileNav() {
   const pathname = usePathname();
 
   return (
     <nav
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-2 py-2 safe-area-bottom"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-2 py-2"
       aria-label="Primary navigation"
+      style={mobileNavSafeAreaStyle}
     >
       <div className="flex items-center justify-around">
         {navItems.map((item) => {
