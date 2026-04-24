@@ -6,7 +6,7 @@ export interface Project {
   gradient: string;
   url: string;
   image?: string;
-  useIframe?: boolean;
+  priority?: boolean;
 }
 
 export const projects: Project[] = [
@@ -19,7 +19,7 @@ export const projects: Project[] = [
     gradient: "from-slate-600 to-indigo-600",
     url: "https://defendresolutions.com",
     image: "/defendre-solutions.png",
-    useIframe: false,
+    priority: true,
   },
   {
     initials: "BR",
@@ -29,6 +29,7 @@ export const projects: Project[] = [
     tags: ["React", "PostgreSQL", "Node.js"],
     gradient: "from-pink-500 to-rose-600",
     url: "https://braidsbyrose.com",
+    image: "/project-previews/braidsbyrose.svg",
   },
   {
     initials: "VC",
@@ -48,6 +49,7 @@ export const projects: Project[] = [
     tags: ["AI/ML", "AWS", "Python", "React"],
     gradient: "from-emerald-500 to-teal-600",
     url: "https://trycommand.vercel.app",
+    image: "/project-previews/command-ai.svg",
   },
   {
     initials: "KS",
@@ -57,9 +59,7 @@ export const projects: Project[] = [
     tags: ["React", "Docker", "TypeScript"],
     gradient: "from-violet-500 to-purple-600",
     url: "https://krystinsylvia.com",
-    image:
-      "https://api.microlink.io/?screenshot=true&meta=false&embed=screenshot.url&url=https://www.krystinsylvia.com",
-    useIframe: false,
+    image: "/project-previews/krystin-sylvia.svg",
   },
   {
     initials: "NP",
@@ -70,6 +70,5 @@ export const projects: Project[] = [
     gradient: "from-amber-500 to-orange-600",
     url: "https://nayka-portfolio.vercel.app/",
     image: "/nayka-portfolio.png",
-    useIframe: false,
   },
 ];
