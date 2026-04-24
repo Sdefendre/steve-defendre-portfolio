@@ -33,6 +33,27 @@ export default function ThreeScene() {
     let targetX = 0;
     let targetY = 0;
     let frameId = 0;
+    let elapsedTime = 0;
+    let startAnimation = () => {};
+    const reducedMotionQuery =
+      typeof window.matchMedia === "function"
+        ? window.matchMedia("(prefers-reduced-motion: reduce)")
+        : null;
+    let shouldReduceMotion = reducedMotionQuery?.matches ?? false;
+
+    const renderScene = () => {
+      if (!renderer || isDisposed) return;
+      renderer.render(scene, camera);
+    };
+
+    const stopAnimation = () => {
+      if (!frameId) return;
+      cancelAnimationFrame(frameId);
+      frameId = 0;
+    };
+
+    const shouldAnimate = () =>
+      !shouldReduceMotion && document.visibilityState === "visible";
 
     const handleMouseMove = (event: MouseEvent) => {
       mouseX = (event.clientX / window.innerWidth) * 2 - 1;
@@ -45,17 +66,42 @@ export default function ThreeScene() {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
+      renderScene();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        stopAnimation();
+        return;
+      }
+
+      startAnimation();
+    };
+
+    const handleMotionPreferenceChange = (event: MediaQueryListEvent) => {
+      shouldReduceMotion = event.matches;
+
+      if (shouldReduceMotion) {
+        stopAnimation();
+        renderScene();
+        return;
+      }
+
+      startAnimation();
     };
 
     const cleanup = () => {
       if (isDisposed) return;
       isDisposed = true;
 
-      if (frameId) {
-        cancelAnimationFrame(frameId);
-      }
+      stopAnimation();
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      reducedMotionQuery?.removeEventListener(
+        "change",
+        handleMotionPreferenceChange
+      );
       if (renderer && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
@@ -142,16 +188,19 @@ export default function ThreeScene() {
         scene.add(mesh);
       }
 
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("resize", handleResize);
-
       // Animation loop
-      const clock = new THREE.Clock();
+      const clock = new THREE.Clock(false);
 
       const animate = () => {
+        frameId = 0;
         if (!renderer || isDisposed) return;
 
-        const elapsedTime = clock.getElapsedTime();
+        if (!shouldAnimate()) {
+          renderScene();
+          return;
+        }
+
+        elapsedTime += Math.min(clock.getDelta(), 0.033);
 
         // Smooth mouse following
         targetX += (mouseX - targetX) * 0.02;
@@ -176,7 +225,23 @@ export default function ThreeScene() {
         frameId = requestAnimationFrame(animate);
       };
 
-      animate();
+      startAnimation = () => {
+        if (frameId || !shouldAnimate() || !renderer || isDisposed) return;
+
+        clock.start();
+        frameId = requestAnimationFrame(animate);
+      };
+
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("resize", handleResize);
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      reducedMotionQuery?.addEventListener(
+        "change",
+        handleMotionPreferenceChange
+      );
+
+      renderScene();
+      startAnimation();
     } catch (error) {
       cleanup();
       console.error("ThreeScene disabled because WebGL setup failed.", error);

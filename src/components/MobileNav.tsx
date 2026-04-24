@@ -2,25 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  HomeIcon,
-  UserIcon,
-  FolderIcon,
-  EnvelopeIcon,
-} from "@heroicons/react/24/outline";
-import {
-  HomeIcon as HomeIconSolid,
-  UserIcon as UserIconSolid,
-  FolderIcon as FolderIconSolid,
-  EnvelopeIcon as EnvelopeIconSolid,
-} from "@heroicons/react/24/solid";
-
-const navItems = [
-  { name: "Home", href: "/", icon: HomeIcon, activeIcon: HomeIconSolid },
-  { name: "About", href: "/about", icon: UserIcon, activeIcon: UserIconSolid },
-  { name: "Projects", href: "/projects", icon: FolderIcon, activeIcon: FolderIconSolid },
-  { name: "Contact", href: "/contact", icon: EnvelopeIcon, activeIcon: EnvelopeIconSolid },
-];
+import { primaryNavItems } from "@/components/navItems";
 
 const mobileNavSafeAreaStyle = {
   paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))",
@@ -36,7 +18,7 @@ export default function MobileNav() {
       style={mobileNavSafeAreaStyle}
     >
       <div className="flex items-center justify-around">
-        {navItems.map((item) => {
+        {primaryNavItems.map((item) => {
           const isActive = pathname === item.href;
           const Icon = isActive ? item.activeIcon : item.icon;
           return (
