@@ -14,21 +14,21 @@ const contactLinks = [
   },
   {
     name: "LinkedIn",
-    value: "Connect with me",
+    value: "linkedin.com/in/joseph-m-defendre-a11a47225",
     href: "https://www.linkedin.com/in/joseph-m-defendre-a11a47225/",
     icon: LinkedInIcon,
     description: "Let's connect professionally"
   },
   {
     name: "GitHub",
-    value: "View my code",
+    value: "github.com/Sdefendre",
     href: "https://github.com/Sdefendre",
     icon: GitHubIcon,
     description: "Check out my projects"
   },
   {
     name: "Support",
-    value: "Buy me a coffee",
+    value: "buymeacoffee.com/defendresolutions",
     href: "https://buymeacoffee.com/defendresolutions",
     icon: SupportIcon,
     description: "Support my work"
@@ -62,7 +62,8 @@ export default function Contact() {
                   <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-gray-400" />
                 )}
               </div>
-              <p className="text-xs lg:text-sm text-gray-500 truncate">{link.description}</p>
+              <p className="text-xs lg:text-sm font-medium text-gray-700 break-all">{link.value}</p>
+              <p className="text-xs lg:text-sm text-gray-500">{link.description}</p>
             </div>
           </a>
         ))}
