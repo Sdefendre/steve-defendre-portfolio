@@ -27,16 +27,14 @@ export default function AnimatedBackground() {
   }
 
   // Mobile background / Desktop fallback / SSR initial state
-  // Using a class for the mobile color and inline style for the desktop gradient to match ThreeScene background
+  // Using Tailwind classes for the background to match ThreeScene background
   return (
     <div
-      className="fixed inset-0 -z-10 bg-gray-50 lg:bg-transparent"
-      style={{
-        background:
-          isDesktop === null || isDesktop
-            ? "linear-gradient(135deg, #fafafa 0%, #f0f0f5 100%)"
-            : undefined,
-      }}
+      className={`fixed inset-0 -z-10 ${
+        isDesktop === null || isDesktop
+          ? "bg-gradient-to-br from-[#fafafa] to-[#f0f0f5]"
+          : "bg-gray-50"
+      } lg:bg-transparent`}
     />
   );
 }

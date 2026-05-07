@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { navItems } from "@/data/navigation";
+import { primaryNavItems } from "@/data/navigation";
 import { socialLinks } from "@/data/socials";
 
 export default function Sidebar() {
@@ -22,14 +22,14 @@ export default function Sidebar() {
           className="rounded-full object-cover object-top"
         />
         <div>
-          <h2 className="text-sm font-semibold text-gray-900">Steve Defendre</h2>
+          <p className="text-sm font-semibold text-gray-900">Steve Defendre</p>
           <p className="text-xs text-gray-500">Developer</p>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="mb-8" aria-label="Primary navigation">
-        {navItems.map((item) => {
+        {primaryNavItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
@@ -50,7 +50,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Socials */}
-      <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-3 px-3">
+      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3 px-3">
         Socials
       </p>
       <div className="mb-8">
@@ -60,7 +60,7 @@ export default function Sidebar() {
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all"
           >
             <link.icon className="w-[18px] h-[18px]" />
             {link.name}

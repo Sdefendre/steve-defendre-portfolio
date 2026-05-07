@@ -29,21 +29,22 @@ export const contactLinks = [
   },
   {
     name: "LinkedIn",
-    value: "Connect with me",
+    value: "linkedin.com/in/joseph-m-defendre-a11a47225",
+    mobileValue: "LinkedIn profile",
     href: "https://www.linkedin.com/in/joseph-m-defendre-a11a47225/",
     icon: LinkedInIcon,
     description: "Let's connect professionally"
   },
   {
     name: "GitHub",
-    value: "View my code",
+    value: "github.com/Sdefendre",
     href: "https://github.com/Sdefendre",
     icon: GitHubIcon,
     description: "Check out my projects"
   },
   {
     name: "Support",
-    value: "Buy me a coffee",
+    value: "buymeacoffee.com/defendresolutions",
     href: "https://buymeacoffee.com/defendresolutions",
     icon: SupportIcon,
     description: "Support my work"

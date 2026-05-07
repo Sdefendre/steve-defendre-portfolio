@@ -27,7 +27,10 @@ describe('ProjectCard', () => {
   });
 
   it('renders as an anchor tag when url is provided', () => {
-    const props = { ...defaultProps, url: 'https://example.com' };
+    const props = {
+      ...defaultProps,
+      url: 'https://example.com',
+    };
     const { container } = render(<ProjectCard {...props} />);
 
     const anchor = container.firstChild as HTMLAnchorElement;
@@ -45,16 +48,21 @@ describe('ProjectCard', () => {
     const imgSrc = img.getAttribute('src');
     expect(imgSrc).not.toBeNull();
     expect(decodeURIComponent(imgSrc ?? '')).toContain(props.image);
-    expect(img).toHaveAttribute('alt', props.title);
+    expect(img).toHaveAttribute('alt', `${props.title} project preview`);
+    expect(img).toHaveAttribute('sizes', '(max-width: 1023px) calc(100vw - 2rem), 180px');
   });
 
-  it('renders an iframe when url is provided and useIframe is true (default)', () => {
+  it('renders a linked fallback preview without an iframe when url is provided and image is missing', () => {
     const props = { ...defaultProps, url: 'https://example.com' };
-    render(<ProjectCard {...props} />);
+    const { container } = render(<ProjectCard {...props} />);
 
-    const iframe = screen.getByTitle(props.title);
-    expect(iframe.nodeName).toBe('IFRAME');
-    expect(iframe).toHaveAttribute('src', props.url);
+    expect(container.firstChild?.nodeName).toBe('A');
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', props.url);
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(screen.getByText(defaultProps.initials)).toBeInTheDocument();
+    expect(container.querySelector('iframe')).toBeNull();
   });
 
   it('renders fallback gradient with initials when image and url are missing', () => {
@@ -62,30 +70,31 @@ describe('ProjectCard', () => {
 
     expect(screen.getByText(defaultProps.initials)).toBeInTheDocument();
     // Gradient class is applied to the wrapper div, not the initials span
-    const gradientContainer = screen.getByText(defaultProps.initials).closest('div');
+    const gradientContainer = screen
+      .getByText(defaultProps.initials)
+      .closest('div[aria-hidden="true"]');
     expect(gradientContainer).not.toBeNull();
     expect(gradientContainer).toHaveClass('bg-gradient-to-br');
   });
 
-  it('renders fallback gradient with initials when useIframe is false and no image', () => {
-    const props = { ...defaultProps, url: 'https://example.com', useIframe: false };
+  it('renders fallback gradient with initials when a linked project has no image', () => {
+    const props = { ...defaultProps, url: 'https://example.com' };
     render(<ProjectCard {...props} />);
 
     expect(screen.getByText(defaultProps.initials)).toBeInTheDocument();
-    // Iframe should NOT be present
-    expect(screen.queryByTitle(props.title)).not.toBeInTheDocument();
+    expect(document.querySelector('iframe')).toBeNull();
   });
 
-  it('prefers custom image over iframe even if url is provided', () => {
+  it('prefers custom image over fallback when url is provided', () => {
     const props = {
       ...defaultProps,
       url: 'https://example.com',
       image: '/test-image.png',
-      useIframe: true
     };
     render(<ProjectCard {...props} />);
 
     expect(screen.getByRole('img')).toBeInTheDocument();
-    expect(screen.queryByTitle(props.title)).not.toBeInTheDocument();
+    expect(screen.getByRole('link')).toHaveAttribute('href', props.url);
+    expect(document.querySelector('iframe')).toBeNull();
   });
 });

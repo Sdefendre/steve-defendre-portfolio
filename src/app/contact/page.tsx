@@ -28,7 +28,17 @@ export default function Contact() {
                   <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-gray-400" />
                 )}
               </div>
-              <p className="text-xs lg:text-sm text-gray-500 truncate">{link.description}</p>
+              <p className="text-xs lg:text-sm font-medium text-gray-700 break-words">
+                {"mobileValue" in link ? (
+                  <>
+                    <span className="sm:hidden">{link.mobileValue}</span>
+                    <span className="hidden sm:inline">{link.value}</span>
+                  </>
+                ) : (
+                  link.value
+                )}
+              </p>
+              <p className="text-xs lg:text-sm text-gray-500">{link.description}</p>
             </div>
           </a>
         ))}

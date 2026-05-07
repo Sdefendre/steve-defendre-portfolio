@@ -10,21 +10,45 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const localSiteUrl = "http://localhost:3000";
-const vercelSiteUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : localSiteUrl;
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? vercelSiteUrl;
+const localSiteUrl = new URL("http://localhost:3000");
 
-const metadataBase = (() => {
-  try {
-    return new URL(siteUrl);
-  } catch {
-    try {
-      return new URL(vercelSiteUrl);
-    } catch {
-      return new URL(localSiteUrl);
-    }
+function normalizeSiteUrl(value?: string): URL | null {
+  if (!value) {
+    return null;
   }
-})();
+
+  const trimmedValue = value.trim();
+
+  if (!trimmedValue) {
+    return null;
+  }
+
+  const normalizedValue = /^[a-zA-Z][a-zA-Z\d+.-]*:\/\//.test(trimmedValue)
+    ? trimmedValue
+    : trimmedValue.startsWith("//")
+      ? `https:${trimmedValue}`
+      : `https://${trimmedValue}`;
+
+  try {
+    const url = new URL(normalizedValue);
+    url.hash = "";
+    url.search = "";
+    url.pathname = "/";
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+const metadataBase =
+  [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    process.env.VERCEL_URL,
+  ]
+    .map(normalizeSiteUrl)
+    .find((url): url is URL => url !== null) ?? localSiteUrl;
+const canonicalUrl = new URL("/", metadataBase);
 
 const previewImage = "/defendre-solutions.png";
 
@@ -33,12 +57,12 @@ export const metadata: Metadata = {
   title: "Steve Defendre | Full-Stack Developer",
   description: "Veteran-owned software development. Transforming ideas into production-ready applications.",
   alternates: {
-    canonical: "/",
+    canonical: canonicalUrl,
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: siteUrl,
+    url: canonicalUrl,
     title: "Steve Defendre | Full-Stack Developer",
     description:
       "Veteran-owned software development. Transforming ideas into production-ready applications.",
@@ -73,7 +97,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={`${inter.variable} font-sans antialiased`}>
         <AnimatedBackground />
 
