@@ -32,39 +32,29 @@ const values = [
 export default function About() {
   return (
     <div>
-      {/* Mobile Header */}
-      <div className="lg:hidden text-center mb-8">
-        <Image
-          src="/headshot.jpg"
-          alt="Steve Defendre"
-          width={96}
-          height={96}
-          className="rounded-full object-cover object-top mx-auto mb-4"
-        />
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">About Me</h1>
-        <p className="text-sm text-gray-600 leading-relaxed">
-          Military veteran turned full-stack engineer. Founder of Defendre Solutions, combining military discipline with modern technology.
-        </p>
-      </div>
-
-      {/* Desktop Header */}
-      <div className="hidden lg:flex items-start gap-6 mb-8">
+      {/* Header */}
+      <header className="flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-6 mb-8 text-center lg:text-left">
         <Image
           src="/headshot.jpg"
           alt="Steve Defendre"
           width={128}
           height={128}
-          className="rounded-xl object-cover flex-shrink-0"
+          className="rounded-full lg:rounded-xl object-cover object-top flex-shrink-0 w-24 h-24 lg:w-32 lg:h-32"
         />
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">About Me</h1>
-          <p className="text-base text-gray-600 leading-relaxed">
-            I&apos;m Steve Defendre, a military veteran turned full-stack engineer. As the
-            founder of Defendre Solutions, I combine military discipline with modern
-            technology to help small businesses compete digitally.
+        <div className="max-w-2xl">
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2 lg:mb-4">About Me</h1>
+          <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
+            <span className="lg:hidden">
+              Military veteran turned full-stack engineer. Founder of Defendre Solutions, combining military discipline with modern technology.
+            </span>
+            <span className="hidden lg:inline">
+              I&apos;m Steve Defendre, a military veteran turned full-stack engineer. As the
+              founder of Defendre Solutions, I combine military discipline with modern
+              technology to help small businesses compete digitally.
+            </span>
           </p>
         </div>
-      </div>
+      </header>
 
       {/* Core Values */}
       <section className="mb-8 lg:mb-12">
