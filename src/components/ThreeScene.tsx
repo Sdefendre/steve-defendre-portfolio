@@ -255,8 +255,7 @@ export default function ThreeScene() {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ background: "linear-gradient(135deg, #fafafa 0%, #f0f0f5 100%)" }}
+      className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-br from-[#fafafa] to-[#f0f0f5]"
     />
   );
 }
