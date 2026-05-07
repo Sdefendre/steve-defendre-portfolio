@@ -12,7 +12,10 @@ export function useInteractivity() {
 
   // Initialize state with a function to avoid setstate in useEffect
   const [shouldReduceMotion, setShouldReduceMotion] = useState(() => {
-    if (typeof window !== "undefined") {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function"
+    ) {
       return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     }
     return false;
@@ -38,7 +41,10 @@ export function useInteractivity() {
   }, []);
 
   useEffect(() => {
-    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const reducedMotionQuery =
+      typeof window.matchMedia === "function"
+        ? window.matchMedia("(prefers-reduced-motion: reduce)")
+        : null;
 
     const handleMotionPreferenceChange = (event: MediaQueryListEvent) => {
       setShouldReduceMotion(event.matches);
@@ -47,13 +53,13 @@ export function useInteractivity() {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("resize", handleResize);
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    reducedMotionQuery.addEventListener("change", handleMotionPreferenceChange);
+    reducedMotionQuery?.addEventListener("change", handleMotionPreferenceChange);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      reducedMotionQuery.removeEventListener("change", handleMotionPreferenceChange);
+      reducedMotionQuery?.removeEventListener("change", handleMotionPreferenceChange);
     };
   }, [handleMouseMove, handleResize, handleVisibilityChange]);
 
