@@ -2,7 +2,6 @@ import { render, screen, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import AnimatedBackground from "../AnimatedBackground";
 
-// Mock ThreeScene which is dynamically imported
 vi.mock("../ThreeScene", () => ({
   default: () => <div data-testid="three-scene">Three Scene</div>,
 }));
@@ -15,7 +14,6 @@ describe("AnimatedBackground", () => {
   });
 
   afterEach(() => {
-    // Restore original innerWidth
     Object.defineProperty(window, "innerWidth", {
       writable: true,
       configurable: true,
@@ -33,30 +31,16 @@ describe("AnimatedBackground", () => {
   };
 
   it("renders mobile fallback when width is less than 1024", () => {
-    // Set width to mobile
-    Object.defineProperty(window, "innerWidth", {
-      writable: true,
-      configurable: true,
-      value: 375,
-    });
+    setWidth(375);
 
     render(<AnimatedBackground />);
 
     expect(screen.queryByTestId("three-scene")).not.toBeInTheDocument();
-
-    // Check for the fallback div classes
-    // Note: It uses "fixed inset-0 -z-10 bg-gray-50 lg:bg-transparent"
-    const fallback = document.querySelector(".bg-gray-50");
-    expect(fallback).toBeInTheDocument();
+    expect(document.querySelector(".bg-gray-50")).toBeInTheDocument();
   });
 
   it("renders ThreeScene when width is 1024 or greater", async () => {
-    // Set width to desktop
-    Object.defineProperty(window, "innerWidth", {
-      writable: true,
-      configurable: true,
-      value: 1200,
-    });
+    setWidth(1200);
 
     render(<AnimatedBackground />);
 
@@ -64,28 +48,31 @@ describe("AnimatedBackground", () => {
   });
 
   it("responds to window resize events", async () => {
-    // Start with mobile
-    Object.defineProperty(window, "innerWidth", {
-      writable: true,
-      configurable: true,
-      value: 375,
-    });
+    setWidth(375);
 
     render(<AnimatedBackground />);
     expect(screen.queryByTestId("three-scene")).not.toBeInTheDocument();
 
-    // Resize to desktop
     await act(async () => {
       setWidth(1200);
     });
-
     expect(await screen.findByTestId("three-scene")).toBeInTheDocument();
 
-    // Resize back to mobile
     await act(async () => {
       setWidth(800);
     });
-
     expect(screen.queryByTestId("three-scene")).not.toBeInTheDocument();
+  });
+
+  it("cleans up resize event listener on unmount", () => {
+    const removeEventListenerSpy = vi.spyOn(window, "removeEventListener");
+    const { unmount } = render(<AnimatedBackground />);
+
+    unmount();
+
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      "resize",
+      expect.any(Function)
+    );
   });
 });
