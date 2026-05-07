@@ -42,11 +42,43 @@ vi.mock("three", () => {
     }
   }
 
+  class Clock {
+    start = vi.fn();
+    getDelta = vi.fn(() => 0.016);
+  }
+
+  class Color {
+    constructor(color: string) {
+      return { color };
+    }
+  }
+
+  class Points {
+    rotation = { x: 0, y: 0 };
+  }
+
+  class Mesh {
+    position = { x: 0, y: 0, z: 0 };
+    rotation = { x: 0, y: 0 };
+    scale = { set: vi.fn() };
+  }
+
   return {
     Scene,
     PerspectiveCamera,
     WebGLRenderer,
     BufferGeometry,
+    Clock,
+    Color,
+    Points,
+    Mesh,
+    IcosahedronGeometry: vi.fn(),
+    OctahedronGeometry: vi.fn(),
+    TetrahedronGeometry: vi.fn(),
+    PointsMaterial: vi.fn(),
+    MeshBasicMaterial: vi.fn(),
+    BufferAttribute: vi.fn(),
+    AdditiveBlending: 1,
   };
 });
 
@@ -56,6 +88,21 @@ describe("ThreeScene", () => {
   beforeEach(() => {
     threeMockState.failRendererConstruction = false;
     threeMockState.failBufferGeometryConstruction = false;
+
+    // Mock window.matchMedia
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(), // deprecated
+        removeListener: vi.fn(), // deprecated
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
   });
 
   afterEach(() => {
