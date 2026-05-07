@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { primaryNavItems } from "@/components/navItems";
+import { primaryNavItems } from "@/data/navigation";
 
 const mobileNavSafeAreaStyle = {
   paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))",
@@ -27,9 +27,7 @@ export default function MobileNav() {
               href={item.href}
               aria-current={isActive ? "page" : undefined}
               className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all ${
-                isActive
-                  ? "text-indigo-600"
-                  : "text-gray-500"
+                isActive ? "text-indigo-600" : "text-gray-500"
               }`}
             >
               <Icon className="w-6 h-6" />

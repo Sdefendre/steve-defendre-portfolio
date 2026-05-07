@@ -4,26 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { GitHubIcon, LinkedInIcon, SupportIcon } from "@/components/SocialIcons";
-import { primaryNavItems } from "@/components/navItems";
-
-const socialLinks = [
-  {
-    name: "GitHub",
-    href: "https://github.com/Sdefendre",
-    icon: GitHubIcon,
-  },
-  {
-    name: "LinkedIn",
-    href: "https://www.linkedin.com/in/joseph-m-defendre-a11a47225/",
-    icon: LinkedInIcon,
-  },
-  {
-    name: "Support",
-    href: "https://buymeacoffee.com/defendresolutions",
-    icon: SupportIcon,
-  },
-];
+import { primaryNavItems } from "@/data/navigation";
+import { socialLinks } from "@/data/socials";
 
 export default function Sidebar() {
   const pathname = usePathname();
