@@ -119,7 +119,9 @@ describe("ThreeScene", () => {
     const background = container.firstChild as HTMLDivElement;
 
     expect(background).toBeInTheDocument();
-    expect(background.getAttribute("style")).toContain("linear-gradient");
+    expect(background.className).toContain("bg-gradient-to-br");
+    expect(background.className).toContain("from-[#fafafa]");
+    expect(background.className).toContain("to-[#f0f0f5]");
     expect(background.querySelector("canvas")).not.toBeInTheDocument();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "ThreeScene disabled because WebGL setup failed.",
@@ -137,7 +139,9 @@ describe("ThreeScene", () => {
     const background = container.firstChild as HTMLDivElement;
 
     expect(background).toBeInTheDocument();
-    expect(background.getAttribute("style")).toContain("linear-gradient");
+    expect(background.className).toContain("bg-gradient-to-br");
+    expect(background.className).toContain("from-[#fafafa]");
+    expect(background.className).toContain("to-[#f0f0f5]");
     expect(background.querySelector("canvas")).not.toBeInTheDocument();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "ThreeScene disabled because WebGL setup failed.",
