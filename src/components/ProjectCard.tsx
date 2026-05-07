@@ -67,7 +67,7 @@ function ProjectCard({
             fill
             sizes="(max-width: 1023px) calc(100vw - 2rem), 180px"
             className="object-cover object-top"
-            preload={priority}
+            priority={priority}
           />
         ) : (
           <ProjectPreviewFallback initials={initials} gradient={gradient} />
