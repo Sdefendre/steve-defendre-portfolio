@@ -13,3 +13,16 @@
 
 ### Measurement note
 No benchmark data is recorded in this repo; this rationale is based on expected browser behavior for native lazy-loaded iframes.
+
+## Optimization: Cached Window Dimensions in ThreeScene
+`ThreeScene` in `src/components/ThreeScene.tsx` now caches `window.innerWidth` and `window.innerHeight`.
+
+## Rationale
+The `mousemove` event handler was previously reading window dimensions directly from the `window` object on every event.
+
+### Why this helps
+1. **Prevents Layout Thrashing**: Accessing properties like `innerWidth` and `innerHeight` can force the browser to recalculate the layout (reflow) if there are pending style changes. Doing this on every mouse move (potentially 60+ times per second) is inefficient.
+2. **Improved Performance**: Using cached local variables in the frequently-called `mousemove` handler reduces overhead and ensures smoother animations.
+
+### Measurement note
+Verified via `src/components/__tests__/ThreeScenePerformance.test.tsx` that `window` dimension properties are no longer accessed during `mousemove` events after the initial mount and are only updated on `resize`.

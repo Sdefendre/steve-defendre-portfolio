@@ -10,11 +10,14 @@ export default function ThreeScene() {
     if (!containerRef.current) return;
     const container = containerRef.current;
 
+    let windowWidth = window.innerWidth;
+    let windowHeight = window.innerHeight;
+
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       75,
-      window.innerWidth / window.innerHeight,
+      windowWidth / windowHeight,
       0.1,
       1000
     );
@@ -56,16 +59,19 @@ export default function ThreeScene() {
       !shouldReduceMotion && document.visibilityState === "visible";
 
     const handleMouseMove = (event: MouseEvent) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+      mouseX = (event.clientX / windowWidth) * 2 - 1;
+      mouseY = -(event.clientY / windowHeight) * 2 + 1;
     };
 
     const handleResize = () => {
       if (!renderer || isDisposed) return;
 
-      camera.aspect = window.innerWidth / window.innerHeight;
+      windowWidth = window.innerWidth;
+      windowHeight = window.innerHeight;
+
+      camera.aspect = windowWidth / windowHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(windowWidth, windowHeight);
       renderScene();
     };
 
@@ -121,7 +127,7 @@ export default function ThreeScene() {
 
     try {
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(windowWidth, windowHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       container.appendChild(renderer.domElement);
 
