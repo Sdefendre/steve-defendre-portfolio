@@ -10,7 +10,7 @@ import { useShapes } from "./useShapes";
  */
 export function useThreeScene(containerRef: React.RefObject<HTMLDivElement | null>) {
   const { init: initBase, cleanup: cleanupBase, rendererRef, cameraRef, sceneRef } = useThreeBase();
-  const { mouseRef, shouldAnimate } = useInteractivity();
+  const { mouseRef, dimensionsRef, shouldAnimate } = useInteractivity();
   const { init: initParticles, update: updateParticles, cleanup: cleanupParticles } = useParticles();
   const { init: initShapes, update: updateShapes, cleanup: cleanupShapes } = useShapes();
 
@@ -43,8 +43,9 @@ export function useThreeScene(containerRef: React.RefObject<HTMLDivElement | nul
     elapsedTimeRef.current += Math.min(clockRef.current.getDelta(), 0.033);
 
     // Normalize mouse coordinates within the animation loop for better performance
-    const normalizedMouseX = (mouseRef.current.x / window.innerWidth) * 2 - 1;
-    const normalizedMouseY = -(mouseRef.current.y / window.innerHeight) * 2 + 1;
+    const { width, height } = dimensionsRef.current;
+    const normalizedMouseX = (mouseRef.current.x / width) * 2 - 1;
+    const normalizedMouseY = -(mouseRef.current.y / height) * 2 + 1;
 
     // Smooth mouse following
     targetXRef.current += (normalizedMouseX - targetXRef.current) * 0.02;
@@ -55,7 +56,7 @@ export function useThreeScene(containerRef: React.RefObject<HTMLDivElement | nul
 
     renderer.render(scene, camera);
     frameIdRef.current = requestAnimationFrame(animateRef.current);
-  }, [shouldAnimate, updateParticles, updateShapes, mouseRef, rendererRef, cameraRef, sceneRef]);
+  }, [shouldAnimate, updateParticles, updateShapes, mouseRef, dimensionsRef, rendererRef, cameraRef, sceneRef]);
 
   // Update the animateRef whenever animate changes
   useEffect(() => {

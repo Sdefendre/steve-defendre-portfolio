@@ -5,6 +5,10 @@ import { useRef, useEffect, useState, useCallback } from "react";
  */
 export function useInteractivity() {
   const mouseRef = useRef({ x: 0, y: 0 });
+  const dimensionsRef = useRef({
+    width: typeof window !== "undefined" ? window.innerWidth : 1,
+    height: typeof window !== "undefined" ? window.innerHeight : 1,
+  });
 
   // Initialize state with a function to avoid setstate in useEffect
   const [shouldReduceMotion, setShouldReduceMotion] = useState(() => {
@@ -26,6 +30,13 @@ export function useInteractivity() {
     setIsVisible(document.visibilityState === "visible");
   }, []);
 
+  const handleResize = useCallback(() => {
+    dimensionsRef.current = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+  }, []);
+
   useEffect(() => {
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -34,20 +45,23 @@ export function useInteractivity() {
     };
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("resize", handleResize);
     document.addEventListener("visibilitychange", handleVisibilityChange);
     reducedMotionQuery.addEventListener("change", handleMotionPreferenceChange);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       reducedMotionQuery.removeEventListener("change", handleMotionPreferenceChange);
     };
-  }, [handleMouseMove, handleVisibilityChange]);
+  }, [handleMouseMove, handleResize, handleVisibilityChange]);
 
   const shouldAnimate = !shouldReduceMotion && isVisible;
 
   return {
     mouseRef,
+    dimensionsRef,
     shouldAnimate,
     isVisible,
   };
