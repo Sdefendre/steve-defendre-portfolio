@@ -13,28 +13,15 @@ const inter = Inter({
 const localSiteUrl = new URL("http://localhost:3000");
 
 function normalizeSiteUrl(value?: string): URL | null {
-  if (!value) {
-    return null;
-  }
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
 
-  const trimmedValue = value.trim();
-
-  if (!trimmedValue) {
-    return null;
-  }
-
-  const normalizedValue = /^[a-zA-Z][a-zA-Z\d+.-]*:\/\//.test(trimmedValue)
-    ? trimmedValue
-    : trimmedValue.startsWith("//")
-      ? `https:${trimmedValue}`
-      : `https://${trimmedValue}`;
+  const base = /^[a-z][a-z\d+\-.]*:\/\//i.test(trimmed)
+    ? trimmed
+    : `https://${trimmed.replace(/^\/\//, "")}`;
 
   try {
-    const url = new URL(normalizedValue);
-    url.hash = "";
-    url.search = "";
-    url.pathname = "/";
-    return url;
+    return new URL("/", base);
   } catch {
     return null;
   }
