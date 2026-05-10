@@ -72,7 +72,6 @@ describe("useShapes", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    // @ts-ignore
     scene = new THREE.Scene();
   });
 

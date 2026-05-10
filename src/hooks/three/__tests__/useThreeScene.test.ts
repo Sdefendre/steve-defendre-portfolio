@@ -6,6 +6,7 @@ import { useThreeBase } from "../useThreeBase";
 import { useInteractivity } from "../useInteractivity";
 import { useParticles } from "../useParticles";
 import { useShapes } from "../useShapes";
+import type { RefObject } from "react";
 
 vi.mock("../useThreeBase");
 vi.mock("../useInteractivity");
@@ -27,6 +28,10 @@ vi.mock("three", async () => {
 });
 
 describe("useThreeScene", () => {
+  const createContainerRef = (current: HTMLDivElement | null): RefObject<HTMLDivElement | null> => ({
+    current,
+  });
+
   const mockScene = { add: vi.fn(), remove: vi.fn() };
   const mockCamera = { aspect: 1, updateProjectionMatrix: vi.fn() };
   const mockRenderer = {
@@ -63,12 +68,12 @@ describe("useThreeScene", () => {
   };
 
   beforeEach(() => {
-    vi.mocked(useThreeBase).mockReturnValue(mockBase as any);
-    vi.mocked(useInteractivity).mockReturnValue(mockInteractivity as any);
-    vi.mocked(useParticles).mockReturnValue(mockParticles as any);
-    vi.mocked(useShapes).mockReturnValue(mockShapes as any);
+    vi.mocked(useThreeBase).mockReturnValue(mockBase as unknown as ReturnType<typeof useThreeBase>);
+    vi.mocked(useInteractivity).mockReturnValue(mockInteractivity as unknown as ReturnType<typeof useInteractivity>);
+    vi.mocked(useParticles).mockReturnValue(mockParticles as unknown as ReturnType<typeof useParticles>);
+    vi.mocked(useShapes).mockReturnValue(mockShapes as unknown as ReturnType<typeof useShapes>);
 
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation(() => {
       // Don't actually call the callback to avoid infinite loops unless explicitly triggered
       return 1;
     });
@@ -81,9 +86,9 @@ describe("useThreeScene", () => {
 
   it("should initialize all sub-hooks when container is provided", () => {
     const container = document.createElement("div");
-    const containerRef = { current: container };
+    const containerRef = createContainerRef(container);
 
-    renderHook(() => useThreeScene(containerRef as any));
+    renderHook(() => useThreeScene(containerRef));
 
     expect(mockBase.init).toHaveBeenCalledWith(container);
     expect(mockParticles.init).toHaveBeenCalledWith(mockScene);
@@ -91,9 +96,9 @@ describe("useThreeScene", () => {
   });
 
   it("should not initialize if container is null", () => {
-    const containerRef = { current: null };
+    const containerRef = createContainerRef(null);
 
-    renderHook(() => useThreeScene(containerRef as any));
+    renderHook(() => useThreeScene(containerRef));
 
     expect(mockBase.init).not.toHaveBeenCalled();
     expect(mockParticles.init).not.toHaveBeenCalled();
@@ -102,21 +107,21 @@ describe("useThreeScene", () => {
 
   it("should start animation loop and call update functions when shouldAnimate is true", () => {
     const container = document.createElement("div");
-    const containerRef = { current: container };
+    const containerRef = createContainerRef(container);
 
-    let animationCallback: any;
+    let animationCallback: FrameRequestCallback = () => {};
     vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
       animationCallback = cb;
       return 123;
     });
 
-    renderHook(() => useThreeScene(containerRef as any));
+    renderHook(() => useThreeScene(containerRef));
 
     // Initial render call from useEffect is triggered by shouldAnimate
     expect(window.requestAnimationFrame).toHaveBeenCalled();
 
     // Manually trigger the animation callback
-    animationCallback();
+    animationCallback(0);
 
     expect(mockParticles.update).toHaveBeenCalled();
     expect(mockShapes.update).toHaveBeenCalled();
@@ -125,15 +130,15 @@ describe("useThreeScene", () => {
 
   it("should stop animation loop and not call update functions when shouldAnimate is false", () => {
     const container = document.createElement("div");
-    const containerRef = { current: container };
+    const containerRef = createContainerRef(container);
 
     // Start with shouldAnimate: true
     const { rerender } = renderHook(({ shouldAnimate }) => {
       vi.mocked(useInteractivity).mockReturnValue({
         ...mockInteractivity,
         shouldAnimate,
-      } as any);
-      return useThreeScene(containerRef as any);
+      } as unknown as ReturnType<typeof useInteractivity>);
+      return useThreeScene(containerRef);
     }, {
       initialProps: { shouldAnimate: true }
     });
@@ -158,9 +163,9 @@ describe("useThreeScene", () => {
 
   it("should cleanup all sub-hooks on unmount", () => {
     const container = document.createElement("div");
-    const containerRef = { current: container };
+    const containerRef = createContainerRef(container);
 
-    const { unmount } = renderHook(() => useThreeScene(containerRef as any));
+    const { unmount } = renderHook(() => useThreeScene(containerRef));
 
     unmount();
 
@@ -172,14 +177,14 @@ describe("useThreeScene", () => {
 
   it("should handle initialization errors and perform cleanup", () => {
     const container = document.createElement("div");
-    const containerRef = { current: container };
+    const containerRef = createContainerRef(container);
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
     mockParticles.init.mockImplementationOnce(() => {
       throw new Error("Init failed");
     });
 
-    renderHook(() => useThreeScene(containerRef as any));
+    renderHook(() => useThreeScene(containerRef));
 
     expect(mockParticles.cleanup).toHaveBeenCalledWith(mockScene);
     expect(mockShapes.cleanup).toHaveBeenCalledWith(mockScene);
