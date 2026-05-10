@@ -33,13 +33,6 @@ export function useInteractivity() {
     setIsVisible(document.visibilityState === "visible");
   }, []);
 
-  const handleResize = useCallback(() => {
-    dimensionsRef.current = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
-  }, []);
-
   useEffect(() => {
     const reducedMotionQuery =
       typeof window.matchMedia === "function"
@@ -50,18 +43,33 @@ export function useInteractivity() {
       setShouldReduceMotion(event.matches);
     };
 
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+
+    const handleResize = () => {
+      dimensionsRef.current = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      };
+    };
+
+    const debouncedResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleResize, 100);
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", debouncedResize);
     document.addEventListener("visibilitychange", handleVisibilityChange);
     reducedMotionQuery?.addEventListener("change", handleMotionPreferenceChange);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", debouncedResize);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       reducedMotionQuery?.removeEventListener("change", handleMotionPreferenceChange);
+      clearTimeout(resizeTimeout);
     };
-  }, [handleMouseMove, handleResize, handleVisibilityChange]);
+  }, [handleMouseMove, handleVisibilityChange]);
 
   const shouldAnimate = !shouldReduceMotion && isVisible;
 

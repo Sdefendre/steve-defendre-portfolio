@@ -97,6 +97,14 @@ vi.mock("three", () => {
 });
 
 describe("ThreeScene Performance", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("tracks window dimension access during mousemove", () => {
     let innerWidthAccessCount = 0;
     let innerHeightAccessCount = 0;
@@ -138,7 +146,8 @@ describe("ThreeScene Performance", () => {
     innerHeightAccessCount = 0;
     fireEvent.resize(window);
 
-    // Should be accessed on resize
+    // Should be accessed on resize after debounce
+    vi.advanceTimersByTime(100);
     expect(innerWidthAccessCount).toBeGreaterThan(0);
     expect(innerHeightAccessCount).toBeGreaterThan(0);
 
