@@ -20,6 +20,7 @@ export default function Sidebar() {
           width={40}
           height={40}
           className="rounded-full object-cover object-top"
+          priority
         />
         <div>
           <p className="text-sm font-semibold text-gray-900">Steve Defendre</p>

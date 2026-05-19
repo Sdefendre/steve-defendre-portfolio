@@ -14,6 +14,7 @@ export default function Home() {
             width={56}
             height={56}
             className="rounded-full object-cover object-top lg:hidden"
+            priority
           />
           <div className="hidden lg:block text-4xl mb-2">👋</div>
           <div>

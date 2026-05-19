@@ -4,11 +4,15 @@ import { projects } from "@/data/projects";
 import { expect, test, vi } from "vitest";
 import type { ImgHTMLAttributes } from "react";
 
+interface MockImageProps extends ImgHTMLAttributes<HTMLImageElement> {
+  priority?: boolean;
+}
+
 // Mock next/image
 vi.mock("next/image", () => ({
-  default: ({ alt, ...props }: ImgHTMLAttributes<HTMLImageElement>) => {
+  default: ({ alt, priority, ...props }: MockImageProps) => {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img alt={alt ?? ""} {...props} />;
+    return <img alt={alt ?? ""} {...props} data-priority={priority ? "true" : undefined} />;
   },
 }));
 

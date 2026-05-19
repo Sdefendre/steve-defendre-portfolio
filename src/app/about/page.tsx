@@ -40,6 +40,7 @@ export default function About() {
           width={128}
           height={128}
           className="rounded-full lg:rounded-xl object-cover object-top flex-shrink-0 w-24 h-24 lg:w-32 lg:h-32"
+          priority
         />
         <div className="max-w-2xl">
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2 lg:mb-4">About Me</h1>
