@@ -1,16 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { primaryNavItems } from "@/data/navigation";
 import { socialLinks } from "@/data/socials";
-import { isSafeHref } from "@/utils/url";
+import { NavLink } from "./NavLink";
 
 export default function Sidebar() {
-  const pathname = usePathname();
-
   return (
     <aside className="hidden lg:flex w-[200px] bg-white border-r border-gray-200 p-6 fixed h-screen flex-col">
       {/* Profile */}
@@ -30,24 +26,22 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="mb-8" aria-label="Primary navigation">
-        {primaryNavItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              aria-current={isActive ? "page" : undefined}
-              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all ${
+        {primaryNavItems.map((item) => (
+          <NavLink
+            key={item.name}
+            href={item.href}
+            className={({ isActive }) =>
+              `flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all ${
                 isActive
                   ? "bg-gray-100 text-gray-900 font-medium"
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              }`}
-            >
-              <item.icon className="w-[18px] h-[18px]" />
-              {item.name}
-            </Link>
-          );
-        })}
+              }`
+            }
+          >
+            <item.icon className="w-[18px] h-[18px]" />
+            {item.name}
+          </NavLink>
+        ))}
       </nav>
 
       {/* Socials */}
@@ -56,28 +50,27 @@ export default function Sidebar() {
       </p>
       <div className="mb-8">
         {socialLinks.map((link) => (
-          <a
+          <NavLink
             key={link.name}
-            href={isSafeHref(link.href) ? link.href : "#"}
+            href={link.href}
             target="_blank"
-            rel="noopener noreferrer"
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all"
           >
             <link.icon className="w-[18px] h-[18px]" />
             {link.name}
-          </a>
+          </NavLink>
         ))}
       </div>
 
       {/* Footer */}
       <div className="mt-auto">
-        <Link
+        <NavLink
           href="/contact"
           className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
         >
           Contact Me
           <ArrowRightIcon className="w-4 h-4" />
-        </Link>
+        </NavLink>
       </div>
     </aside>
   );
