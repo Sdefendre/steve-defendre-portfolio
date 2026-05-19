@@ -18,4 +18,3 @@ export const primaryNavItems = [
   { name: "Contact", href: "/contact", icon: EnvelopeIcon, activeIcon: EnvelopeIconSolid },
 ];
 
-export const navItems = primaryNavItems;
