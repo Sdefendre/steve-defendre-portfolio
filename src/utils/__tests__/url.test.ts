@@ -20,6 +20,7 @@ describe('isSafeHref', () => {
     expect(isSafeHref('data:text/html,<script>alert(1)</script>')).toBe(false);
     expect(isSafeHref('vbscript:msgbox("Hi")')).toBe(false);
     expect(isSafeHref('file:///etc/passwd')).toBe(false);
+    expect(isSafeHref('//evil.example')).toBe(false);
   });
 
   it('handles empty or null inputs', () => {

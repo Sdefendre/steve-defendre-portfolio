@@ -8,7 +8,7 @@ export function isSafeHref(href: string | undefined | null): boolean {
   const trimmed = href.trim();
 
   // Allow relative paths and anchors
-  if (trimmed.startsWith("/") || trimmed.startsWith("#")) {
+  if ((trimmed.startsWith("/") && !trimmed.startsWith("//")) || trimmed.startsWith("#")) {
     return true;
   }
 
