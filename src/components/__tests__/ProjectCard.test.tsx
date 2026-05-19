@@ -40,6 +40,18 @@ describe('ProjectCard', () => {
     expect(anchor).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
+  it('renders as an anchor tag when mixed-case protocol url is provided', () => {
+    const props = {
+      ...defaultProps,
+      url: 'HTTPS://example.com',
+    };
+    const { container } = render(<ProjectCard {...props} />);
+
+    const anchor = container.firstChild as HTMLAnchorElement;
+    expect(anchor.nodeName).toBe('A');
+    expect(anchor).toHaveAttribute('href', props.url);
+  });
+
   it('renders a custom image when image prop is provided', () => {
     const props = { ...defaultProps, image: '/test-image.png' };
     render(<ProjectCard {...props} />);

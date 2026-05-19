@@ -96,7 +96,9 @@ function ProjectCard({
     </>
   );
 
-  if (url) {
+  const isSafeUrl = url && (url.trim().toLowerCase().startsWith("http://") || url.trim().toLowerCase().startsWith("https://"));
+
+  if (isSafeUrl) {
     return (
       <a
         href={url}
