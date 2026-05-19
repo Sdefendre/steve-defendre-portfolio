@@ -26,3 +26,12 @@ The `mousemove` event handler was previously reading window dimensions directly 
 
 ### Measurement note
 Verified via `src/components/__tests__/ThreeScenePerformance.test.tsx` that `window` dimension properties are no longer accessed during `mousemove` events after the initial mount and are only updated on `resize`.
+
+## Optimization: Priority Loading for Above-the-Fold Images
+The profile headshot `Image` components in `src/components/Sidebar.tsx`, `src/app/page.tsx`, and `src/app/about/page.tsx` use `priority` because they can render in the initial viewport.
+
+## Rationale
+Next.js image components are lazy-loaded by default. Prioritizing these visible profile images lets Next.js preload them earlier and avoids delaying the initial visual presentation.
+
+### Measurement note
+This is a standard Next.js LCP optimization for above-the-fold images. No benchmark data is recorded in this repo.

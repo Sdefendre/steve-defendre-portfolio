@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ImgHTMLAttributes, ReactNode } from 'react';
 import Sidebar from '../Sidebar';
 import { usePathname } from 'next/navigation';
 
@@ -9,6 +9,10 @@ type MockLinkProps = {
   href: string;
   className?: string;
 } & Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'children' | 'className'>;
+
+interface MockImageProps extends ImgHTMLAttributes<HTMLImageElement> {
+  priority?: boolean;
+}
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
@@ -22,6 +26,13 @@ vi.mock('next/link', () => ({
       {children}
     </a>
   ),
+}));
+
+vi.mock('next/image', () => ({
+  default: ({ priority, ...props }: MockImageProps) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img {...props} alt={props.alt ?? ''} data-priority={priority ? 'true' : undefined} />;
+  },
 }));
 
 describe('Sidebar', () => {
@@ -74,5 +85,6 @@ describe('Sidebar', () => {
     const headshotSrc = headshot.getAttribute('src');
     expect(headshotSrc).not.toBeNull();
     expect(decodeURIComponent(headshotSrc ?? '')).toContain('/headshot.jpg');
+    expect(headshot).toHaveAttribute('data-priority', 'true');
   });
 });
