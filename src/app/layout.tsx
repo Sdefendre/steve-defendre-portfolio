@@ -28,13 +28,10 @@ function normalizeSiteUrl(value?: string): URL | null {
 }
 
 const metadataBase =
-  [
-    process.env.NEXT_PUBLIC_SITE_URL,
-    process.env.VERCEL_PROJECT_PRODUCTION_URL,
-    process.env.VERCEL_URL,
-  ]
-    .map(normalizeSiteUrl)
-    .find((url): url is URL => url !== null) ?? localSiteUrl;
+  normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) ??
+  normalizeSiteUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL) ??
+  normalizeSiteUrl(process.env.VERCEL_URL) ??
+  localSiteUrl;
 const canonicalUrl = new URL("/", metadataBase);
 
 const previewImage = "/defendre-solutions.png";
