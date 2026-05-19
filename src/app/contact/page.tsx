@@ -1,5 +1,6 @@
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import { contactLinks } from "@/data/socials";
+import { isSafeHref } from "@/utils/url";
 
 export default function Contact() {
   return (
@@ -13,9 +14,9 @@ export default function Contact() {
         {contactLinks.map((link) => (
           <a
             key={link.name}
-            href={link.href}
-            target={link.href.startsWith("mailto") ? undefined : "_blank"}
-            rel={link.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
+            href={isSafeHref(link.href) ? link.href : "#"}
+            target={link.href?.startsWith("mailto") ? undefined : "_blank"}
+            rel={link.href?.startsWith("mailto") ? undefined : "noopener noreferrer"}
             className="flex items-center gap-3 lg:gap-4 p-4 lg:p-5 bg-white rounded-xl border border-gray-100 lg:border-gray-200 active:scale-[0.98] transition-transform group"
           >
             <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 text-white">
@@ -24,7 +25,7 @@ export default function Contact() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h3 className="font-semibold text-gray-900 text-sm lg:text-base">{link.name}</h3>
-                {!link.href.startsWith("mailto") && (
+                {!link.href?.startsWith("mailto") && (
                   <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-gray-400" />
                 )}
               </div>
