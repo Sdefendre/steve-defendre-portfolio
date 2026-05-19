@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { primaryNavItems } from "@/data/navigation";
 import { socialLinks } from "@/data/socials";
+import { isSafeHref } from "@/utils/url";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -57,7 +58,7 @@ export default function Sidebar() {
         {socialLinks.map((link) => (
           <a
             key={link.name}
-            href={link.href}
+            href={isSafeHref(link.href) ? link.href : "#"}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all"

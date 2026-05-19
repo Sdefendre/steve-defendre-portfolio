@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { isSafeHref } from "@/utils/url";
 
 interface ProjectCardProps {
   initials: string;
@@ -96,7 +97,7 @@ function ProjectCard({
     </>
   );
 
-  if (url) {
+  if (url && isSafeHref(url)) {
     return (
       <a
         href={url}
