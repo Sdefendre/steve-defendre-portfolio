@@ -109,4 +109,17 @@ describe('ProjectCard', () => {
     expect(screen.getByRole('link')).toHaveAttribute('href', props.url);
     expect(document.querySelector('iframe')).toBeNull();
   });
+
+  it('renders correctly with empty tags array', () => {
+    const props = { ...defaultProps, tags: [] };
+    const { container } = render(<ProjectCard {...props} />);
+
+    expect(screen.getByText(props.title)).toBeInTheDocument();
+    expect(screen.getByText(props.description)).toBeInTheDocument();
+
+    // Check that no tags are rendered.
+    // Tags in ProjectCard have the class 'px-2.5'
+    const tags = container.querySelectorAll('span.px-2\\.5');
+    expect(tags.length).toBe(0);
+  });
 });
