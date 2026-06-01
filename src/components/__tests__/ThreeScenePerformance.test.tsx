@@ -6,6 +6,7 @@ import ThreeScene from "../ThreeScene";
 vi.mock("three", () => {
   class Scene {
     add = vi.fn();
+    remove = vi.fn();
   }
 
   class PerspectiveCamera {
