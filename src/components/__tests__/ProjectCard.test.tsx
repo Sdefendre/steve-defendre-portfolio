@@ -109,4 +109,17 @@ describe('ProjectCard', () => {
     expect(screen.getByRole('link')).toHaveAttribute('href', props.url);
     expect(document.querySelector('iframe')).toBeNull();
   });
+
+  it('handles empty tags array gracefully', () => {
+    const props = { ...defaultProps, tags: [] };
+    const { container } = render(<ProjectCard {...props} />);
+
+    expect(screen.getByText(props.title)).toBeInTheDocument();
+    expect(screen.getByText(props.description)).toBeInTheDocument();
+
+    // The tags are rendered inside a div with class "flex gap-2 flex-wrap"
+    const tagsContainer = container.querySelector('.flex.gap-2.flex-wrap');
+    expect(tagsContainer).toBeInTheDocument();
+    expect(tagsContainer?.children.length).toBe(0);
+  });
 });
