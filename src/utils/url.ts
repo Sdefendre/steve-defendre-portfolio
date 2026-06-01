@@ -2,6 +2,10 @@
  * Validates if a URL or href is safe to use in an anchor tag.
  * Allows http, https, mailto, and tel protocols, as well as relative paths and anchors.
  */
+
+// Allow specific safe protocols
+const SAFE_PROTOCOL_REGEX = /^(https?|mailto|tel):/i;
+
 export function isSafeHref(href: string | undefined | null): boolean {
   if (!href) return false;
 
@@ -12,7 +16,5 @@ export function isSafeHref(href: string | undefined | null): boolean {
     return true;
   }
 
-  // Allow specific safe protocols
-  const safeProtocolRegex = /^(https?|mailto|tel):/i;
-  return safeProtocolRegex.test(trimmed);
+  return SAFE_PROTOCOL_REGEX.test(trimmed);
 }
