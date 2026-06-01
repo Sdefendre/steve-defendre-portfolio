@@ -12,13 +12,16 @@ const inter = Inter({
 
 const localSiteUrl = new URL("http://localhost:3000");
 
+const SCHEME_REGEX = /^[a-z][a-z\d+\-.]*:\/\//i;
+const PROTOCOL_RELATIVE_REGEX = /^\/\//;
+
 function normalizeSiteUrl(value?: string): URL | null {
   const trimmed = value?.trim();
   if (!trimmed) return null;
 
-  const base = /^[a-z][a-z\d+\-.]*:\/\//i.test(trimmed)
+  const base = SCHEME_REGEX.test(trimmed)
     ? trimmed
-    : `https://${trimmed.replace(/^\/\//, "")}`;
+    : `https://${trimmed.replace(PROTOCOL_RELATIVE_REGEX, "")}`;
 
   try {
     return new URL("/", base);
