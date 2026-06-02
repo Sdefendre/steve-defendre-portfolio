@@ -1,27 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import Sidebar from '../Sidebar';
 import { usePathname } from 'next/navigation';
-
-type MockLinkProps = {
-  children: ReactNode;
-  href: string;
-  className?: string;
-} & Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'children' | 'className'>;
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(),
-}));
-
-// Mock next/link
-vi.mock('next/link', () => ({
-  default: ({ children, href, className, ...props }: MockLinkProps) => (
-    <a href={href} className={className} {...props}>
-      {children}
-    </a>
-  ),
 }));
 
 describe('Sidebar', () => {
