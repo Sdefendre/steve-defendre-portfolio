@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import ProjectCard from '../ProjectCard';
 
@@ -108,5 +108,14 @@ describe('ProjectCard', () => {
     expect(screen.getByRole('img')).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', props.url);
     expect(document.querySelector('iframe')).toBeNull();
+  });
+
+  it('handles empty tags array without rendering any tags', () => {
+    render(<ProjectCard {...defaultProps} tags={[]} />);
+
+    const tagsContainer = screen.getByTestId('project-tags');
+    expect(tagsContainer).toBeInTheDocument();
+    expect(within(tagsContainer).queryByRole('generic')).not.toBeInTheDocument();
+    expect(tagsContainer.children.length).toBe(0);
   });
 });
