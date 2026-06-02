@@ -1,6 +1,4 @@
 import { render } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
 const threeMockState = vi.hoisted(() => ({
   failRendererConstruction: false,
   failBufferGeometryConstruction: false,
