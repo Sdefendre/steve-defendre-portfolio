@@ -111,7 +111,11 @@ describe('ProjectCard', () => {
   });
 
   it('handles empty tags array without rendering any tags', () => {
-    render(<ProjectCard {...defaultProps} tags={[]} />);
+    const props = { ...defaultProps, tags: [] };
+    render(<ProjectCard {...props} />);
+
+    expect(screen.getByText(props.title)).toBeInTheDocument();
+    expect(screen.getByText(props.description)).toBeInTheDocument();
 
     const tagsContainer = screen.getByTestId('project-tags');
     expect(tagsContainer).toBeInTheDocument();
