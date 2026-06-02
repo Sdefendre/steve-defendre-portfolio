@@ -30,6 +30,13 @@ export function useThreeAnimation({
   const elapsedTimeRef = useRef(0);
   const targetXRef = useRef(0);
   const targetYRef = useRef(0);
+  const shouldAnimateRef = useRef(shouldAnimate);
+  const prevShouldAnimateRef = useRef(shouldAnimate);
+
+  // Keep shouldAnimateRef in sync
+  useEffect(() => {
+    shouldAnimateRef.current = shouldAnimate;
+  }, [shouldAnimate]);
 
   // Use a ref to store the animate function so it can be called safely in requestAnimationFrame
   // and avoid ESLint "Cannot access variable before it is declared" error.
@@ -45,7 +52,7 @@ export function useThreeAnimation({
       return;
     }
 
-    if (!shouldAnimate) {
+    if (!shouldAnimateRef.current) {
       renderer.render(scene, camera);
       frameIdRef.current = 0;
       return;
@@ -68,7 +75,6 @@ export function useThreeAnimation({
     renderer.render(scene, camera);
     frameIdRef.current = requestAnimationFrame(animateRef.current);
   }, [
-    shouldAnimate,
     updateParticles,
     updateShapes,
     mouseRef,
@@ -92,14 +98,14 @@ export function useThreeAnimation({
     if (shouldAnimate && !frameIdRef.current && renderer) {
       clockRef.current.start();
       frameIdRef.current = requestAnimationFrame(animateRef.current);
-    } else if (!shouldAnimate && frameIdRef.current) {
-      cancelAnimationFrame(frameIdRef.current);
-      frameIdRef.current = 0;
-      // Final render to ensure state is reflected (e.g. if reduced motion was just enabled)
+    } else if (!shouldAnimate && prevShouldAnimateRef.current) {
+      // Transitioned from true to false - ensure final render
       if (renderer && scene && camera) {
         renderer.render(scene, camera);
       }
     }
+
+    prevShouldAnimateRef.current = shouldAnimate;
 
     return () => {
       if (frameIdRef.current) {
