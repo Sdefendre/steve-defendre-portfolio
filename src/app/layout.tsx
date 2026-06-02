@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import MobileNav from "@/components/MobileNav";
@@ -12,42 +13,29 @@ const inter = Inter({
 
 const localSiteUrl = new URL("http://localhost:3000");
 
+const SCHEME_REGEX = /^[a-z][a-z\d+\-.]*:\/\//i;
+const PROTOCOL_RELATIVE_REGEX = /^\/\//;
+
 function normalizeSiteUrl(value?: string): URL | null {
-  if (!value) {
-    return null;
-  }
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
 
-  const trimmedValue = value.trim();
-
-  if (!trimmedValue) {
-    return null;
-  }
-
-  const normalizedValue = /^[a-zA-Z][a-zA-Z\d+.-]*:\/\//.test(trimmedValue)
-    ? trimmedValue
-    : trimmedValue.startsWith("//")
-      ? `https:${trimmedValue}`
-      : `https://${trimmedValue}`;
+  const base = SCHEME_REGEX.test(trimmed)
+    ? trimmed
+    : `https://${trimmed.replace(PROTOCOL_RELATIVE_REGEX, "")}`;
 
   try {
-    const url = new URL(normalizedValue);
-    url.hash = "";
-    url.search = "";
-    url.pathname = "/";
-    return url;
+    return new URL("/", base);
   } catch {
     return null;
   }
 }
 
 const metadataBase =
-  [
-    process.env.NEXT_PUBLIC_SITE_URL,
-    process.env.VERCEL_PROJECT_PRODUCTION_URL,
-    process.env.VERCEL_URL,
-  ]
-    .map(normalizeSiteUrl)
-    .find((url): url is URL => url !== null) ?? localSiteUrl;
+  normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) ??
+  normalizeSiteUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL) ??
+  normalizeSiteUrl(process.env.VERCEL_URL) ??
+  localSiteUrl;
 const canonicalUrl = new URL("/", metadataBase);
 
 const previewImage = "/defendre-solutions.png";
@@ -91,11 +79,15 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export const dynamic = "force-dynamic";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await headers();
+
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body className={`${inter.variable} font-sans antialiased`}>

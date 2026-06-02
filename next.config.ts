@@ -2,10 +2,6 @@ import type { NextConfig } from "next";
 
 const securityHeaders = [
   {
-    key: "Content-Security-Policy",
-    value: "base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
-  },
-  {
     key: "Permissions-Policy",
     value: "camera=(), geolocation=(), microphone=(), payment=()",
   },

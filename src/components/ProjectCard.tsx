@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { isSafeHref } from "@/utils/url";
 
 interface ProjectCardProps {
   initials: string;
@@ -80,7 +81,7 @@ function ProjectCard({
         <p className="text-sm text-gray-500 lg:text-gray-600 mb-3 lg:mb-4 leading-relaxed line-clamp-2 lg:line-clamp-none">
           {description}
         </p>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap" data-testid="project-tags">
           {tags.map((tag, index) => (
             <span
               key={tag}
@@ -96,7 +97,7 @@ function ProjectCard({
     </>
   );
 
-  if (url) {
+  if (url && isSafeHref(url)) {
     return (
       <a
         href={url}

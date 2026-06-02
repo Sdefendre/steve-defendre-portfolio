@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import ProjectCard from '../ProjectCard';
 
@@ -38,6 +38,18 @@ describe('ProjectCard', () => {
     expect(anchor).toHaveAttribute('href', props.url);
     expect(anchor).toHaveAttribute('target', '_blank');
     expect(anchor).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('renders as an anchor tag when mixed-case protocol url is provided', () => {
+    const props = {
+      ...defaultProps,
+      url: 'HTTPS://example.com',
+    };
+    const { container } = render(<ProjectCard {...props} />);
+
+    const anchor = container.firstChild as HTMLAnchorElement;
+    expect(anchor.nodeName).toBe('A');
+    expect(anchor).toHaveAttribute('href', props.url);
   });
 
   it('renders a custom image when image prop is provided', () => {
@@ -96,5 +108,18 @@ describe('ProjectCard', () => {
     expect(screen.getByRole('img')).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', props.url);
     expect(document.querySelector('iframe')).toBeNull();
+  });
+
+  it('handles empty tags array without rendering any tags', () => {
+    const props = { ...defaultProps, tags: [] };
+    render(<ProjectCard {...props} />);
+
+    expect(screen.getByText(props.title)).toBeInTheDocument();
+    expect(screen.getByText(props.description)).toBeInTheDocument();
+
+    const tagsContainer = screen.getByTestId('project-tags');
+    expect(tagsContainer).toBeInTheDocument();
+    expect(within(tagsContainer).queryByRole('generic')).not.toBeInTheDocument();
+    expect(tagsContainer.children.length).toBe(0);
   });
 });
