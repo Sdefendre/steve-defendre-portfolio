@@ -79,16 +79,18 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  await headers();
 
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body className={`${inter.variable} font-sans antialiased`} nonce={nonce}>
+      <body className={`${inter.variable} font-sans antialiased`}>
         <AnimatedBackground />
 
         <div className="flex min-h-screen w-full overflow-x-hidden">

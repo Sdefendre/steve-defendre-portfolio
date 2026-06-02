@@ -3,16 +3,11 @@
 import { primaryNavItems } from "@/data/navigation";
 import { NavLink } from "./NavLink";
 
-const mobileNavSafeAreaStyle = {
-  paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))",
-};
-
 export default function MobileNav() {
   return (
     <nav
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-2 py-2"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-2 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))]"
       aria-label="Primary navigation"
-      style={mobileNavSafeAreaStyle}
     >
       <div className="flex items-center justify-around">
         {primaryNavItems.map((item) => (
