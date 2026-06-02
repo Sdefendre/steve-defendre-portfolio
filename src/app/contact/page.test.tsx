@@ -11,18 +11,17 @@ test('renders Contact page with heading and introductory text', () => {
 test('renders all contact links with correct hrefs', () => {
   render(<Contact />)
 
-  // Use a matcher that is less sensitive to nested text if needed,
-  // but with cleanup/globals fixed, getByRole should work if unique per render.
-  const emailLink = screen.getByRole('link', { name: /Email/i })
+  // Use a matcher that is less sensitive to nested text to reduce coupling to full accessible name.
+  const emailLink = screen.getByRole('link', { name: (n) => n.includes('Email') })
   expect(emailLink.getAttribute('href')).toBe('mailto:steve.defendre12@gmail.com')
 
-  const linkedinLink = screen.getByRole('link', { name: /LinkedIn/i })
+  const linkedinLink = screen.getByRole('link', { name: (n) => n.includes('LinkedIn') })
   expect(linkedinLink.getAttribute('href')).toBe('https://www.linkedin.com/in/joseph-m-defendre-a11a47225/')
 
-  const githubLink = screen.getByRole('link', { name: /GitHub/i })
+  const githubLink = screen.getByRole('link', { name: (n) => n.includes('GitHub') })
   expect(githubLink.getAttribute('href')).toBe('https://github.com/Sdefendre')
 
-  const supportLink = screen.getByRole('link', { name: /Support/i })
+  const supportLink = screen.getByRole('link', { name: (n) => n.includes('Support') })
   expect(supportLink.getAttribute('href')).toBe('https://buymeacoffee.com/defendresolutions')
 })
 
