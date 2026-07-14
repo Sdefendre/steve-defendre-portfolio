@@ -51,24 +51,4 @@ export const projects: Project[] = [
     url: "https://trycommand.vercel.app",
     image: "/project-previews/command-ai.svg",
   },
-  {
-    initials: "KS",
-    title: "Krystin Sylvia",
-    description:
-      "Personal brand portfolio showcasing creative work with elegant design and seamless user experience. Built with performance and accessibility in mind.",
-    tags: ["React", "Docker", "TypeScript"],
-    gradient: "from-violet-500 to-purple-600",
-    url: "https://krystinsylvia.com",
-    image: "/project-previews/krystin-sylvia.svg",
-  },
-  {
-    initials: "NP",
-    title: "Nayka's Portfolio",
-    description:
-      "A personal portfolio site highlighting work, presentation, and overall web presence with a clean, focused browsing experience.",
-    tags: ["Portfolio", "Vercel", "Responsive Design"],
-    gradient: "from-amber-500 to-orange-600",
-    url: "https://nayka-portfolio.vercel.app/",
-    image: "/nayka-portfolio.png",
-  },
 ];
