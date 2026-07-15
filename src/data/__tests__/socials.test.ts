@@ -1,4 +1,4 @@
-import { socialLinks, contactLinks } from '../socials';
+import { contactLinks, socialLinks, supportLink } from '../socials';
 
 describe('Socials Data', () => {
   describe('socialLinks', () => {
@@ -30,6 +30,12 @@ describe('Socials Data', () => {
       const uniqueHrefs = new Set(hrefs);
       expect(uniqueHrefs.size).toBe(hrefs.length);
     });
+
+    it('should promote professional links without Support as a primary social CTA', () => {
+      const names = socialLinks.map(l => l.name);
+      expect(names).toEqual(['GitHub', 'LinkedIn', 'Defendre Solutions']);
+      expect(names).not.toContain('Support');
+    });
   });
 
   describe('contactLinks', () => {
@@ -53,6 +59,8 @@ describe('Socials Data', () => {
 
         expect(typeof link.description).toBe('string');
         expect(link.description.length).toBeGreaterThan(0);
+
+        expect(['primary', 'secondary', 'footer']).toContain(link.priority);
       });
     });
 
@@ -60,6 +68,12 @@ describe('Socials Data', () => {
       const names = contactLinks.map(l => l.name);
       const uniqueNames = new Set(names);
       expect(uniqueNames.size).toBe(names.length);
+    });
+
+    it('should keep Support as a footer-priority contact link', () => {
+      expect(supportLink.href).toBe('https://buymeacoffee.com/defendresolutions');
+      expect(supportLink.priority).toBe('footer');
+      expect(contactLinks.at(-1)).toBe(supportLink);
     });
   });
 });

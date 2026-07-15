@@ -10,17 +10,23 @@ vi.mock("@/data/projects", () => ({
       initials: "TP1",
       title: "Test Project 1",
       description: "Description 1",
+      role: "Featured role",
+      outcome: "Featured outcome",
       tags: ["Tag1", "Tag2"],
       gradient: "from-red-500 to-blue-500",
       url: "https://test1.com",
+      ctaLabel: "Open featured",
     },
     {
       initials: "TP2",
       title: "Test Project 2",
       description: "Description 2",
+      role: "Second role",
+      outcome: "Second outcome",
       tags: ["Tag3"],
       gradient: "from-green-500 to-yellow-500",
       url: "https://test2.com",
+      ctaLabel: "Open second",
     },
   ],
 }));
@@ -28,9 +34,10 @@ vi.mock("@/data/projects", () => ({
 test("renders Projects page with correct title and description", () => {
   render(<Projects />);
 
-  expect(screen.getByText("Projects")).toBeDefined();
+  expect(screen.getByRole("heading", { name: "Projects", level: 1 })).toBeDefined();
+  expect(screen.getByText(/Live software, not concept boards/i)).toBeDefined();
   expect(
-    screen.getByText(/A collection of projects I've built for clients and personal ventures\./i)
+    screen.getByText(/A working portfolio of studio, client, and founder-led builds/i)
   ).toBeDefined();
 });
 
@@ -41,7 +48,16 @@ test("renders all projects from the data", () => {
 
   projects.forEach((project) => {
     expect(screen.getByText(project.title)).toBeDefined();
+    expect(screen.getByText(project.role)).toBeDefined();
+    expect(screen.getByText(project.outcome)).toBeDefined();
   });
+});
+
+test("renders the first project as featured", () => {
+  render(<Projects />);
+
+  expect(screen.getByText("Featured build")).toBeDefined();
+  expect(screen.getByRole("region", { name: "Featured build" })).toHaveTextContent(projects[0].title);
 });
 
 test("renders project links with correct attributes", () => {

@@ -6,17 +6,19 @@ import { NavLink } from "./NavLink";
 export default function MobileNav() {
   return (
     <nav
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-2 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))]"
+      className="fixed inset-x-0 bottom-0 z-50 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pl-[max(0.75rem,env(safe-area-inset-left,0px))] pr-[max(0.75rem,env(safe-area-inset-right,0px))] pt-2 lg:hidden"
       aria-label="Primary navigation"
     >
-      <div className="flex items-center justify-around">
+      <div className="spatial-glass spatial-dock mx-auto flex min-h-[4.5rem] max-w-md items-stretch justify-between gap-1 rounded-[1.6rem] p-1.5">
         {primaryNavItems.map((item) => (
           <NavLink
             key={item.name}
             href={item.href}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all ${
-                isActive ? "text-indigo-600" : "text-gray-500"
+              `focus-ring dock-link relative flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[1.15rem] border px-1.5 py-2 text-center ${
+                isActive
+                  ? "dock-link-active"
+                  : "border-transparent text-[var(--muted)] active:bg-[rgba(207,244,251,0.055)] active:text-[var(--foreground)]"
               }`
             }
           >
@@ -24,8 +26,15 @@ export default function MobileNav() {
               const Icon = isActive ? item.activeIcon : item.icon;
               return (
                 <>
-                  <Icon className="w-6 h-6" />
-                  <span className="text-[10px] font-medium">{item.name}</span>
+                  <Icon
+                    aria-hidden="true"
+                    className={`h-5 w-5 shrink-0 ${
+                      isActive ? "text-[var(--accent-strong)]" : ""
+                    }`}
+                  />
+                  <span className="max-w-full truncate text-[0.66rem] font-bold leading-none tracking-[0.01em]">
+                    {item.name}
+                  </span>
                 </>
               );
             }}

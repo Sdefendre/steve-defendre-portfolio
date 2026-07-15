@@ -30,9 +30,9 @@ describe("useThreeAnimation", () => {
   };
 
   const createDefaultProps = () => ({
-    rendererRef: { current: mockRenderer } as React.RefObject<THREE.WebGLRenderer | null>,
-    cameraRef: { current: mockCamera } as React.RefObject<THREE.PerspectiveCamera | null>,
-    sceneRef: { current: mockScene } as React.RefObject<THREE.Scene | null>,
+    rendererRef: { current: mockRenderer } as unknown as React.RefObject<THREE.WebGLRenderer | null>,
+    cameraRef: { current: mockCamera } as unknown as React.RefObject<THREE.PerspectiveCamera | null>,
+    sceneRef: { current: mockScene } as unknown as React.RefObject<THREE.Scene | null>,
     shouldAnimate: true,
     mouseRef: { current: { x: 0, y: 0 } },
     dimensionsRef: { current: { width: 1000, height: 1000 } },
@@ -41,7 +41,7 @@ describe("useThreeAnimation", () => {
   });
 
   beforeEach(() => {
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation(() => {
       return 1;
     });
     vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => {});

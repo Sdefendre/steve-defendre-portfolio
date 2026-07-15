@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { primaryNavItems } from "@/data/navigation";
 import { socialLinks } from "@/data/socials";
@@ -8,70 +9,110 @@ import { NavLink } from "./NavLink";
 
 export default function Sidebar() {
   return (
-    <aside className="hidden lg:flex w-[200px] bg-white border-r border-gray-200 p-6 fixed h-screen flex-col">
-      {/* Profile */}
-      <div className="flex items-center gap-3 mb-8">
-        <Image
-          src="/headshot.jpg"
-          alt="Steve Defendre"
-          width={40}
-          height={40}
-          className="rounded-full object-cover object-top"
-          priority
-        />
-        <div>
-          <p className="text-sm font-semibold text-gray-900">Steve Defendre</p>
-          <p className="text-xs text-gray-500">Developer</p>
+    <aside className="fixed inset-x-0 top-0 z-40 hidden px-6 pt-[max(1rem,env(safe-area-inset-top,0px))] lg:block">
+      <div className="spatial-glass spatial-dock mx-auto flex min-h-[4.75rem] w-full max-w-[1180px] items-center gap-3 rounded-[1.75rem] px-3 py-2.5 xl:gap-4">
+        <div className="flex min-w-[11.5rem] items-center gap-3 pl-1">
+          <div className="relative shrink-0">
+            <Image
+              src="/headshot.jpg"
+              alt="Steve Defendre"
+              width={46}
+              height={46}
+              className="h-[46px] w-[46px] rounded-full object-cover object-top ring-1 ring-[var(--border-strong)] shadow-[0_10px_28px_rgba(0,4,8,0.46)]"
+              priority
+            />
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-[3px] border-[var(--surface-opaque)] bg-[var(--success)] shadow-[0_0_12px_rgba(137,215,173,0.72)]"
+            />
+          </div>
+          <div className="min-w-0">
+            <p className="truncate font-display text-[1.02rem] font-semibold leading-tight text-[var(--foreground)]">
+              Steve Defendre
+            </p>
+            <p className="mt-0.5 hidden truncate text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[var(--muted)] xl:block">
+              Full-stack developer
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Navigation */}
-      <nav className="mb-8" aria-label="Primary navigation">
-        {primaryNavItems.map((item) => (
-          <NavLink
-            key={item.name}
-            href={item.href}
-            className={({ isActive }) =>
-              `flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all ${
-                isActive
-                  ? "bg-gray-100 text-gray-900 font-medium"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              }`
-            }
-          >
-            <item.icon className="w-[18px] h-[18px]" />
-            {item.name}
-          </NavLink>
-        ))}
-      </nav>
-
-      {/* Socials */}
-      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3 px-3">
-        Socials
-      </p>
-      <div className="mb-8">
-        {socialLinks.map((link) => (
-          <NavLink
-            key={link.name}
-            href={link.href}
-            target="_blank"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all"
-          >
-            <link.icon className="w-[18px] h-[18px]" />
-            {link.name}
-          </NavLink>
-        ))}
-      </div>
-
-      {/* Footer */}
-      <div className="mt-auto">
-        <NavLink
-          href="/contact"
-          className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+        <nav
+          className="flex min-w-0 flex-1 items-center justify-center gap-1"
+          aria-label="Primary navigation"
         >
-          Contact Me
-          <ArrowRightIcon className="w-4 h-4" />
-        </NavLink>
+          {primaryNavItems.map((item) => (
+            <NavLink
+              key={item.name}
+              href={item.href}
+              aria-label={item.name}
+              className={({ isActive }) =>
+                `focus-ring dock-link group relative flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border px-3 text-sm font-semibold xl:px-4 ${
+                  isActive
+                    ? "dock-link-active"
+                    : "border-transparent text-[var(--muted-foreground)] hover:border-[var(--border)] hover:bg-[rgba(207,244,251,0.055)] hover:text-[var(--foreground)]"
+                }`
+              }
+            >
+              {({ isActive }) => {
+                const Icon = isActive ? item.activeIcon : item.icon;
+                return (
+                  <>
+                    <Icon
+                      aria-hidden="true"
+                      className={`h-[18px] w-[18px] shrink-0 transition-colors duration-200 ${
+                        isActive
+                          ? "text-[var(--accent-strong)]"
+                          : "text-[var(--muted)] group-hover:text-[var(--accent)]"
+                      }`}
+                    />
+                    <span aria-hidden="true" className="hidden xl:inline">
+                      {item.name}
+                    </span>
+                  </>
+                );
+              }}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+          <div
+            className="flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-transparent px-2 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[var(--muted-foreground)] xl:px-3"
+            title="Available for select builds and advisory work"
+          >
+            <span
+              aria-hidden="true"
+              className="h-2 w-2 shrink-0 rounded-full bg-[var(--success)] shadow-[0_0_10px_rgba(137,215,173,0.62)]"
+            />
+            <span className="hidden xl:inline">Available</span>
+            <span className="sr-only xl:hidden">Available for work</span>
+          </div>
+
+          <nav className="hidden items-center 2xl:flex" aria-label="Social links">
+            {socialLinks.map((link) => (
+              <NavLink
+                key={link.name}
+                href={link.href}
+                target="_blank"
+                aria-label={link.name}
+                className="focus-ring dock-link flex min-h-11 min-w-11 items-center justify-center rounded-full text-[var(--muted)] hover:bg-[rgba(207,244,251,0.055)] hover:text-[var(--foreground)]"
+              >
+                <link.icon aria-hidden="true" className="h-[17px] w-[17px]" />
+              </NavLink>
+            ))}
+          </nav>
+
+          <Link
+            href="/contact"
+            className="focus-ring group flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--accent-strong)] px-4 text-sm font-extrabold text-[var(--accent-foreground)] shadow-[0_10px_28px_rgba(0,4,8,0.38)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
+          >
+            <span>Start a project</span>
+            <ArrowRightIcon
+              aria-hidden="true"
+              className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+            />
+          </Link>
+        </div>
       </div>
     </aside>
   );

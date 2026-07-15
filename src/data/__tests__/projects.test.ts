@@ -24,6 +24,14 @@ describe('Projects Data', () => {
       expect(typeof project.description).toBe('string');
       expect(project.description.length).toBeGreaterThan(0);
 
+      expect(project.role).toBeDefined();
+      expect(typeof project.role).toBe('string');
+      expect(project.role.length).toBeGreaterThan(0);
+
+      expect(project.outcome).toBeDefined();
+      expect(typeof project.outcome).toBe('string');
+      expect(project.outcome.length).toBeGreaterThan(0);
+
       expect(Array.isArray(project.tags)).toBe(true);
       expect(project.tags.length).toBeGreaterThan(0);
       project.tags.forEach(tag => {
@@ -53,7 +61,21 @@ describe('Projects Data', () => {
       if (project.priority !== undefined) {
         expect(typeof project.priority).toBe('boolean');
       }
+
+      if (project.ctaLabel !== undefined) {
+        expect(typeof project.ctaLabel).toBe('string');
+        expect(project.ctaLabel.length).toBeGreaterThan(0);
+      }
     });
+  });
+
+  it('should include studio proof for the featured project', () => {
+    const [featuredProject] = projects;
+
+    expect(featuredProject.title).toBe('Defendre Solutions');
+    expect(featuredProject.role).toMatch(/Founder/i);
+    expect(featuredProject.outcome).toMatch(/studio brand/i);
+    expect(featuredProject.ctaLabel).toBe('Visit studio');
   });
 
   it('should have unique titles', () => {

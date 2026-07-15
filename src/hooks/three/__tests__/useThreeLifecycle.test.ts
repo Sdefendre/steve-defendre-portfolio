@@ -15,7 +15,7 @@ describe("useThreeLifecycle", () => {
 
   const defaultProps = {
     containerRef: { current: document.createElement("div") } as React.RefObject<HTMLDivElement | null>,
-    sceneRef: { current: mockScene } as React.RefObject<THREE.Scene | null>,
+    sceneRef: { current: mockScene } as unknown as React.RefObject<THREE.Scene | null>,
     initBase: vi.fn().mockReturnValue({ scene: mockScene, camera: mockCamera, renderer: mockRenderer }),
     cleanupBase: vi.fn(),
     initParticles: vi.fn(),
@@ -50,6 +50,29 @@ describe("useThreeLifecycle", () => {
     expect(defaultProps.cleanupParticles).toHaveBeenCalledWith(mockScene);
     expect(defaultProps.cleanupShapes).toHaveBeenCalledWith(mockScene);
     expect(defaultProps.cleanupBase).toHaveBeenCalledWith(defaultProps.containerRef.current);
+  });
+
+  it("should cleanup the scene initialized by the effect if sceneRef.current is replaced", () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const replacementScene = { add: vi.fn(), remove: vi.fn() };
+    const sceneRef = { current: null } as React.RefObject<THREE.Scene | null>;
+    const initBase = vi.fn(() => {
+      sceneRef.current = mockScene as unknown as THREE.Scene;
+      throw new Error("Init failed after creating the scene");
+    });
+    const props = { ...defaultProps, sceneRef, initBase };
+    const { unmount } = renderHook(() => useThreeLifecycle(props));
+
+    props.cleanupParticles.mockClear();
+    props.cleanupShapes.mockClear();
+    sceneRef.current = replacementScene as unknown as THREE.Scene;
+    unmount();
+
+    expect(props.cleanupParticles).toHaveBeenCalledWith(mockScene);
+    expect(props.cleanupParticles).not.toHaveBeenCalledWith(replacementScene);
+    expect(props.cleanupShapes).toHaveBeenCalledWith(mockScene);
+    expect(props.cleanupShapes).not.toHaveBeenCalledWith(replacementScene);
+    consoleSpy.mockRestore();
   });
 
   it("should handle initialization errors and perform cleanup", () => {

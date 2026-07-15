@@ -1,33 +1,58 @@
-import { expect, test } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import Contact from './page'
+import { render, screen, within } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import Contact, { metadata } from "./page";
 
-test('renders Contact page with heading and introductory text', () => {
-  render(<Contact />)
-  expect(screen.getByRole('heading', { name: /Get in Touch/i })).toBeTruthy()
-  expect(screen.getByText(/Have a project in mind\? I'd love to hear from you\./i)).toBeTruthy()
-})
+describe("Contact page", () => {
+  it("renders a primary project inquiry path", () => {
+    render(<Contact />);
 
-test('renders all contact links with correct hrefs', () => {
-  render(<Contact />)
+    expect(
+      screen.getByRole("heading", { name: /start a project conversation/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /project inquiry/i })).toBeInTheDocument();
 
-  // Use a matcher that is less sensitive to nested text to reduce coupling to full accessible name.
-  const emailLink = screen.getByRole('link', { name: (n) => n.includes('Email') })
-  expect(emailLink.getAttribute('href')).toBe('mailto:steve.defendre12@gmail.com')
+    const emailLink = screen.getByRole("link", { name: /email steve/i });
+    expect(emailLink).toHaveAttribute("href", "mailto:steve.defendre12@gmail.com");
+    expect(screen.getByRole("button", { name: /copy email/i })).toBeInTheDocument();
+  });
 
-  const linkedinLink = screen.getByRole('link', { name: (n) => n.includes('LinkedIn') })
-  expect(linkedinLink.getAttribute('href')).toBe('https://www.linkedin.com/in/joseph-m-defendre-a11a47225/')
+  it("renders GitHub, LinkedIn, and Defendre Solutions as secondary links", () => {
+    render(<Contact />);
 
-  const githubLink = screen.getByRole('link', { name: (n) => n.includes('GitHub') })
-  expect(githubLink.getAttribute('href')).toBe('https://github.com/Sdefendre')
+    const secondarySection = screen
+      .getByRole("heading", { name: /other ways to connect/i })
+      .closest("section");
 
-  const supportLink = screen.getByRole('link', { name: (n) => n.includes('Support') })
-  expect(supportLink.getAttribute('href')).toBe('https://buymeacoffee.com/defendresolutions')
-})
+    expect(secondarySection).not.toBeNull();
 
-test('renders business info section correctly', () => {
-  render(<Contact />)
-  expect(screen.getByText('Defendre Solutions')).toBeTruthy()
-  expect(screen.getByText(/Veteran-owned software development/i)).toBeTruthy()
-  expect(screen.getByText(/Available for new projects/i)).toBeTruthy()
-})
+    const secondary = within(secondarySection as HTMLElement);
+    expect(secondary.getByRole("link", { name: /github/i })).toHaveAttribute(
+      "href",
+      "https://github.com/Sdefendre",
+    );
+    expect(secondary.getByRole("link", { name: /linkedin/i })).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/joseph-m-defendre-a11a47225/",
+    );
+    expect(secondary.getByRole("link", { name: /defendre solutions/i })).toHaveAttribute(
+      "href",
+      "https://defendresolutions.com",
+    );
+    expect(secondary.queryByRole("link", { name: /support/i })).not.toBeInTheDocument();
+  });
+
+  it("demotes Support to a low-priority footer link", () => {
+    render(<Contact />);
+
+    const supportLink = screen.getByRole("link", { name: /support defendre solutions/i });
+    expect(supportLink).toHaveAttribute("href", "https://buymeacoffee.com/defendresolutions");
+    expect(supportLink).toHaveClass("rounded-full");
+  });
+
+  it("exports route-specific contact metadata", () => {
+    expect(metadata.title).toBe("Contact Steve Defendre | Project Inquiries");
+    expect(metadata.description).toContain("Start a project inquiry");
+    expect(metadata.alternates?.canonical).toBe("/contact");
+    expect(metadata.openGraph?.url).toBe("/contact");
+  });
+});
