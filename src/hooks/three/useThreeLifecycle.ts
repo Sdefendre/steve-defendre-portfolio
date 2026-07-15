@@ -39,21 +39,21 @@ export function useThreeLifecycle({
     } catch (error) {
       // In case of error during initialization, ensure any partially created
       // resources are cleaned up immediately.
-      const scene = sceneRef.current || initializedScene;
-      if (scene) {
-        cleanupParticles(scene);
-        cleanupShapes(scene);
+      initializedScene ??= sceneRef.current;
+      if (initializedScene) {
+        cleanupParticles(initializedScene);
+        cleanupShapes(initializedScene);
       }
       cleanupBase(container);
       console.error("ThreeScene disabled because WebGL setup failed.", error);
     }
 
+    const sceneToCleanup = initializedScene ?? sceneRef.current;
+
     return () => {
-      // Use the captured initializedScene to ensure proper cleanup even if sceneRef.current changes
-      const scene = initializedScene || sceneRef.current;
-      if (scene) {
-        cleanupParticles(scene);
-        cleanupShapes(scene);
+      if (sceneToCleanup) {
+        cleanupParticles(sceneToCleanup);
+        cleanupShapes(sceneToCleanup);
       }
       cleanupBase(container);
     };

@@ -41,7 +41,7 @@ describe("useThreeAnimation", () => {
   });
 
   beforeEach(() => {
-    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation(() => {
       return 1;
     });
     vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => {});
