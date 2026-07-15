@@ -54,24 +54,23 @@ describe('Sidebar', () => {
 
     const aboutLink = screen.getByRole('link', { name: /about/i });
     expect(aboutLink).toHaveAttribute('aria-current', 'page');
-    expect(aboutLink).toHaveClass('bg-gray-100');
+    expect(aboutLink.className).toContain('dock-link-active');
 
     const homeLink = screen.getByRole('link', { name: /home/i });
     expect(homeLink).not.toHaveAttribute('aria-current');
-    expect(homeLink).not.toHaveClass('bg-gray-100');
+    expect(homeLink.className).toContain('border-transparent');
   });
 
-  it('renders social links correctly', () => {
+  it('renders available social links correctly', () => {
     mockUsePathname.mockReturnValue('/');
     render(<Sidebar />);
 
-    expect(screen.getByText('GitHub')).toBeInTheDocument();
-    expect(screen.getByText('LinkedIn')).toBeInTheDocument();
-    expect(screen.getByText('Support')).toBeInTheDocument();
-
     const githubLink = screen.getByRole('link', { name: /github/i });
+    const linkedInLink = screen.getByRole('link', { name: /linkedin/i });
     expect(githubLink).toHaveAttribute('href', 'https://github.com/Sdefendre');
     expect(githubLink).toHaveAttribute('target', '_blank');
+    expect(githubLink.className).toContain('focus-ring');
+    expect(linkedInLink).toHaveAttribute('target', '_blank');
   });
 
   it('renders the profile information', () => {
@@ -79,12 +78,22 @@ describe('Sidebar', () => {
     render(<Sidebar />);
 
     expect(screen.getByText('Steve Defendre')).toBeInTheDocument();
-    expect(screen.getByText('Developer')).toBeInTheDocument();
+    expect(screen.getByText('Full-stack developer')).toBeInTheDocument();
+    expect(screen.getByText('Available')).toBeInTheDocument();
     const headshot = screen.getByAltText('Steve Defendre');
     expect(headshot).toBeInTheDocument();
     const headshotSrc = headshot.getAttribute('src');
     expect(headshotSrc).not.toBeNull();
     expect(decodeURIComponent(headshotSrc ?? '')).toContain('/headshot.jpg');
     expect(headshot).toHaveAttribute('data-priority', 'true');
+  });
+
+  it('renders a clear contact CTA', () => {
+    mockUsePathname.mockReturnValue('/');
+    render(<Sidebar />);
+
+    const cta = screen.getByRole('link', { name: /start a project/i });
+    expect(cta).toHaveAttribute('href', '/contact');
+    expect(cta.className).toContain('bg-[var(--accent-strong)]');
   });
 });

@@ -1,15 +1,26 @@
 import Image from "next/image";
+import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
 import { isSafeHref } from "@/utils/url";
+
+type ProjectCardVariant = "compact" | "detailed" | "featured";
 
 interface ProjectCardProps {
   initials: string;
   title: string;
   description: string;
+  role: string;
+  outcome: string;
   tags: string[];
   gradient?: string;
   url?: string;
   image?: string;
   priority?: boolean;
+  ctaLabel?: string;
+  variant?: ProjectCardVariant;
+}
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
 }
 
 function ProjectPreviewFallback({
@@ -22,25 +33,14 @@ function ProjectPreviewFallback({
   return (
     <div
       aria-hidden="true"
-      className={`absolute inset-0 bg-gradient-to-br ${gradient} overflow-hidden`}
+      className={`absolute inset-0 overflow-hidden bg-gradient-to-br ${gradient}`}
     >
-      <div className="absolute inset-x-4 top-4 flex gap-1.5">
-        <span className="h-2 w-2 rounded-full bg-white/45" />
-        <span className="h-2 w-2 rounded-full bg-white/30" />
-        <span className="h-2 w-2 rounded-full bg-white/30" />
-      </div>
-      <div className="absolute inset-x-5 top-10 space-y-2">
-        <span className="block h-3 w-2/3 rounded-full bg-white/75" />
-        <span className="block h-2 w-full rounded-full bg-white/35" />
-        <span className="block h-2 w-4/5 rounded-full bg-white/30" />
-      </div>
-      <div className="absolute bottom-5 left-5 flex items-end gap-3">
-        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 text-lg font-semibold text-white ring-1 ring-white/25 lg:h-10 lg:w-10 lg:text-sm">
-          {initials}
-        </span>
-        <span className="mb-1 block h-8 w-24 rounded-lg bg-white/15 ring-1 ring-white/20 lg:h-6 lg:w-16" />
-      </div>
-      <div className="absolute -right-10 -bottom-14 h-36 w-36 rounded-full bg-white/15" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:2rem_2rem]" />
+      <div className="absolute inset-x-6 top-1/2 h-px bg-white/35" />
+      <div className="absolute left-1/2 inset-y-6 w-px bg-white/25" />
+      <span className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/15 font-display text-2xl font-semibold text-white backdrop-blur-md">
+        {initials}
+      </span>
     </div>
   );
 }
@@ -49,61 +49,155 @@ function ProjectCard({
   initials,
   title,
   description,
+  role,
+  outcome,
   tags,
-  gradient = "from-indigo-500 to-purple-600",
+  gradient = "from-slate-700 to-sky-700",
   url,
   image,
   priority = false,
+  ctaLabel = "View live site",
+  variant = "detailed",
 }: ProjectCardProps) {
-  const cardClassName =
-    "flex flex-col lg:flex-row gap-4 lg:gap-6 p-4 lg:p-5 bg-white rounded-2xl lg:rounded-xl border border-gray-100 lg:border-gray-200 shadow-sm lg:shadow-none hover:shadow-lg active:scale-[0.98] lg:active:scale-100 lg:hover:-translate-y-0.5 transition-all overflow-hidden";
+  const isCompact = variant === "compact";
+  const isFeatured = variant === "featured";
+  const hasSafeUrl = Boolean(url && isSafeHref(url));
+  const imageAlt = `${title} live project preview for ${role}`;
+  const imageSizes = isCompact
+    ? "(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 42vw, 420px"
+    : isFeatured
+      ? "(max-width: 1023px) calc(100vw - 3rem), 58vw"
+      : "(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 50vw, 520px";
+
+  const cardClassName = cx(
+    "spatial-window group relative isolate flex h-full flex-col overflow-hidden rounded-[2rem] border border-[var(--border)]",
+    hasSafeUrl &&
+      "focus-ring cursor-pointer transition-[transform,background-color] duration-300 hover:-translate-y-1 hover:bg-[var(--surface-elevated)] active:translate-y-0",
+    isFeatured && "lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]",
+  );
+
+  const mediaClassName = cx(
+    "relative w-full flex-shrink-0 overflow-hidden bg-[var(--surface-muted)]",
+    isFeatured ? "aspect-[16/10] lg:aspect-auto lg:min-h-[31rem]" : "aspect-[16/10]",
+  );
 
   const cardContent = (
     <>
-      <div className="relative w-full aspect-[16/10] min-h-[190px] flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 lg:h-[120px] lg:min-h-0 lg:w-[180px] lg:aspect-auto">
+      <div className={mediaClassName}>
+        <div className="absolute inset-x-3 top-3 z-10 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-[color-mix(in_oklab,var(--background)_72%,transparent)] px-3 py-2 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[var(--foreground)] backdrop-blur-xl sm:inset-x-4 sm:top-4">
+          <span className="inline-flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0.75rem_rgba(52,211,153,0.8)]"
+            />
+            Live deployment
+          </span>
+          {image && <span>{initials}</span>}
+        </div>
+
         {image ? (
           <Image
             src={image}
-            alt={`${title} project preview`}
+            alt={imageAlt}
             fill
-            sizes="(max-width: 1023px) calc(100vw - 2rem), 180px"
-            className="object-cover object-top"
-            priority={priority}
+            sizes={imageSizes}
+            className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.015]"
+            priority={priority || isFeatured}
           />
         ) : (
           <ProjectPreviewFallback initials={initials} gradient={gradient} />
         )}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[color-mix(in_oklab,var(--background)_62%,transparent)] to-transparent"
+        />
       </div>
-      <div className="flex-1">
-        <h3 className="text-lg lg:text-base font-semibold text-gray-900 mb-1 lg:mb-2">
-          {title}
-        </h3>
-        <p className="text-sm text-gray-500 lg:text-gray-600 mb-3 lg:mb-4 leading-relaxed line-clamp-2 lg:line-clamp-none">
+
+      <div className={cx("flex min-w-0 flex-1 flex-col p-5 sm:p-6", isFeatured && "lg:p-8")}>
+        <div className="flex items-start justify-between gap-5">
+          <h3
+            className={cx(
+              "font-display font-medium tracking-[-0.04em] text-[var(--foreground)]",
+              isFeatured ? "text-3xl sm:text-4xl lg:text-5xl" : "text-2xl sm:text-3xl",
+            )}
+          >
+            {title}
+          </h3>
+          {hasSafeUrl && (
+            <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+              <ArrowUpRightIcon aria-hidden="true" className="h-4 w-4" />
+            </span>
+          )}
+        </div>
+
+        <p
+          className={cx(
+            "mt-4 text-sm leading-7 text-[var(--muted-foreground)]",
+            isCompact && "line-clamp-3",
+          )}
+        >
           {description}
         </p>
-        <div className="flex gap-2 flex-wrap" data-testid="project-tags">
+
+        <dl className="mt-6 grid gap-5 border-t border-[var(--border)] pt-5 sm:grid-cols-2">
+          <div>
+            <dt className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[var(--muted)]">
+              Role
+            </dt>
+            <dd className="mt-2 text-xs font-bold leading-6 text-[var(--foreground)]">
+              {role}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[var(--muted)]">
+              Outcome
+            </dt>
+            <dd
+              className={cx(
+                "mt-2 text-xs leading-6 text-[var(--muted-foreground)]",
+                isCompact && "line-clamp-3",
+              )}
+            >
+              {outcome}
+            </dd>
+          </div>
+        </dl>
+
+        <div
+          className="mt-6 flex flex-wrap gap-x-4 gap-y-2"
+          data-testid="project-tags"
+        >
           {tags.map((tag, index) => (
             <span
               key={tag}
-              className={`px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium lg:font-normal rounded-full lg:rounded ${
-                index >= 3 ? "hidden lg:inline-block" : ""
-              }`}
+              className={cx(
+                "text-xs font-bold text-[var(--foreground)]",
+                isCompact && index >= 3 ? "hidden lg:inline" : "",
+              )}
             >
               {tag}
             </span>
           ))}
         </div>
+
+        {hasSafeUrl && (
+          <span className="mt-auto inline-flex min-h-11 w-fit items-end gap-2 pt-7 text-sm font-bold text-[var(--foreground)] transition-colors group-hover:text-[var(--accent)]">
+            {ctaLabel}
+            <span className="sr-only">opens in a new tab</span>
+          </span>
+        )}
       </div>
     </>
   );
 
-  if (url && isSafeHref(url)) {
+  if (hasSafeUrl) {
     return (
       <a
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className={`${cardClassName} cursor-pointer`}
+        aria-label={`${ctaLabel} for ${title} (opens in new tab)`}
+        className={cardClassName}
       >
         {cardContent}
       </a>

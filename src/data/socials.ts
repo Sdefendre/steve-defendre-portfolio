@@ -1,4 +1,4 @@
-import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import { BuildingOffice2Icon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { GitHubIcon, LinkedInIcon, SupportIcon } from "@/components/SocialIcons";
 
 export const socialLinks = [
@@ -13,11 +13,20 @@ export const socialLinks = [
     icon: LinkedInIcon,
   },
   {
-    name: "Support",
-    href: "https://buymeacoffee.com/defendresolutions",
-    icon: SupportIcon,
+    name: "Defendre Solutions",
+    href: "https://defendresolutions.com",
+    icon: BuildingOffice2Icon,
   },
 ];
+
+export const supportLink = {
+  name: "Support",
+  value: "buymeacoffee.com/defendresolutions",
+  href: "https://buymeacoffee.com/defendresolutions",
+  icon: SupportIcon,
+  description: "Optional support link",
+  priority: "footer",
+} as const;
 
 export const contactLinks = [
   {
@@ -25,7 +34,16 @@ export const contactLinks = [
     value: "steve.defendre12@gmail.com",
     href: "mailto:steve.defendre12@gmail.com",
     icon: EnvelopeIcon,
-    description: "Best for project inquiries"
+    description: "Best for project inquiries and availability",
+    priority: "primary",
+  },
+  {
+    name: "GitHub",
+    value: "github.com/Sdefendre",
+    href: "https://github.com/Sdefendre",
+    icon: GitHubIcon,
+    description: "Review shipped projects and source work",
+    priority: "secondary",
   },
   {
     name: "LinkedIn",
@@ -33,20 +51,16 @@ export const contactLinks = [
     mobileValue: "LinkedIn profile",
     href: "https://www.linkedin.com/in/joseph-m-defendre-a11a47225/",
     icon: LinkedInIcon,
-    description: "Let's connect professionally"
+    description: "Connect professionally",
+    priority: "secondary",
   },
   {
-    name: "GitHub",
-    value: "github.com/Sdefendre",
-    href: "https://github.com/Sdefendre",
-    icon: GitHubIcon,
-    description: "Check out my projects"
+    name: "Defendre Solutions",
+    value: "defendresolutions.com",
+    href: "https://defendresolutions.com",
+    icon: BuildingOffice2Icon,
+    description: "Veteran-owned software studio",
+    priority: "secondary",
   },
-  {
-    name: "Support",
-    value: "buymeacoffee.com/defendresolutions",
-    href: "https://buymeacoffee.com/defendresolutions",
-    icon: SupportIcon,
-    description: "Support my work"
-  },
+  supportLink,
 ];

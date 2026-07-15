@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("next/font/google", () => ({
-  Inter: () => ({ variable: "--font-inter" }),
+  Fraunces: () => ({ variable: "font-fraunces" }),
+  Manrope: () => ({ variable: "font-manrope" }),
 }));
 
 vi.mock("@/components/Sidebar", () => ({

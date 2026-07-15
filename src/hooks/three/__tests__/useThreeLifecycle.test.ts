@@ -15,7 +15,7 @@ describe("useThreeLifecycle", () => {
 
   const defaultProps = {
     containerRef: { current: document.createElement("div") } as React.RefObject<HTMLDivElement | null>,
-    sceneRef: { current: mockScene } as React.RefObject<THREE.Scene | null>,
+    sceneRef: { current: mockScene } as unknown as React.RefObject<THREE.Scene | null>,
     initBase: vi.fn().mockReturnValue({ scene: mockScene, camera: mockCamera, renderer: mockRenderer }),
     cleanupBase: vi.fn(),
     initParticles: vi.fn(),

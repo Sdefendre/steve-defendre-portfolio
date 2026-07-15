@@ -7,7 +7,10 @@ describe('ProjectCard', () => {
     initials: 'JD',
     title: 'John Doe Project',
     description: 'A test project description.',
+    role: 'Full-stack implementer',
+    outcome: 'A measurable product outcome for the client.',
     tags: ['React', 'TypeScript'],
+    ctaLabel: 'Open project',
   };
 
   it('renders basic project information correctly', () => {
@@ -15,6 +18,10 @@ describe('ProjectCard', () => {
 
     expect(screen.getByText(defaultProps.title)).toBeInTheDocument();
     expect(screen.getByText(defaultProps.description)).toBeInTheDocument();
+    expect(screen.getByText(defaultProps.role)).toBeInTheDocument();
+    expect(screen.getByText(defaultProps.outcome)).toBeInTheDocument();
+    expect(screen.getByText('Role')).toBeInTheDocument();
+    expect(screen.getByText('Outcome')).toBeInTheDocument();
     defaultProps.tags.forEach(tag => {
       expect(screen.getByText(tag)).toBeInTheDocument();
     });
@@ -38,6 +45,8 @@ describe('ProjectCard', () => {
     expect(anchor).toHaveAttribute('href', props.url);
     expect(anchor).toHaveAttribute('target', '_blank');
     expect(anchor).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(anchor).toHaveAccessibleName(`${props.ctaLabel} for ${props.title} (opens in new tab)`);
+    expect(screen.getByText(props.ctaLabel)).toBeInTheDocument();
   });
 
   it('renders as an anchor tag when mixed-case protocol url is provided', () => {
@@ -60,8 +69,34 @@ describe('ProjectCard', () => {
     const imgSrc = img.getAttribute('src');
     expect(imgSrc).not.toBeNull();
     expect(decodeURIComponent(imgSrc ?? '')).toContain(props.image);
-    expect(img).toHaveAttribute('alt', `${props.title} project preview`);
-    expect(img).toHaveAttribute('sizes', '(max-width: 1023px) calc(100vw - 2rem), 180px');
+    expect(img).toHaveAttribute('alt', `${props.title} live project preview for ${props.role}`);
+    expect(img).toHaveAttribute(
+      'sizes',
+      '(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 50vw, 520px'
+    );
+  });
+
+  it('renders compact variant with shorter text treatment and compact image sizes', () => {
+    const props = {
+      ...defaultProps,
+      image: '/test-image.png',
+      url: 'https://example.com',
+      tags: ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+    };
+    render(<ProjectCard {...props} variant="compact" />);
+
+    expect(screen.getByText(props.description)).toHaveClass('line-clamp-3');
+    expect(screen.getByText(props.outcome)).toHaveClass('line-clamp-3');
+    expect(screen.getByRole('img')).toHaveAttribute(
+      'sizes',
+      '(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 42vw, 420px'
+    );
+  });
+
+  it('renders detailed variant without clamping the description', () => {
+    render(<ProjectCard {...defaultProps} variant="detailed" />);
+
+    expect(screen.getByText(defaultProps.description)).not.toHaveClass('line-clamp-2');
   });
 
   it('renders a linked fallback preview without an iframe when url is provided and image is missing', () => {
