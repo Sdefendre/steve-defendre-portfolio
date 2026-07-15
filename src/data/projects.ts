@@ -70,32 +70,4 @@ export const projects: Project[] = [
     image: "/project-previews/command-ai.svg",
     ctaLabel: "Open platform",
   },
-  {
-    initials: "KS",
-    title: "Krystin Sylvia",
-    description:
-      "A personal brand portfolio that keeps the presentation clean, fast, and focused on the person behind the work.",
-    role: "Portfolio design and implementation",
-    outcome:
-      "Created a live portfolio presence with fast browsing, clear presentation, and room for creative work to lead.",
-    tags: ["React", "Docker", "TypeScript"],
-    gradient: "from-violet-500 to-purple-600",
-    url: "https://krystinsylvia.com",
-    image: "/project-previews/krystin-sylvia.svg",
-    ctaLabel: "View portfolio",
-  },
-  {
-    initials: "NP",
-    title: "Nayka's Portfolio",
-    description:
-      "A responsive portfolio site shaped around scannable work samples, professional presentation, and a clean browsing path.",
-    role: "Portfolio build and deployment",
-    outcome:
-      "Delivered a live personal site that makes the owner's work and story easier to navigate.",
-    tags: ["Portfolio", "Vercel", "Responsive Design"],
-    gradient: "from-amber-500 to-orange-600",
-    url: "https://nayka-portfolio.vercel.app/",
-    image: "/nayka-portfolio.png",
-    ctaLabel: "View portfolio",
-  },
 ];
