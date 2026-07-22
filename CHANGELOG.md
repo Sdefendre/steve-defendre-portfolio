@@ -9,6 +9,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Updated the public contact email from the personal Gmail address to
   `steve@defendresolutions.com` across the contact page, copy-email button,
   and metadata. The studio address is now the single public contact point.
+- Refreshed README to match the current stack, routes, content model, and
+  contact email policy.
+
+### Removed
+- Deleted leftover assets from previously removed portfolio projects
+  (`nayka-portfolio.png`, `project-previews/krystin-sylvia.svg`).
+- Deleted the merged `codex/visionos-portfolio-redesign` remote branch.
 
 ## [2026-07-15]
 
