@@ -31,17 +31,17 @@ describe("CopyEmailButton", () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     setClipboard(writeText);
 
-    render(<CopyEmailButton email="steve.defendre12@gmail.com" />);
+    render(<CopyEmailButton email="steve@defendresolutions.com" />);
 
     fireEvent.click(screen.getByRole("button", { name: /copy email/i }));
 
     await waitFor(() => {
-      expect(writeText).toHaveBeenCalledWith("steve.defendre12@gmail.com");
+      expect(writeText).toHaveBeenCalledWith("steve@defendresolutions.com");
     });
 
     expect(screen.getByRole("button", { name: /copied/i })).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(
-      "steve.defendre12@gmail.com copied to clipboard.",
+      "steve@defendresolutions.com copied to clipboard.",
     );
   });
 
@@ -52,7 +52,7 @@ describe("CopyEmailButton", () => {
       value: undefined,
     });
 
-    render(<CopyEmailButton email="steve.defendre12@gmail.com" />);
+    render(<CopyEmailButton email="steve@defendresolutions.com" />);
 
     fireEvent.click(screen.getByRole("button", { name: /copy email/i }));
 

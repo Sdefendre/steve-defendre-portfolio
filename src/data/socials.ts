@@ -31,8 +31,8 @@ export const supportLink = {
 export const contactLinks = [
   {
     name: "Email",
-    value: "steve.defendre12@gmail.com",
-    href: "mailto:steve.defendre12@gmail.com",
+    value: "steve@defendresolutions.com",
+    href: "mailto:steve@defendresolutions.com",
     icon: EnvelopeIcon,
     description: "Best for project inquiries and availability",
     priority: "primary",

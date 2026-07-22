@@ -12,7 +12,7 @@ describe("Contact page", () => {
     expect(screen.getByRole("heading", { name: /project inquiry/i })).toBeInTheDocument();
 
     const emailLink = screen.getByRole("link", { name: /email steve/i });
-    expect(emailLink).toHaveAttribute("href", "mailto:steve.defendre12@gmail.com");
+    expect(emailLink).toHaveAttribute("href", "mailto:steve@defendresolutions.com");
     expect(screen.getByRole("button", { name: /copy email/i })).toBeInTheDocument();
   });
 
