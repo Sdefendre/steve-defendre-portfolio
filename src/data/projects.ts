@@ -70,4 +70,17 @@ export const projects: Project[] = [
     image: "/project-previews/command-ai.svg",
     ctaLabel: "Open platform",
   },
+  {
+    initials: "KS",
+    title: "Krystin Sylvia",
+    description:
+      "Personal brand portfolio showcasing creative work with elegant design and seamless user experience.",
+    role: "Portfolio frontend developer",
+    outcome:
+      "Delivered a clean portfolio site with seamless layout transitions.",
+    tags: ["React", "Docker", "TypeScript"],
+    gradient: "from-violet-500 to-purple-600",
+    url: "https://krystinsylvia.com",
+    ctaLabel: "View portfolio",
+  },
 ];
