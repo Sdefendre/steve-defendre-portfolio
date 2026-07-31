@@ -5,12 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+- Portfolio projects for FreeVoiceTranscribe, Traces, and Social Media Manager
+  Agent, with matching SVG previews under `public/project-previews/`.
+
 ### Changed
 - Updated the public contact email from the personal Gmail address to
   `steve@defendresolutions.com` across the contact page, copy-email button,
   and metadata. The studio address is now the single public contact point.
 - Refreshed README to match the current stack, routes, content model, and
   contact email policy.
+- About page delivery-range and core-stack copy now reflect local AI, desktop,
+  and agent work alongside client delivery.
 
 ### Removed
 - Deleted leftover assets from previously removed portfolio projects

@@ -29,6 +29,48 @@ export const projects: Project[] = [
     ctaLabel: "Visit studio",
   },
   {
+    initials: "FV",
+    title: "FreeVoiceTranscribe",
+    description:
+      "Private, local hold-to-talk dictation for Apple Silicon Macs. Hold fn, speak, release to insert — no cloud accounts, no always-on mic.",
+    role: "Product designer and Python systems engineer",
+    outcome:
+      "Shipped an MIT-licensed menu-bar app with local Whisper inference, hands-free mode, and a clean install path for real daily use.",
+    tags: ["Python", "Whisper", "macOS", "MLX"],
+    gradient: "from-violet-500 to-purple-700",
+    url: "https://github.com/Sdefendre/freevoicetranscribe",
+    image: "/project-previews/freevoicetranscribe.svg",
+    ctaLabel: "View on GitHub",
+  },
+  {
+    initials: "TR",
+    title: "Traces",
+    description:
+      "A local-first knowledge workspace with a 3D force-directed graph, markdown vault, and multi-provider AI assistant that can read and edit notes.",
+    role: "Founder product and full-stack desktop engineer",
+    outcome:
+      "Built a Defendre Solutions desktop app combining Electron, Next.js, React Three Fiber, and multi-provider AI chat in one vault-native surface.",
+    tags: ["Electron", "Next.js", "R3F", "TypeScript"],
+    gradient: "from-indigo-500 to-sky-600",
+    url: "https://github.com/Sdefendre/traces-app",
+    image: "/project-previews/traces.svg",
+    ctaLabel: "View on GitHub",
+  },
+  {
+    initials: "SM",
+    title: "Social Media Manager Agent",
+    description:
+      "An AI content ops console that turns one topic into a blog post, X copy, LinkedIn copy, and hero image with calendar and publish flows.",
+    role: "AI product builder and full-stack engineer",
+    outcome:
+      "Compressed multi-channel content production into a single generation pipeline with history, scheduling, and one-click publish paths.",
+    tags: ["AI Agents", "Next.js", "TypeScript", "Gemini"],
+    gradient: "from-amber-500 to-orange-600",
+    url: "https://social-media-manager-agent.vercel.app",
+    image: "/project-previews/social-media-manager-agent.svg",
+    ctaLabel: "Open agent",
+  },
+  {
     initials: "BR",
     title: "BraidsbyRose",
     description:
