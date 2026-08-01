@@ -34,7 +34,7 @@ test('About Page renders skills', () => {
 test('About Page renders proof points and operating principles', () => {
   render(<About />)
   expect(screen.getByText('Founder of Defendre Solutions')).toBeDefined()
-  expect(screen.getByText(/Healthcare, booking, portfolio/i)).toBeDefined()
+  expect(screen.getByText(/Client web, local AI products/i)).toBeDefined()
   expect(screen.getByText('Mission clarity')).toBeDefined()
   expect(screen.getByText('Delivery discipline')).toBeDefined()
   expect(screen.getByText('Owner-level judgment')).toBeDefined()

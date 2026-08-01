@@ -49,11 +49,11 @@ const proofPoints = [
   },
   {
     label: "Delivery range",
-    value: "Healthcare, booking, portfolio, and veteran-transition products",
+    value: "Client web, local AI products, desktop tools, and agent workflows",
   },
   {
     label: "Core stack",
-    value: "Next.js, React, TypeScript, Node.js, PostgreSQL, AWS",
+    value: "Next.js, React, TypeScript, Python, Electron, PostgreSQL, AWS",
   },
 ] as const;
 
