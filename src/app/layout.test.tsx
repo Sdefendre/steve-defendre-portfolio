@@ -1,4 +1,9 @@
+import { render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("next/headers", () => ({
+  headers: vi.fn(async () => new Headers()),
+}));
 
 vi.mock("next/font/google", () => ({
   Fraunces: () => ({ variable: "font-fraunces" }),
@@ -15,6 +20,10 @@ vi.mock("@/components/MobileNav", () => ({
 
 vi.mock("@/components/AnimatedBackground", () => ({
   default: () => null,
+}));
+
+vi.mock("@vercel/analytics/next", () => ({
+  Analytics: () => <div data-testid="vercel-analytics" />,
 }));
 
 const siteEnvKeys = [
@@ -135,5 +144,18 @@ describe("layout metadata URL handling", () => {
     expect(metadata.openGraph?.url?.toString()).toBe("http://localhost:3000/");
     expect(firstImageUrl(metadata.openGraph?.images)).toBe("/project-previews/defendre-solutions.jpg");
     expect(firstImageUrl(metadata.twitter?.images)).toBe("/project-previews/defendre-solutions.jpg");
+  });
+
+  it("mounts the Vercel Analytics component in the root layout", async () => {
+    const { default: RootLayout } = await import("./layout");
+
+    const tree = await RootLayout({
+      children: <div data-testid="layout-child">Child</div>,
+    });
+
+    render(tree);
+
+    expect(screen.getByTestId("layout-child")).toBeInTheDocument();
+    expect(screen.getByTestId("vercel-analytics")).toBeInTheDocument();
   });
 });

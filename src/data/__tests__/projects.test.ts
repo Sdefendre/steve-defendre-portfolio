@@ -1,13 +1,23 @@
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
-import { projects } from '../projects';
+import { projectCategories, projects, type ProjectStatus } from '../projects';
+
+const projectStatuses = ['Live', 'Prototype'] satisfies ProjectStatus[];
+const repositoryRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '../../..',
+);
+const publicDirectory = path.join(repositoryRoot, 'public');
 
 describe('Projects Data', () => {
   it('should be an array', () => {
     expect(Array.isArray(projects)).toBe(true);
   });
 
-  it('should not be empty', () => {
-    expect(projects.length).toBeGreaterThan(0);
+  it('preserves the complete six-project portfolio', () => {
+    expect(projects).toHaveLength(6);
   });
 
   it('each project should have valid required fields', () => {
@@ -32,6 +42,19 @@ describe('Projects Data', () => {
       expect(typeof project.outcome).toBe('string');
       expect(project.outcome.length).toBeGreaterThan(0);
 
+      expect(projectCategories).toContain(project.category);
+      expect(Number.isInteger(project.year)).toBe(true);
+      expect(project.year).toBeGreaterThan(2000);
+      expect(project.year).toBeLessThanOrEqual(new Date().getFullYear());
+      expect(projectStatuses).toContain(project.status);
+
+      expect(project.caseStudy).toBeDefined();
+      ['challenge', 'approach', 'impact'].forEach((field) => {
+        const value = project.caseStudy[field as keyof typeof project.caseStudy];
+        expect(typeof value).toBe('string');
+        expect(value.trim().length).toBeGreaterThan(0);
+      });
+
       expect(Array.isArray(project.tags)).toBe(true);
       expect(project.tags.length).toBeGreaterThan(0);
       project.tags.forEach(tag => {
@@ -45,7 +68,12 @@ describe('Projects Data', () => {
 
       expect(project.url).toBeDefined();
       expect(typeof project.url).toBe('string');
-      expect(project.url).toMatch(/^https?:\/\//);
+      expect(project.url).toMatch(/^https:\/\//);
+      const url = new URL(project.url);
+      expect(url.protocol).toBe('https:');
+      expect(url.username).toBe('');
+      expect(url.password).toBe('');
+      expect(url.hostname.length).toBeGreaterThan(0);
     });
   });
 
@@ -54,8 +82,11 @@ describe('Projects Data', () => {
       if (project.image !== undefined) {
         expect(typeof project.image).toBe('string');
         expect(project.image.length).toBeGreaterThan(0);
-        // Image can be a relative path or an absolute URL
-        expect(project.image.startsWith('/') || project.image.startsWith('http')).toBe(true);
+        expect(project.image).toMatch(/^\/(?!\/)/);
+
+        const resolvedImage = path.resolve(publicDirectory, `.${project.image}`);
+        expect(resolvedImage.startsWith(`${publicDirectory}${path.sep}`)).toBe(true);
+        expect(existsSync(resolvedImage)).toBe(true);
       }
 
       if (project.priority !== undefined) {
@@ -88,5 +119,9 @@ describe('Projects Data', () => {
     const urls = projects.map(p => p.url);
     const uniqueUrls = new Set(urls);
     expect(uniqueUrls.size).toBe(urls.length);
+  });
+
+  it('exports a stable category list for filtering', () => {
+    expect(projectCategories).toEqual(['Studio', 'Client', 'Product']);
   });
 });

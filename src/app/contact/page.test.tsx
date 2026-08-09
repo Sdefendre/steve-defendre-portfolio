@@ -10,10 +10,16 @@ describe("Contact page", () => {
       screen.getByRole("heading", { name: /start a project conversation/i }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /project inquiry/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /prepare an email draft without losing the thread/i }),
+    ).toBeInTheDocument();
 
     const emailLink = screen.getByRole("link", { name: /email steve/i });
     expect(emailLink).toHaveAttribute("href", "mailto:steve@defendresolutions.com");
     expect(screen.getByRole("button", { name: /copy email/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /prepare email draft/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/your name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/budget range/i)).toBeInTheDocument();
   });
 
   it("renders GitHub, LinkedIn, and Defendre Solutions as secondary links", () => {

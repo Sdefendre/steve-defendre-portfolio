@@ -4,6 +4,7 @@ import {
   EnvelopeIcon,
 } from "@heroicons/react/24/outline";
 import { CopyEmailButton } from "@/components/CopyEmailButton";
+import { ContactComposer } from "@/components/ContactComposer";
 import { contactLinks } from "@/data/socials";
 import { isSafeHref } from "@/utils/url";
 
@@ -98,6 +99,30 @@ export default function Contact() {
             <CopyEmailButton email={primaryContact.value} />
           </div>
         </div>
+      </section>
+
+      <section
+        aria-labelledby="contact-composer-heading"
+        className="spatial-window spatial-reveal grid gap-8 rounded-[2rem] border border-[var(--border)] p-5 sm:p-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:p-10"
+      >
+        <div className="space-y-4 lg:sticky lg:top-8">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
+            Draft first
+          </p>
+          <h2
+            id="contact-composer-heading"
+            className="font-display text-[clamp(2.25rem,4vw,3.75rem)] font-medium leading-[0.95] tracking-[-0.045em] text-[var(--foreground)]"
+          >
+            Prepare an email draft without losing the thread.
+          </h2>
+          <p className="max-w-[42ch] text-sm leading-7 text-[var(--muted-foreground)]">
+            This form prepares a properly encoded email draft in your mail app.
+            Nothing sends automatically, and you still keep the copy button and
+            direct contact links above if that is faster.
+          </p>
+        </div>
+
+        <ContactComposer />
       </section>
 
       <section aria-labelledby="secondary-contact-heading">
