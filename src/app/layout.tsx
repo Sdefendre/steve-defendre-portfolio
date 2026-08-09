@@ -111,7 +111,7 @@ export default async function RootLayout({
           <main
             id="main-content"
             tabIndex={-1}
-            className="mx-auto flex min-h-screen w-full max-w-[1440px] flex-col pb-[calc(10rem+env(safe-area-inset-bottom,0px))] pl-[max(1rem,env(safe-area-inset-left,0px))] pr-[max(1rem,env(safe-area-inset-right,0px))] pt-7 focus:outline-none sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))] sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] sm:pt-10 lg:px-10 lg:pb-12 lg:pt-36 xl:px-14 2xl:px-16"
+            className="mx-auto flex min-h-screen w-full max-w-[1440px] flex-col pb-[calc(10rem+env(safe-area-inset-bottom,0px))] pl-[max(1rem,env(safe-area-inset-left,0px))] pr-[max(1rem,env(safe-area-inset-right,0px))] pt-7 focus:outline-none sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))] sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] sm:pt-10 md:pb-12 md:pt-36 lg:px-10 xl:px-14 2xl:px-16"
           >
             <div className="w-full min-w-0 flex-1">{children}</div>
 

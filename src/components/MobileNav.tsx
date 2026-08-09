@@ -6,7 +6,7 @@ import { NavLink } from "./NavLink";
 export default function MobileNav() {
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-50 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pl-[max(0.75rem,env(safe-area-inset-left,0px))] pr-[max(0.75rem,env(safe-area-inset-right,0px))] pt-2 lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pl-[max(0.75rem,env(safe-area-inset-left,0px))] pr-[max(0.75rem,env(safe-area-inset-right,0px))] pt-2 md:hidden"
       aria-label="Primary navigation"
     >
       <div className="spatial-glass spatial-dock mx-auto flex min-h-[4.5rem] max-w-md items-stretch justify-between gap-1 rounded-[1.6rem] p-1.5">

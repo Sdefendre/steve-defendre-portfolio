@@ -1,4 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+
+const layoutSource = readFileSync("src/app/layout.tsx", "utf8");
 
 vi.mock("next/font/google", () => ({
   Fraunces: () => ({ variable: "font-fraunces" }),
@@ -135,5 +138,15 @@ describe("layout metadata URL handling", () => {
     expect(metadata.openGraph?.url?.toString()).toBe("http://localhost:3000/");
     expect(firstImageUrl(metadata.openGraph?.images)).toBe("/project-previews/defendre-solutions.jpg");
     expect(firstImageUrl(metadata.twitter?.images)).toBe("/project-previews/defendre-solutions.jpg");
+  });
+});
+
+describe("layout responsive navigation clearance", () => {
+  it("resets mobile dock clearance when the tablet header takes over", () => {
+    expect(layoutSource).toContain(
+      "pb-[calc(10rem+env(safe-area-inset-bottom,0px))]",
+    );
+    expect(layoutSource).toContain("md:pb-12 md:pt-36");
+    expect(layoutSource).not.toContain("lg:pb-12");
   });
 });
