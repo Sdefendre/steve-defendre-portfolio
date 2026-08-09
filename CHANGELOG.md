@@ -10,6 +10,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   previews under `public/project-previews/`.
 
 ### Changed
+- Reorganized the `/projects` archive into a clean equal-height two-column
+  grid with numbered rows, replacing the staggered constellation layout.
+- Replaced stylized SVG project previews and older root PNGs with fresh
+  1440×900 JPEG live captures under `public/project-previews/` for every
+  project card (FreeVoice uses the product marketing page; Traces uses the
+  public GitHub repo page when no hosted demo exists).
 - Tightened project copy after a public readiness audit (accurate roles,
   outcomes, and stack tags; Social Media Manager Agent held back until the
   live demo is not key-gated).
@@ -26,6 +32,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ### Removed
 - Deleted leftover assets from previously removed portfolio projects
   (`nayka-portfolio.png`, `project-previews/krystin-sylvia.svg`).
+- Removed obsolete root project PNGs and SVG mock previews superseded by
+  live JPEG captures.
 - Deleted the merged `codex/visionos-portfolio-redesign` remote branch.
 
 ## [2026-07-15]

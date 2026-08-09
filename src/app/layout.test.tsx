@@ -57,6 +57,27 @@ async function loadMetadata(env: Partial<Record<SiteEnvKey, string>>) {
   return (await import("./layout")).metadata;
 }
 
+function firstImageUrl(image: unknown): string | undefined {
+  if (!image) {
+    return undefined;
+  }
+
+  if (Array.isArray(image)) {
+    return firstImageUrl(image[0]);
+  }
+
+  if (typeof image === "string" || image instanceof URL) {
+    return image.toString();
+  }
+
+  if (typeof image === "object" && "url" in image) {
+    const value = (image as { url?: string | URL }).url;
+    return value?.toString();
+  }
+
+  return undefined;
+}
+
 afterEach(() => {
   restoreSiteEnv();
   vi.resetModules();
@@ -71,6 +92,8 @@ describe("layout metadata URL handling", () => {
     expect(metadata.metadataBase?.toString()).toBe("https://portfolio.defendresolutions.com/");
     expect(metadata.alternates?.canonical?.toString()).toBe("https://portfolio.defendresolutions.com/");
     expect(metadata.openGraph?.url?.toString()).toBe("https://portfolio.defendresolutions.com/");
+    expect(firstImageUrl(metadata.openGraph?.images)).toBe("/project-previews/defendre-solutions.jpg");
+    expect(firstImageUrl(metadata.twitter?.images)).toBe("/project-previews/defendre-solutions.jpg");
   });
 
   it("prefers VERCEL_PROJECT_PRODUCTION_URL over VERCEL_URL when NEXT_PUBLIC_SITE_URL is unset", async () => {
@@ -82,6 +105,8 @@ describe("layout metadata URL handling", () => {
     expect(metadata.metadataBase?.toString()).toBe("https://stevedefendre.com/");
     expect(metadata.alternates?.canonical?.toString()).toBe("https://stevedefendre.com/");
     expect(metadata.openGraph?.url?.toString()).toBe("https://stevedefendre.com/");
+    expect(firstImageUrl(metadata.openGraph?.images)).toBe("/project-previews/defendre-solutions.jpg");
+    expect(firstImageUrl(metadata.twitter?.images)).toBe("/project-previews/defendre-solutions.jpg");
   });
 
   it("falls back past malformed env values to the next valid site URL", async () => {
@@ -94,6 +119,8 @@ describe("layout metadata URL handling", () => {
     expect(metadata.metadataBase?.toString()).toBe("https://portfolio-preview.vercel.app/");
     expect(metadata.alternates?.canonical?.toString()).toBe("https://portfolio-preview.vercel.app/");
     expect(metadata.openGraph?.url?.toString()).toBe("https://portfolio-preview.vercel.app/");
+    expect(firstImageUrl(metadata.openGraph?.images)).toBe("/project-previews/defendre-solutions.jpg");
+    expect(firstImageUrl(metadata.twitter?.images)).toBe("/project-previews/defendre-solutions.jpg");
   });
 
   it("uses localhost when every site URL source is unusable", async () => {
@@ -106,5 +133,7 @@ describe("layout metadata URL handling", () => {
     expect(metadata.metadataBase?.toString()).toBe("http://localhost:3000/");
     expect(metadata.alternates?.canonical?.toString()).toBe("http://localhost:3000/");
     expect(metadata.openGraph?.url?.toString()).toBe("http://localhost:3000/");
+    expect(firstImageUrl(metadata.openGraph?.images)).toBe("/project-previews/defendre-solutions.jpg");
+    expect(firstImageUrl(metadata.twitter?.images)).toBe("/project-previews/defendre-solutions.jpg");
   });
 });

@@ -24,7 +24,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "React", "TypeScript"],
     gradient: "from-slate-600 to-indigo-600",
     url: "https://defendresolutions.com",
-    image: "/defendre-solutions.png",
+    image: "/project-previews/defendre-solutions.jpg",
     priority: true,
     ctaLabel: "Visit studio",
   },
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     tags: ["Python", "Whisper", "macOS", "MLX"],
     gradient: "from-violet-500 to-purple-700",
     url: "https://github.com/Sdefendre/freevoicetranscribe",
-    image: "/project-previews/freevoicetranscribe.svg",
+    image: "/project-previews/freevoicetranscribe.jpg",
     ctaLabel: "View on GitHub",
   },
   {
@@ -53,7 +53,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "React", "TypeScript"],
     gradient: "from-pink-500 to-rose-600",
     url: "https://braidsbyrose.com",
-    image: "/project-previews/braidsbyrose.svg",
+    image: "/project-previews/braidsbyrose.jpg",
     ctaLabel: "View booking site",
   },
   {
@@ -67,7 +67,7 @@ export const projects: Project[] = [
     tags: ["Electron", "Next.js", "R3F", "TypeScript"],
     gradient: "from-indigo-500 to-sky-600",
     url: "https://github.com/Sdefendre/traces-app",
-    image: "/project-previews/traces.svg",
+    image: "/project-previews/traces.jpg",
     ctaLabel: "View on GitHub",
   },
   {
@@ -81,6 +81,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "React", "TypeScript"],
     gradient: "from-teal-500 to-cyan-600",
     url: "https://krystinsylvia.com",
+    image: "/project-previews/krystin-sylvia.jpg",
     ctaLabel: "View portfolio",
   },
   {
@@ -94,7 +95,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "Tailwind CSS", "Vercel"],
     gradient: "from-blue-500 to-cyan-600",
     url: "https://velocitycarellc.com",
-    image: "/velocity-care.png",
+    image: "/project-previews/velocity-care.jpg",
     ctaLabel: "Visit healthcare site",
   },
   {
@@ -108,7 +109,7 @@ export const projects: Project[] = [
     tags: ["Next.js", "TypeScript", "Convex"],
     gradient: "from-emerald-500 to-teal-600",
     url: "https://trycommand.vercel.app",
-    image: "/project-previews/command-ai.svg",
+    image: "/project-previews/command-ai.jpg",
     ctaLabel: "Open platform",
   },
 ];

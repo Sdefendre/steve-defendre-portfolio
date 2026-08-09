@@ -45,7 +45,7 @@ const metadataBase =
   localSiteUrl;
 const canonicalUrl = new URL("/", metadataBase);
 
-const previewImage = "/defendre-solutions.png";
+const previewImage = "/project-previews/defendre-solutions.jpg";
 
 export const metadata: Metadata = {
   metadataBase,
