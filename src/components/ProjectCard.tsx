@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
+import type { ProjectStatus } from "@/data/projects";
 import { isSafeHref } from "@/utils/url";
 
 type ProjectCardVariant = "compact" | "detailed" | "featured";
@@ -13,6 +14,7 @@ interface ProjectCardProps {
   role: string;
   outcome: string;
   tags: string[];
+  status?: ProjectStatus;
   gradient?: string;
   url?: string;
   image?: string;
@@ -54,6 +56,7 @@ function ProjectCard({
   role,
   outcome,
   tags,
+  status = "Live",
   gradient = "from-slate-700 to-sky-700",
   url,
   image,
@@ -64,6 +67,7 @@ function ProjectCard({
   const isCompact = variant === "compact";
   const isFeatured = variant === "featured";
   const hasSafeUrl = Boolean(url && isSafeHref(url));
+  const isLive = status === "Live";
   const imageAlt = `${title} live project preview for ${role}`;
   const imageSizes = isCompact
     ? "(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 42vw, 420px"
@@ -87,13 +91,18 @@ function ProjectCard({
     <>
       <div className={mediaClassName}>
         <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-[color-mix(in_oklab,var(--background)_72%,transparent)] px-3 py-2 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[var(--foreground)] backdrop-blur-xl sm:inset-x-4 sm:top-4">
-          <span className="inline-flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0.75rem_rgba(52,211,153,0.8)]"
-            />
-            Live deployment
-          </span>
+            <span className="inline-flex items-center gap-2" data-testid="project-status">
+              <span
+                aria-hidden="true"
+                className={cx(
+                  "h-2 w-2 rounded-full",
+                  isLive
+                    ? "bg-emerald-400 shadow-[0_0_0.75rem_rgba(52,211,153,0.8)]"
+                    : "bg-amber-300 shadow-[0_0_0.75rem_rgba(252,211,77,0.7)]",
+                )}
+              />
+              {isLive ? "Live deployment" : "Prototype"}
+            </span>
           {image && <span>{initials}</span>}
         </div>
 

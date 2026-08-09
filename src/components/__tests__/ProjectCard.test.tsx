@@ -27,6 +27,21 @@ describe('ProjectCard', () => {
     });
   });
 
+  it('renders status-specific deployment messaging and styling', () => {
+    const { rerender } = render(<ProjectCard {...defaultProps} status="Live" />);
+
+    const liveStatus = screen.getByTestId('project-status');
+    expect(liveStatus).toHaveTextContent('Live deployment');
+    expect(liveStatus.firstElementChild).toHaveClass('bg-emerald-400');
+
+    rerender(<ProjectCard {...defaultProps} status="Prototype" />);
+
+    const prototypeStatus = screen.getByTestId('project-status');
+    expect(prototypeStatus).toHaveTextContent('Prototype');
+    expect(prototypeStatus).not.toHaveTextContent('Live deployment');
+    expect(prototypeStatus.firstElementChild).toHaveClass('bg-amber-300');
+  });
+
   it('renders as a div when url is not provided', () => {
     const { container } = render(<ProjectCard {...defaultProps} />);
     // The outermost element should be a div since url is undefined
