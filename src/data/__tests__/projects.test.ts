@@ -16,8 +16,16 @@ describe('Projects Data', () => {
     expect(Array.isArray(projects)).toBe(true);
   });
 
-  it('preserves the complete six-project portfolio', () => {
-    expect(projects).toHaveLength(6);
+  it('preserves the complete current-main project catalog', () => {
+    expect(projects.map((project) => project.title)).toEqual([
+      'Defendre Solutions',
+      'FreeVoiceTranscribe',
+      'BraidsbyRose',
+      'Traces',
+      'Krystin Sylvia',
+      'Velocity Care LLC',
+      'Command.AI',
+    ]);
   });
 
   it('each project should have valid required fields', () => {
