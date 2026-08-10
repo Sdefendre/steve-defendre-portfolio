@@ -44,4 +44,14 @@ describe("global spatial CSS contracts", () => {
     );
     expect(reducedTransparency).toContain("backdrop-filter: none !important");
   });
+
+  it("switches document scroll clearance with the tablet navigation handoff", () => {
+    expect(css).toMatch(
+      /@media \(min-width: 48rem\)\s*\{\s*html\s*\{\s*scroll-padding-top:\s*9rem;\s*scroll-padding-bottom:\s*2rem;/,
+    );
+    expect(css).toMatch(
+      /html\s*\{[\s\S]*?scroll-padding-top:\s*2rem;[\s\S]*?scroll-padding-bottom:\s*var\(--mobile-nav-clearance\);/,
+    );
+    expect(css).not.toContain("@media (min-width: 64rem)");
+  });
 });

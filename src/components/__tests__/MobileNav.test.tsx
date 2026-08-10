@@ -26,6 +26,8 @@ describe("MobileNav", () => {
       "pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]"
     );
     expect(nav.className).toContain("fixed");
+    expect(nav.className).toContain("md:hidden");
+    expect(nav.className).not.toContain("lg:hidden");
 
     const rail = nav.firstElementChild;
     expect(rail).toHaveClass("min-h-[4.5rem]");

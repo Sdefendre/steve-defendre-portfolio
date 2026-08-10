@@ -11,6 +11,31 @@ vi.mock('next/navigation', () => ({
 describe('Sidebar', () => {
   const mockUsePathname = vi.mocked(usePathname);
 
+  it('uses a compact tablet header while preserving every critical route', () => {
+    mockUsePathname.mockReturnValue('/');
+    render(<Sidebar />);
+
+    const header = screen.getByRole('complementary');
+    const identity = screen.getByText('Steve Defendre').parentElement;
+    const status = screen.getByTitle('Available for select builds and advisory work');
+    const cta = screen.getByRole('link', { name: /start a project/i });
+
+    expect(header).toHaveClass(
+      'pl-[max(0.75rem,env(safe-area-inset-left,0px))]',
+      'pr-[max(0.75rem,env(safe-area-inset-right,0px))]',
+      'md:block',
+      'lg:px-6',
+    );
+    expect(identity).toHaveClass('hidden', 'lg:block');
+    expect(status).toHaveClass('hidden', 'lg:flex');
+    expect(cta).toHaveClass('w-11', 'px-0', 'lg:w-auto', 'lg:px-4');
+    expect(cta).toHaveAttribute('href', '/contact');
+
+    for (const name of ['Home', 'About', 'Projects', 'Contact']) {
+      expect(screen.getByRole('link', { name })).toBeInTheDocument();
+    }
+  });
+
   it('renders all navigation items', () => {
     mockUsePathname.mockReturnValue('/');
     render(<Sidebar />);
