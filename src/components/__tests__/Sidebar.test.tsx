@@ -20,7 +20,12 @@ describe('Sidebar', () => {
     const status = screen.getByTitle('Available for select builds and advisory work');
     const cta = screen.getByRole('link', { name: /start a project/i });
 
-    expect(header).toHaveClass('px-3', 'md:block', 'lg:px-6');
+    expect(header).toHaveClass(
+      'pl-[max(0.75rem,env(safe-area-inset-left,0px))]',
+      'pr-[max(0.75rem,env(safe-area-inset-right,0px))]',
+      'md:block',
+      'lg:px-6',
+    );
     expect(identity).toHaveClass('hidden', 'lg:block');
     expect(status).toHaveClass('hidden', 'lg:flex');
     expect(cta).toHaveClass('w-11', 'px-0', 'lg:w-auto', 'lg:px-4');

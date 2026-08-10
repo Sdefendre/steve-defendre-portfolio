@@ -9,7 +9,7 @@ import { NavLink } from "./NavLink";
 
 export default function Sidebar() {
   return (
-    <aside className="fixed inset-x-0 top-0 z-40 hidden px-3 pt-[max(1rem,env(safe-area-inset-top,0px))] md:block lg:px-6">
+    <aside className="fixed inset-x-0 top-0 z-40 hidden pl-[max(0.75rem,env(safe-area-inset-left,0px))] pr-[max(0.75rem,env(safe-area-inset-right,0px))] pt-[max(1rem,env(safe-area-inset-top,0px))] md:block lg:px-6">
       <div className="spatial-glass spatial-dock mx-auto flex min-h-[4.75rem] w-full max-w-[1180px] items-center gap-1.5 rounded-[1.5rem] px-2 py-2.5 lg:gap-3 lg:rounded-[1.75rem] lg:px-3 xl:gap-4">
         <div className="flex min-w-0 shrink-0 items-center gap-3 pl-1 lg:min-w-[11.5rem]">
           <div className="relative shrink-0">
