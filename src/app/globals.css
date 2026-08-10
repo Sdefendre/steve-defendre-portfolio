@@ -300,7 +300,7 @@ body {
   }
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 48rem) {
   html {
     scroll-padding-top: 9rem;
     scroll-padding-bottom: 2rem;
