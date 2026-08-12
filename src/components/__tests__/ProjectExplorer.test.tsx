@@ -83,6 +83,9 @@ describe("ProjectExplorer", () => {
     fireEvent.click(screen.getByRole("button", { name: "Client" }));
 
     expect(screen.getByRole("button", { name: "Client" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Product" })).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByText("Showing 1 of 3 projects in Client")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /visit site for beta care/i })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /visit studio for alpha launch/i })).not.toBeInTheDocument();
@@ -106,6 +109,30 @@ describe("ProjectExplorer", () => {
 
     expect(screen.getByText("Showing 2 of 2 projects")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /visit studio for alpha launch/i })).toBeInTheDocument();
+  });
+
+  it("maintains exclusive active state when switching between filters", () => {
+    render(<ProjectExplorer projects={projects} categories={categories} />);
+
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.click(screen.getByRole("button", { name: "Studio" }));
+    expect(screen.getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Client" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Product" })).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(screen.getByRole("button", { name: "Product" }));
+    expect(screen.getByRole("button", { name: "Product" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Client" })).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(screen.getByRole("button", { name: "All" }));
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Client" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Product" })).toHaveAttribute("aria-pressed", "false");
   });
 
   it("expands the inline case study and keeps external links safe", () => {
