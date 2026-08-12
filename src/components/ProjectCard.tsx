@@ -76,7 +76,8 @@ function ProjectCard({
       : "(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 50vw, 520px";
 
   const cardClassName = cx(
-    "spatial-window group relative z-0 isolate flex h-full flex-col overflow-hidden rounded-[2rem] border border-[var(--border)]",
+    "spatial-window group relative isolate flex flex-col overflow-hidden rounded-[2rem] border border-[var(--border)]",
+    !isCompact && "h-full",
     hasSafeUrl &&
       "focus-ring cursor-pointer motion-safe:transition-[transform,background-color] motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:hover:bg-[var(--surface-elevated)] motion-safe:active:translate-y-0 motion-reduce:transition-none",
     isFeatured && "lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]",

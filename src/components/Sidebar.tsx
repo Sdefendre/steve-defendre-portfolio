@@ -104,10 +104,10 @@ export default function Sidebar() {
 
           <Link
             href="/contact"
+            aria-label="Start a project"
             className="focus-ring group flex min-h-11 w-11 shrink-0 items-center justify-center gap-0 rounded-full bg-[var(--accent-strong)] px-0 text-sm font-extrabold text-[var(--accent-foreground)] shadow-[0_10px_28px_rgba(0,4,8,0.38)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 lg:w-auto lg:gap-2 lg:px-4"
           >
-            <span className="sr-only lg:hidden">Start a project</span>
-            <span className="hidden lg:inline">Start a project</span>
+            <span aria-hidden="true" className="hidden lg:inline">Start a project</span>
             <ArrowRightIcon
               aria-hidden="true"
               className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
