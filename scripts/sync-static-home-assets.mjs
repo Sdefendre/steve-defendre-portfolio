@@ -3,25 +3,22 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { build } from "esbuild";
-import { currentCss, verifyMedia } from "./static-home-assets-lib.mjs";
+import { currentCss } from "./static-home-assets-lib.mjs";
+import { staticHomeFontClasses } from "./static-home-fonts.mjs";
 
-const asset = currentCss();
-verifyMedia(asset.content, asset.outputRoot);
+const asset = await currentCss();
 mkdirSync("public", { recursive: true });
 for (const file of readdirSync("public")) {
   if (/^static-home\.[a-f0-9]{16}\.(?:css|html)$/.test(file)) rmSync(`public/${file}`);
 }
 writeFileSync(`public${asset.publicPath}`, asset.content);
-const cssText = asset.content.toString();
-const variables = [...cssText.matchAll(/\.([\w-]+__variable)\{/g)].map((match) => match[1]);
-if (variables.length !== 2) throw new Error(`Expected two next/font variable classes, found ${variables.length}`);
 const canonicalCandidate = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "https://steve-defendre-portfolio.vercel.app";
 const canonical = new URL("/", /^[a-z][a-z\d+\-.]*:\/\//i.test(canonicalCandidate) ? canonicalCandidate : `https://${canonicalCandidate}`).toString();
 const temp = mkdtempSync(join(tmpdir(), "static-home-render-"));
 const bundle = join(temp, "render.cjs");
 await build({ entryPoints: ["scripts/render-static-home.tsx"], outfile: bundle, bundle: true, platform: "node", format: "cjs", tsconfig: "tsconfig.json" });
 const renderer = await import(pathToFileURL(bundle).href);
-const html = renderer.renderStaticHomeDocument(asset.publicPath, variables.join(" "), canonical);
+const html = renderer.renderStaticHomeDocument(asset.publicPath, staticHomeFontClasses, canonical);
 const htmlHash = (await import("node:crypto")).createHash("sha256").update(html).digest("hex").slice(0, 16);
 const htmlPath = `/static-home.${htmlHash}.html`;
 writeFileSync(`public${htmlPath}`, html);

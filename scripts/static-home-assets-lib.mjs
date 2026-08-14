@@ -1,36 +1,13 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
+import postcss from "postcss";
+import tailwind from "@tailwindcss/postcss";
+import { staticHomeFontCss, verifyStaticHomeFonts } from "./static-home-fonts.mjs";
 
-const nextOutputRoots = [".next", ".vercel/output/static/_next"];
-
-function currentOutputRoot() {
-  for (const root of nextOutputRoots) {
-    if (existsSync(join(root, "static", "chunks"))) return root;
-  }
-
-  throw new Error(
-    `Could not find compiled Next static chunks. Checked: ${nextOutputRoots
-      .map((root) => join(root, "static", "chunks"))
-      .join(", ")}`,
-  );
-}
-
-export function currentCss() {
-  const outputRoot = currentOutputRoot();
-  const dir = join(outputRoot, "static", "chunks");
-  const files = readdirSync(dir).filter((file) => file.endsWith(".css"));
-  if (files.length !== 1) throw new Error(`Expected one compiled global stylesheet, found ${files.length}`);
-  const content = Buffer.from(
-    readFileSync(join(dir, files[0]), "utf8").replaceAll("url(../media/", "url(/_next/static/media/"),
-  );
+export async function currentCss() {
+  verifyStaticHomeFonts();
+  const result = await postcss([tailwind()]).process(readFileSync("src/app/globals.css", "utf8"), { from: "src/app/globals.css" });
+  const content = Buffer.from(`${staticHomeFontCss}${result.css}`);
   const hash = createHash("sha256").update(content).digest("hex").slice(0, 16);
-  return { content, hash, outputRoot, publicPath: `/static-home.${hash}.css` };
-}
-
-export function verifyMedia(content, outputRoot) {
-  const urls = [...content.toString().matchAll(/url\((?:"|')?(\/_next\/static\/media\/[^)"']+)/g)].map((match) => match[1]);
-  for (const url of new Set(urls)) {
-    if (!existsSync(join(outputRoot, url.replace("/_next/", "")))) throw new Error(`Missing compiled media asset: ${url}`);
-  }
+  return { content, hash, publicPath: `/static-home.${hash}.css` };
 }
