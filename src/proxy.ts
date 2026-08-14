@@ -5,6 +5,16 @@ function createNonce() {
 }
 
 export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/static-home-internal" || /^\/static-home\.[a-f0-9]{16}\.html$/.test(pathname)) {
+    return NextResponse.redirect(new URL("/", request.url), 308);
+  }
+
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
+
   const nonce = createNonce();
   const upgradeInsecureRequests =
     request.nextUrl.protocol === "https:" ? "upgrade-insecure-requests;" : "";

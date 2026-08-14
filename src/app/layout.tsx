@@ -1,19 +1,7 @@
-import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import { fraunces, manrope } from "@/lib/fonts";
 import { siteMetadata, siteViewport } from "@/lib/site-metadata";
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata = siteMetadata;
 export const viewport = siteViewport;

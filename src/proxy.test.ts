@@ -3,6 +3,15 @@ import { describe, expect, it } from "vitest";
 import { proxy } from "./proxy";
 
 describe("proxy CSP", () => {
+  it("keeps generated homepage implementation files out of the crawlable URL space", () => {
+    for (const path of ["/static-home-internal", "/static-home.0123456789abcdef.html"]) {
+      const response = proxy(new NextRequest(`https://portfolio.defendresolutions.com${path}`));
+
+      expect(response.status).toBe(308);
+      expect(response.headers.get("location")).toBe("https://portfolio.defendresolutions.com/");
+    }
+  });
+
   it("allows framework inline styles without loosening scripts", () => {
     const response = proxy(new NextRequest("https://portfolio.defendresolutions.com/contact"));
     const csp = response.headers.get("Content-Security-Policy") ?? "";
