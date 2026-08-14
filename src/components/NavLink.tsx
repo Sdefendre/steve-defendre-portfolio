@@ -51,6 +51,7 @@ export function NavLink({
   return (
     <Link
       href={safeHref}
+      prefetch={false}
       className={resolvedClassName}
       aria-current={isActive ? "page" : undefined}
       aria-label={ariaLabel}
