@@ -67,9 +67,17 @@ export function fileSha256(path) {
 
 export async function currentCss() {
   verifyStaticHomeFonts();
-  const [{ default: postcss }, { default: tailwind }] = await Promise.all([import("postcss"), import("@tailwindcss/postcss")]);
+  const [{ default: postcss }, { default: tailwind }, { transform }] = await Promise.all([
+    import("postcss"),
+    import("@tailwindcss/postcss"),
+    import("lightningcss"),
+  ]);
   const result = await postcss([tailwind()]).process(readFileSync("src/app/globals.css", "utf8"), { from: "src/app/globals.css" });
-  const content = Buffer.from(`${staticHomeFontCss}${result.css}`);
+  const content = transform({
+    filename: "static-home.css",
+    code: Buffer.from(`${staticHomeFontCss}${result.css}`),
+    minify: true,
+  }).code;
   const hash = sha256(content);
   return { content, hash, publicPath: `/static-home.${hash.slice(0, 16)}.css` };
 }
