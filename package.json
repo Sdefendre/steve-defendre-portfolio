@@ -4,7 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "prebuild": "node scripts/check-static-home-assets.mjs",
+    "build": "next build && node scripts/check-static-home-runtime.mjs",
+    "sync:static-home": "node scripts/sync-static-home-assets.mjs",
+    "check:static-home": "node scripts/check-static-home-assets.mjs && node scripts/check-static-home-runtime.mjs",
+    "test:static-home": "node --test scripts/check-static-home-assets.node-test.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run"
@@ -27,6 +31,7 @@
     "@types/react-dom": "^19",
     "@types/three": "^0.182.0",
     "@vitejs/plugin-react": "^5.1.4",
+    "esbuild": "0.28.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "jsdom": "^28.1.0",
