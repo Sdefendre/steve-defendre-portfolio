@@ -6,7 +6,7 @@ import { build } from "esbuild";
 import { currentCss, verifyMedia } from "./static-home-assets-lib.mjs";
 
 const asset = currentCss();
-verifyMedia(asset.content);
+verifyMedia(asset.content, asset.outputRoot);
 mkdirSync("public", { recursive: true });
 for (const file of readdirSync("public")) {
   if (/^static-home\.[a-f0-9]{16}\.(?:css|html)$/.test(file)) rmSync(`public/${file}`);

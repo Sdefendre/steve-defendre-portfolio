@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { currentCss, verifyMedia } from "./static-home-assets-lib.mjs";
 
 const asset = currentCss();
-verifyMedia(asset.content);
+verifyMedia(asset.content, asset.outputRoot);
 const publicContent = readFileSync(`public${asset.publicPath}`);
 if (!publicContent.equals(asset.content)) throw new Error("Static homepage CSS content is stale; run npm run sync:static-home");
 const manifest = readFileSync("src/generated/static-home-assets.ts", "utf8");
