@@ -1,13 +1,19 @@
 import { readFileSync } from "node:fs";
-import { currentCss } from "./static-home-assets-lib.mjs";
+import { fileSha256, staticHomeInputHash } from "./static-home-assets-lib.mjs";
+import { staticHomeFontHashes } from "./static-home-fonts.mjs";
 
-const asset = await currentCss();
-const publicContent = readFileSync(`public${asset.publicPath}`);
-if (!publicContent.equals(asset.content)) throw new Error("Static homepage CSS content is stale; run npm run sync:static-home");
 const manifest = readFileSync("src/generated/static-home-assets.ts", "utf8");
-if (!manifest.includes(JSON.stringify(asset.publicPath)) || !manifest.includes(JSON.stringify(asset.hash))) {
-  throw new Error("Static homepage asset manifest is stale; run npm run sync:static-home");
+const outputManifest = JSON.parse(manifest.match(/staticHomeOutputManifest = (.+) as const;/)?.[1] ?? "");
+if (!outputManifest.inputSha256 || !outputManifest.css?.path || !outputManifest.html?.path) {
+  throw new Error("Static homepage asset manifest is incomplete; run npm run sync:static-home");
 }
-const htmlPath = manifest.match(/staticHomeHtml = ("[^"]+")/)?.[1];
-if (!htmlPath) throw new Error("Static homepage HTML manifest entry is missing");
-console.log(`Verified fresh ${asset.publicPath} and checked-in static homepage fonts`);
+if (outputManifest.inputSha256 !== staticHomeInputHash()) {
+  throw new Error("Static homepage inputs changed; run npm run sync:static-home");
+}
+for (const [kind, output] of Object.entries({ css: outputManifest.css, html: outputManifest.html })) {
+  const path = `public${output.path}`;
+  if (fileSha256(path) !== output.sha256) throw new Error(`Static homepage ${kind} output hash is stale; run npm run sync:static-home`);
+}
+if (outputManifest.html.cssSha256 !== outputManifest.css.sha256) throw new Error("Static homepage manifest has mismatched HTML/CSS cross-links; run npm run sync:static-home");
+if (JSON.stringify(outputManifest.fonts) !== JSON.stringify(staticHomeFontHashes())) throw new Error("Static homepage font output hashes are stale; run npm run sync:static-home");
+console.log(`Verified static homepage inputs and committed output hashes (${outputManifest.inputSha256.slice(0, 16)})`);

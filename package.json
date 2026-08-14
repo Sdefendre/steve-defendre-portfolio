@@ -2,15 +2,13 @@
   "name": "portfolio",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "22.x"
-  },
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/check-static-home-assets.mjs",
     "build": "next build && node scripts/check-static-home-runtime.mjs",
     "sync:static-home": "node scripts/sync-static-home-assets.mjs",
     "check:static-home": "node scripts/check-static-home-assets.mjs && node scripts/check-static-home-runtime.mjs",
+    "test:static-home": "node --test scripts/check-static-home-assets.node-test.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run"
