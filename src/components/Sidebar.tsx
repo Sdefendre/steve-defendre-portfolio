@@ -44,6 +44,7 @@ export default function Sidebar() {
             <NavLink
               key={item.name}
               href={item.href}
+              forceDocumentNavigation={item.href === "/"}
               aria-label={item.name}
               className={({ isActive }) =>
                 `focus-ring dock-link group relative flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border px-3 text-sm font-semibold xl:px-4 ${

@@ -16,9 +16,17 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+vi.mock("next/headers", () => ({
+  headers: vi.fn(async () => new Headers([["x-nonce", "test-nonce"]])),
+}));
+
+vi.mock("@/components/HomeNavigation", () => ({
+  default: () => <nav data-testid="home-navigation" />,
+}));
+
 describe("not-found page", () => {
-  it("renders branded recovery CTAs", () => {
-    render(<NotFound />);
+  it("renders branded recovery CTAs with the server-only home shell", async () => {
+    render(await NotFound());
 
     expect(screen.getByText(/Steve Defendre · Signal lost/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /page not found/i })).toBeInTheDocument();
@@ -28,6 +36,11 @@ describe("not-found page", () => {
     expect(screen.getByRole("link", { name: /defendre solutions/i })).toHaveAttribute(
       "href",
       "https://defendresolutions.com",
+    );
+    expect(screen.getByTestId("home-navigation")).toBeInTheDocument();
+    expect(document.querySelector('script[src="/_vercel/insights/script.js"]')).toHaveAttribute(
+      "nonce",
+      "test-nonce",
     );
   });
 
