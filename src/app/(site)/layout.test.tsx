@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 
-const layoutSource = readFileSync("src/app/layout.tsx", "utf8");
+const layoutSource = readFileSync("src/app/(site)/layout.tsx", "utf8");
 
 vi.mock("next/headers", () => ({
   headers: vi.fn(async () => new Headers()),
@@ -66,7 +66,7 @@ async function loadMetadata(env: Partial<Record<SiteEnvKey, string>>) {
 
   vi.resetModules();
 
-  return (await import("./layout")).metadata;
+  return (await import("../layout")).metadata;
 }
 
 function firstImageUrl(image: unknown): string | undefined {

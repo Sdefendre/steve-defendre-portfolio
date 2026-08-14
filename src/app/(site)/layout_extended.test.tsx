@@ -51,7 +51,7 @@ async function loadMetadata(env: Partial<Record<SiteEnvKey, string>>) {
   }
 
   vi.resetModules();
-  return (await import("./layout")).metadata;
+  return (await import("../layout")).metadata;
 }
 
 afterEach(() => {

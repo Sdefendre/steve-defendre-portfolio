@@ -11,6 +11,7 @@ interface NavLinkProps {
   className?: string | ((props: { isActive: boolean }) => string);
   target?: string;
   rel?: string;
+  forceDocumentNavigation?: boolean;
   "aria-label"?: string;
 }
 
@@ -20,6 +21,7 @@ export function NavLink({
   className,
   target,
   rel,
+  forceDocumentNavigation = false,
   "aria-label": ariaLabel,
 }: NavLinkProps) {
   const pathname = usePathname();
@@ -34,7 +36,7 @@ export function NavLink({
   const isExternal = href.startsWith("http") || target === "_blank";
   const safeHref = isSafeHref(href) ? href : "#";
 
-  if (isExternal) {
+  if (isExternal || forceDocumentNavigation) {
     return (
       <a
         href={safeHref}

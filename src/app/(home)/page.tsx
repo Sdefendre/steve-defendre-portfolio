@@ -1,7 +1,7 @@
 import ProjectCard from "@/components/ProjectCard";
 import { projects } from "@/data/projects";
 import { ArrowRightIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
+import ResponsiveImage from "@/components/ResponsiveImage";
 
 const telemetry = [
   {
@@ -93,10 +93,9 @@ export default function Home() {
               className="absolute inset-5 translate-x-5 translate-y-6 rounded-[2.5rem] border border-[var(--border)] bg-[var(--surface-muted)] opacity-60"
             />
             <div className="spatial-glass relative aspect-[4/5] overflow-hidden rounded-[2.5rem] border border-[var(--border)] p-2 shadow-[0_32px_80px_var(--shadow-warm)]">
-              <Image
+              <ResponsiveImage
                 src="/headshot.jpg"
                 alt="Steve Defendre, veteran founder and full-stack engineer"
-                fill
                 sizes="(max-width: 1023px) 320px, 22vw"
                 className="object-cover object-top p-2"
                 priority

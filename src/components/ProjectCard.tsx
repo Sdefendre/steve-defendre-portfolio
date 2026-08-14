@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
 import type { ProjectStatus } from "@/data/projects";
 import { isSafeHref } from "@/utils/url";
+import ResponsiveImage from "./ResponsiveImage";
 
 type ProjectCardVariant = "compact" | "detailed" | "featured";
 
@@ -106,10 +106,9 @@ function ProjectCard({
         </div>
 
         {image ? (
-          <Image
+          <ResponsiveImage
             src={image}
             alt={imageAlt}
-            fill
             sizes={imageSizes}
             className="pointer-events-none object-cover object-top motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.015] motion-reduce:transition-none"
             priority={priority || isFeatured}

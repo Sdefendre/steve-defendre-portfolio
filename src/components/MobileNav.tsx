@@ -14,6 +14,7 @@ export default function MobileNav() {
           <NavLink
             key={item.name}
             href={item.href}
+            forceDocumentNavigation={item.href === "/"}
             className={({ isActive }) =>
               `focus-ring dock-link relative flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-[1.15rem] border px-1.5 py-2 text-center ${
                 isActive
