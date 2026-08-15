@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+- Contact inquiry actions now stack on phones so “Copy email” stays on one line.
+- Invalid contact-form fields now get a visible error border to match the
+  “highlighted fields” status message.
+
 ### Added
 - Portfolio projects for FreeVoiceTranscribe and Traces, with matching SVG
   previews under `public/project-previews/`.
