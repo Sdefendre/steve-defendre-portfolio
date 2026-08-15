@@ -5,11 +5,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-### Fixed
-- Project filter copy now says “Showing 3 Client projects” instead of the
-  misleading “3 of 7 projects in Client.”
-- Case study arrows now rotate when a project’s deeper read is open.
-
 ### Added
 - Portfolio projects for FreeVoiceTranscribe and Traces, with matching SVG
   previews under `public/project-previews/`.
