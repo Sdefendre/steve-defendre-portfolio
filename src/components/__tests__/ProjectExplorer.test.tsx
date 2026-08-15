@@ -86,7 +86,7 @@ describe("ProjectExplorer", () => {
     expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByRole("button", { name: "Product" })).toHaveAttribute("aria-pressed", "false");
-    expect(screen.getByText("Showing 1 of 3 projects in Client")).toBeInTheDocument();
+    expect(screen.getByText("Showing 1 Client project")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /visit site for beta care/i })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /visit studio for alpha launch/i })).not.toBeInTheDocument();
   });
@@ -101,7 +101,7 @@ describe("ProjectExplorer", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Product" }));
 
-    expect(screen.getByText("Showing 0 of 2 projects in Product")).toBeInTheDocument();
+    expect(screen.getByText("Showing 0 Product projects")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /nothing in product right now/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Show all projects" })).toBeInTheDocument();
 
@@ -148,6 +148,8 @@ describe("ProjectExplorer", () => {
 
     expect(caseStudySummary).not.toBeNull();
     expect(caseStudySummary).toHaveClass("relative", "z-10", "w-full", "cursor-pointer");
+    const chevron = (caseStudySummary as HTMLElement).querySelector("svg");
+    expect(chevron).toHaveClass("group-open:rotate-180");
     fireEvent.click(caseStudySummary as HTMLElement);
 
     expect(screen.getByText(projects[0].caseStudy.challenge)).toBeVisible();

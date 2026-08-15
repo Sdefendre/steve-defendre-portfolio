@@ -50,7 +50,7 @@ export default function ProjectExplorer({
   const countLabel =
     activeCategory === "All"
       ? `Showing ${visibleCount} of ${totalCount} projects`
-      : `Showing ${visibleCount} of ${totalCount} projects in ${activeCategory}`;
+      : `Showing ${visibleCount} ${activeCategory} ${visibleCount === 1 ? "project" : "projects"}`;
 
   return (
     <section
@@ -172,7 +172,7 @@ export default function ProjectExplorer({
 
               <ProjectCard {...project} variant="compact" />
 
-              <details className="relative z-10 rounded-[1.5rem] border border-[var(--border)] bg-[var(--surface)]/85 p-4 sm:p-5">
+              <details className="group relative z-10 rounded-[1.5rem] border border-[var(--border)] bg-[var(--surface)]/85 p-4 sm:p-5">
                 <summary className="focus-ring relative z-10 flex min-h-11 w-full cursor-pointer list-none items-center justify-between gap-4 rounded-[1.15rem] outline-none">
                   <div className="min-w-0">
                     <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">
@@ -184,7 +184,10 @@ export default function ProjectExplorer({
                     </p>
                   </div>
                   <span className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--foreground)]">
-                    <ChevronDownIcon aria-hidden="true" className="h-4 w-4" />
+                    <ChevronDownIcon
+                      aria-hidden="true"
+                      className="h-4 w-4 transition-transform duration-300 group-open:rotate-180"
+                    />
                   </span>
                 </summary>
 
