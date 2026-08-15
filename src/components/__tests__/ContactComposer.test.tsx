@@ -25,6 +25,11 @@ describe("ContactComposer", () => {
     fireEvent.submit(form!);
 
     expect(screen.getByRole("alert")).toHaveTextContent(/check the highlighted fields/i);
+    expect(screen.getByLabelText(/your name/i)).toHaveClass("border-rose-300");
+    expect(screen.getByLabelText(/email address/i)).toHaveClass("border-rose-300");
+    expect(screen.getByLabelText(/project type/i)).toHaveClass("border-rose-300");
+    expect(screen.getByLabelText(/budget range/i)).toHaveClass("border-rose-300");
+    expect(screen.getByRole("textbox", { name: /message/i })).toHaveClass("border-rose-300");
     expect(screen.getByText(/enter your name/i)).toBeInTheDocument();
     expect(screen.getByText(/enter your email address/i)).toBeInTheDocument();
     expect(screen.getByText(/choose the kind of project you want help with/i)).toBeInTheDocument();
