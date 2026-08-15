@@ -363,8 +363,12 @@ function Field({
         onChange: (event) => onChange(event.currentTarget.value),
         "aria-invalid": Boolean(error),
         "aria-describedby": describedBy || undefined,
-        className:
-          "focus-ring block w-full min-h-11 rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-3 text-sm text-[var(--foreground)] shadow-[0_1px_0_rgba(255,255,255,0.02)] outline-none transition-[border-color,background-color,box-shadow] duration-200 placeholder:text-[var(--muted)] focus-visible:border-[color-mix(in_oklab,var(--accent)_55%,var(--border))] focus-visible:bg-[var(--surface)]",
+        className: [
+          "focus-ring block w-full min-h-11 rounded-2xl border bg-[var(--surface-elevated)] px-4 py-3 text-sm text-[var(--foreground)] shadow-[0_1px_0_rgba(255,255,255,0.02)] outline-none transition-[border-color,background-color,box-shadow] duration-200 placeholder:text-[var(--muted)] focus-visible:bg-[var(--surface)]",
+          error
+            ? "border-rose-300 focus-visible:border-rose-300"
+            : "border-[var(--border)] focus-visible:border-[color-mix(in_oklab,var(--accent)_55%,var(--border))]",
+        ].join(" "),
         required,
       })}
 
