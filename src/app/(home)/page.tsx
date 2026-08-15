@@ -52,7 +52,7 @@ export default function Home() {
               </span>
             </div>
 
-            <h1 className="max-w-[13ch] font-display text-[clamp(3rem,7vw,7rem)] font-medium leading-[0.92] tracking-[-0.055em] text-[var(--foreground)]">
+            <h1 className="max-w-[13ch] font-display text-[clamp(2.5rem,7vw,7rem)] font-medium leading-[0.92] tracking-[-0.055em] text-[var(--foreground)]">
               Software with clarity, depth, and staying power.
             </h1>
 
@@ -87,7 +87,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[20rem] lg:justify-self-end">
+          <div className="relative mx-auto w-full max-w-[14.5rem] sm:max-w-[20rem] lg:justify-self-end">
             <div
               aria-hidden="true"
               className="absolute inset-5 translate-x-5 translate-y-6 rounded-[2.5rem] border border-[var(--border)] bg-[var(--surface-muted)] opacity-60"

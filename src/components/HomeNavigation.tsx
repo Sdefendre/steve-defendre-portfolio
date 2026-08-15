@@ -37,7 +37,7 @@ export default function HomeNavigation({ activeHref = "/" }: { activeHref?: stri
               return (
                 <a key={item.name} href={item.href} aria-label={item.name} aria-current={isActive ? "page" : undefined} className={`${desktopLinkClass} ${isActive ? "dock-link-active" : "border-transparent text-[var(--muted-foreground)] hover:border-[var(--border)] hover:bg-[rgba(207,244,251,0.055)] hover:text-[var(--foreground)]"}`}>
                   <Icon aria-hidden="true" className={`h-[18px] w-[18px] shrink-0 transition-colors duration-200 ${isActive ? "text-[var(--accent-strong)]" : "text-[var(--muted)] group-hover:text-[var(--accent)]"}`} />
-                  <span aria-hidden="true" className="hidden xl:inline">{item.name}</span>
+                  <span aria-hidden="true" className="hidden lg:inline">{item.name}</span>
                 </a>
               );
             })}
@@ -55,8 +55,8 @@ export default function HomeNavigation({ activeHref = "/" }: { activeHref?: stri
                 </a>
               ))}
             </nav>
-            <a href="/contact" aria-label="Start a project" className="focus-ring group flex min-h-11 w-11 shrink-0 items-center justify-center gap-0 rounded-full bg-[var(--accent-strong)] px-0 text-sm font-extrabold text-[var(--accent-foreground)] shadow-[0_10px_28px_rgba(0,4,8,0.38)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 lg:w-auto lg:gap-2 lg:px-4">
-              <span aria-hidden="true" className="hidden lg:inline">Start a project</span><ArrowRightIcon aria-hidden="true" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+            <a href="/contact" aria-label="Start a project" className="focus-ring group flex min-h-11 w-11 shrink-0 items-center justify-center gap-0 rounded-full bg-[var(--accent-strong)] px-0 text-sm font-extrabold text-[var(--accent-foreground)] shadow-[0_10px_28px_rgba(0,4,8,0.38)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 md:w-auto md:gap-2 md:px-4">
+              <span aria-hidden="true" className="hidden md:inline">Start a project</span><ArrowRightIcon aria-hidden="true" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </a>
           </div>
         </div>

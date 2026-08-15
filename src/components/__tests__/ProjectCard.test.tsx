@@ -100,6 +100,7 @@ describe('ProjectCard', () => {
     };
     render(<ProjectCard {...props} variant="compact" />);
 
+    expect(screen.getByText(props.title)).toHaveClass('min-w-0', 'break-words');
     expect(screen.getByText(props.description)).toHaveClass('line-clamp-3');
     expect(screen.getByText(props.outcome)).toHaveClass('line-clamp-3');
     expect(screen.getByRole('img')).toHaveAttribute(

@@ -126,8 +126,8 @@ function ProjectCard({
         <div className="flex items-start justify-between gap-5">
           <h3
             className={cx(
-              "font-display font-medium tracking-[-0.04em] text-[var(--foreground)]",
-              isFeatured ? "text-3xl sm:text-4xl lg:text-5xl" : "text-2xl sm:text-3xl",
+              "min-w-0 break-words font-display font-medium tracking-[-0.04em] text-[var(--foreground)]",
+              isFeatured ? "text-2xl sm:text-3xl lg:text-5xl" : "text-2xl sm:text-3xl",
             )}
           >
             {title}
@@ -143,6 +143,7 @@ function ProjectCard({
           className={cx(
             "mt-4 text-sm leading-7 text-[var(--muted-foreground)]",
             isCompact && "line-clamp-3",
+            isFeatured && "line-clamp-3 lg:line-clamp-none",
           )}
         >
           {description}
@@ -164,7 +165,8 @@ function ProjectCard({
             <dd
               className={cx(
                 "mt-2 text-xs leading-6 text-[var(--muted-foreground)]",
-                isCompact && "line-clamp-3",
+                (isCompact || isFeatured) && "line-clamp-3",
+                isFeatured && "lg:line-clamp-none",
               )}
             >
               {outcome}

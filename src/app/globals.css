@@ -23,7 +23,7 @@
   --glass-highlight: rgba(225, 250, 255, 0.22);
   --shadow-spatial: rgba(0, 4, 8, 0.54);
   --shadow-warm: rgba(0, 4, 8, 0.46);
-  --mobile-nav-clearance: calc(7.25rem + env(safe-area-inset-bottom, 0px));
+  --mobile-nav-clearance: calc(8.5rem + env(safe-area-inset-bottom, 0px));
   --ease-spatial: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 160ms;
   --duration-state: 260ms;

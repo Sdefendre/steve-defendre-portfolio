@@ -28,7 +28,7 @@ describe('Sidebar', () => {
     );
     expect(identity).toHaveClass('hidden', 'lg:block');
     expect(status).toHaveClass('hidden', 'lg:flex');
-    expect(cta).toHaveClass('w-11', 'px-0', 'lg:w-auto', 'lg:px-4');
+    expect(cta).toHaveClass('w-11', 'px-0', 'md:w-auto', 'md:px-4');
     expect(cta).toHaveAttribute('href', '/contact');
 
     for (const name of ['Home', 'About', 'Projects', 'Contact']) {

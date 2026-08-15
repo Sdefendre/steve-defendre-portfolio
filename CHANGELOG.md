@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+- Phone layout now keeps the bottom menu off the home portrait and project
+  cards (smaller photo, shorter featured card, more bottom space).
+- Long project titles such as FreeVoiceTranscribe wrap instead of getting
+  clipped on tablet-width cards.
+- Tablet and small-laptop navigation now shows menu words and the full
+  “Start a project” button instead of mystery icons.
+
 ### Added
 - Portfolio projects for FreeVoiceTranscribe and Traces, with matching SVG
   previews under `public/project-previews/`.
