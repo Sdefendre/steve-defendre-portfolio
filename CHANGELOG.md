@@ -5,6 +5,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+- Phone layout now keeps the bottom menu off the home portrait and project
+  cards (photo first on small screens, shorter featured card, more bottom space).
+- Long project titles such as FreeVoiceTranscribe wrap instead of getting
+  clipped on tablet-width cards.
+- Tablet and small-laptop navigation now shows menu words and the full
+  “Start a project” button instead of mystery icons.
+- Contact inquiry actions now stack on phones so “Copy email” stays on one line.
+- Invalid contact-form fields now get a visible error border to match the
+  “highlighted fields” status message.
+- Project filter copy now says “Showing 3 Client projects” instead of the
+  misleading “3 of 7 projects in Client.”
+- Case study arrows now rotate when a project’s deeper read is open.
+
 ### Added
 - Portfolio projects for FreeVoiceTranscribe and Traces, with matching SVG
   previews under `public/project-previews/`.

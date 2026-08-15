@@ -36,8 +36,8 @@ export default function Home() {
           className="pointer-events-none absolute -right-24 -top-32 -z-10 h-96 w-96 rounded-full bg-[color-mix(in_oklab,var(--accent)_16%,transparent)] blur-3xl"
         />
 
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(15rem,0.65fr)] lg:gap-14">
-          <div className="max-w-4xl">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(15rem,0.65fr)] lg:gap-14">
+          <div className="order-2 max-w-4xl lg:order-1">
             <div className="mb-7 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
               <span className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4">
                 <span
@@ -52,7 +52,7 @@ export default function Home() {
               </span>
             </div>
 
-            <h1 className="max-w-[13ch] font-display text-[clamp(3rem,7vw,7rem)] font-medium leading-[0.92] tracking-[-0.055em] text-[var(--foreground)]">
+            <h1 className="max-w-[13ch] font-display text-[clamp(2.5rem,7vw,7rem)] font-medium leading-[0.92] tracking-[-0.055em] text-[var(--foreground)]">
               Software with clarity, depth, and staying power.
             </h1>
 
@@ -87,7 +87,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[20rem] lg:justify-self-end">
+          <div className="relative order-1 mx-auto w-full max-w-[14.5rem] sm:max-w-[20rem] lg:order-2 lg:justify-self-end">
             <div
               aria-hidden="true"
               className="absolute inset-5 translate-x-5 translate-y-6 rounded-[2.5rem] border border-[var(--border)] bg-[var(--surface-muted)] opacity-60"
