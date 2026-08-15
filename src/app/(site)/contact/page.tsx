@@ -88,7 +88,7 @@ export default function Contact() {
             {primaryContact.value}
           </p>
 
-          <div className="mt-5 grid grid-cols-2 items-start gap-3 sm:mt-9 sm:flex sm:items-start sm:justify-center">
+          <div className="mt-5 flex flex-col items-stretch gap-3 sm:mt-9 sm:flex-row sm:items-start sm:justify-center">
             <a
               href={safeHref(primaryContact.href)}
               className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-6 text-sm font-bold text-[var(--accent-foreground)] shadow-[0_18px_45px_var(--shadow-warm)] transition-[transform,filter] duration-300 hover:-translate-y-1 hover:brightness-110 active:translate-y-0"

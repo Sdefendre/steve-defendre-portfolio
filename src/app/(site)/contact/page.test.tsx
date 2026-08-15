@@ -16,6 +16,8 @@ describe("Contact page", () => {
 
     const emailLink = screen.getByRole("link", { name: /email steve/i });
     expect(emailLink).toHaveAttribute("href", "mailto:steve@defendresolutions.com");
+    expect(emailLink.parentElement).toHaveClass("flex", "flex-col", "sm:flex-row");
+    expect(emailLink.parentElement).not.toHaveClass("grid-cols-2");
     expect(screen.getByRole("button", { name: /copy email/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /prepare email draft/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/your name/i)).toBeInTheDocument();
