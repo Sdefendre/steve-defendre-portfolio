@@ -1,0 +1,72 @@
+import { expect, test } from "@playwright/test";
+import { expectNoHorizontalOverflow } from "./helpers";
+
+const EMAIL = "steve@defendresolutions.com";
+
+test.describe("contact form", () => {
+  test.beforeEach(async ({ context, page }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.addInitScript(() => {
+      const nativeClick = HTMLAnchorElement.prototype.click;
+      const interceptedMailtoHrefs: string[] = [];
+
+      Object.defineProperty(window, "__interceptedMailtoHrefs", {
+        configurable: true,
+        value: interceptedMailtoHrefs,
+      });
+
+      HTMLAnchorElement.prototype.click = function click() {
+        if (this.href.startsWith("mailto:")) {
+          interceptedMailtoHrefs.push(this.href);
+          return;
+        }
+
+        nativeClick.call(this);
+      };
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/contact");
+  });
+
+  test("shows required-field validation and copies the contact email", async ({ page }) => {
+    await page.getByRole("button", { name: "Prepare email draft" }).click();
+
+    await expect(page.getByText("Check the highlighted fields and try again.", { exact: true })).toBeVisible();
+    for (const label of ["Your name", "Email address", "Project type", "Budget range", "Message"]) {
+      await expect(page.getByLabel(label)).toHaveAttribute("aria-invalid", "true");
+    }
+
+    await page.getByRole("button", { name: "Copy email" }).click();
+    await expect(page.getByRole("button", { name: "Copied" })).toBeVisible();
+    await expect(page.getByText(`${EMAIL} copied to clipboard.`, { exact: true })).toBeVisible();
+    await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe(EMAIL);
+    await expectNoHorizontalOverflow(page);
+  });
+
+  test("opens an encoded mailto draft without sending email", async ({ page }) => {
+    await page.getByLabel("Your name").fill("Ada Lovelace");
+    await page.getByLabel("Email address").fill("ada@example.com");
+    await page.getByLabel("Project type").selectOption("new-website");
+    await page.getByLabel("Budget range").selectOption("5k-10k");
+    await page.getByLabel("Message").fill("A proof-led site & launch plan? Yes.");
+
+    await page.getByRole("button", { name: "Prepare email draft" }).click();
+
+    await expect(
+      page.getByText("Your mail app should open with the draft ready to review.", { exact: true }),
+    ).toBeVisible();
+
+    const draftHref = await page.evaluate(() => {
+      const values = (window as Window & { __interceptedMailtoHrefs?: string[] }).__interceptedMailtoHrefs;
+      return values?.at(-1);
+    });
+
+    expect(draftHref).toBeDefined();
+    const draft = new URL(draftHref as string);
+    expect(draft.protocol).toBe("mailto:");
+    expect(draft.pathname).toBe(EMAIL);
+    expect(draft.searchParams.get("subject")).toBe("Project inquiry: New website");
+    expect(draft.searchParams.get("body")).toContain("Name: Ada Lovelace");
+    expect(draft.searchParams.get("body")).toContain("A proof-led site & launch plan? Yes.");
+  });
+});
