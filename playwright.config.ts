@@ -1,9 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
+import { getLocalPlaywrightHost } from "./playwright.config.helpers";
 
 const baseURL = process.env.PLAYWRIGHT_TEST_BASE_URL ?? "http://127.0.0.1:3100";
 const parsedBaseURL = new URL(baseURL);
-const localHosts = new Set(["127.0.0.1", "localhost", "::1"]);
-const serveLocally = localHosts.has(parsedBaseURL.hostname);
+const localHost = getLocalPlaywrightHost(baseURL);
 const port = parsedBaseURL.port || "80";
 
 export default defineConfig({
@@ -32,9 +32,9 @@ export default defineConfig({
     },
   ],
   // External targets are already running; local targets use the configured host and port.
-  webServer: serveLocally
+  webServer: localHost
     ? {
-        command: `npm run start -- --hostname ${parsedBaseURL.hostname} --port ${port}`,
+        command: `npm run start -- --hostname ${localHost} --port ${port}`,
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
