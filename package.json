@@ -48,6 +48,6 @@
     "hermes-parser": "0.36.1",
     "http-proxy-agent": "9.1.0",
     "https-proxy-agent": "9.1.0",
-    "postcss": "8.5.19"
+    "postcss": "8.5.23"
   }
 }
