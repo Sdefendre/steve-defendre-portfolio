@@ -26,27 +26,58 @@ const metadataBase =
   localSiteUrl;
 const canonicalUrl = new URL("/", metadataBase);
 const previewImage = "/project-previews/defendre-solutions.jpg";
+const siteTitle = "Steve Defendre | Full-Stack Developer";
+const siteDescription =
+  "Veteran-owned software development. Transforming ideas into production-ready applications.";
+
+const sharedOpenGraph = {
+  type: "website",
+  locale: "en_US",
+  siteName: "Steve Defendre Portfolio",
+  images: [{ url: previewImage, width: 1280, height: 720, alt: "Steve Defendre portfolio preview" }],
+} satisfies NonNullable<Metadata["openGraph"]>;
+
+const sharedTwitter = {
+  card: "summary_large_image",
+  images: [previewImage],
+} satisfies NonNullable<Metadata["twitter"]>;
+
+type PageMetadataOptions = {
+  title: string;
+  description: string;
+  canonical: `/${string}` | URL;
+};
+
+export function createPageMetadata({
+  title,
+  description,
+  canonical,
+}: PageMetadataOptions): Metadata {
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      ...sharedOpenGraph,
+      url: canonical,
+      title,
+      description,
+    },
+    twitter: {
+      ...sharedTwitter,
+      title,
+      description,
+    },
+  };
+}
 
 export const siteMetadata: Metadata = {
   metadataBase,
-  title: "Steve Defendre | Full-Stack Developer",
-  description: "Veteran-owned software development. Transforming ideas into production-ready applications.",
-  alternates: { canonical: canonicalUrl },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: canonicalUrl,
-    title: "Steve Defendre | Full-Stack Developer",
-    description: "Veteran-owned software development. Transforming ideas into production-ready applications.",
-    siteName: "Steve Defendre Portfolio",
-    images: [{ url: previewImage, width: 1280, height: 720, alt: "Steve Defendre portfolio preview" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Steve Defendre | Full-Stack Developer",
-    description: "Veteran-owned software development. Transforming ideas into production-ready applications.",
-    images: [previewImage],
-  },
+  ...createPageMetadata({
+    title: siteTitle,
+    description: siteDescription,
+    canonical: canonicalUrl,
+  }),
 };
 
 export const siteViewport: Viewport = {

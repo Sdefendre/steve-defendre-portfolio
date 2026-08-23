@@ -86,6 +86,29 @@ describe("Contact page", () => {
     expect(metadata.title).toBe("Contact Steve Defendre | Project Inquiries");
     expect(metadata.description).toContain("Start a project inquiry");
     expect(metadata.alternates?.canonical).toBe("/contact");
-    expect(metadata.openGraph?.url).toBe("/contact");
+    expect(metadata.openGraph).toMatchObject({
+      type: "website",
+      locale: "en_US",
+      url: "/contact",
+      title: "Contact Steve Defendre | Project Inquiries",
+      description:
+        "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+      siteName: "Steve Defendre Portfolio",
+      images: [
+        {
+          url: "/project-previews/defendre-solutions.jpg",
+          width: 1280,
+          height: 720,
+          alt: "Steve Defendre portfolio preview",
+        },
+      ],
+    });
+    expect(metadata.twitter).toMatchObject({
+      card: "summary_large_image",
+      title: "Contact Steve Defendre | Project Inquiries",
+      description:
+        "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+      images: ["/project-previews/defendre-solutions.jpg"],
+    });
   });
 });

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import {
   LightBulbIcon,
   ShieldCheckIcon,
@@ -6,21 +5,14 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { ExternalLink } from "@/components/ExternalLink";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "About Steve Defendre | Veteran Software Builder",
   description:
     "Meet Steve Defendre, a military veteran, full-stack engineer, and founder of Defendre Solutions.",
-  alternates: {
-    canonical: "/about",
-  },
-  openGraph: {
-    title: "About Steve Defendre | Veteran Software Builder",
-    description:
-      "Meet Steve Defendre, a military veteran, full-stack engineer, and founder of Defendre Solutions.",
-    url: "/about",
-  },
-};
+  canonical: "/about",
+});
 
 const principles = [
   {
