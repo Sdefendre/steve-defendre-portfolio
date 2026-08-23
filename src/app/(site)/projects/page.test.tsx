@@ -39,6 +39,11 @@ test("preserves shared Open Graph metadata for the projects route", () => {
   });
   expect(metadata.twitter).toMatchObject({
     title: "Projects | Steve Defendre",
-    images: ["/project-previews/defendre-solutions.jpg"],
+    images: [
+      {
+        url: "/project-previews/defendre-solutions.jpg",
+        alt: "Steve Defendre portfolio preview",
+      },
+    ],
   });
 });

@@ -97,8 +97,8 @@ describe("Contact page", () => {
       images: [
         {
           url: "/project-previews/defendre-solutions.jpg",
-          width: 1280,
-          height: 720,
+          width: 1440,
+          height: 900,
           alt: "Steve Defendre portfolio preview",
         },
       ],
@@ -108,7 +108,12 @@ describe("Contact page", () => {
       title: "Contact Steve Defendre | Project Inquiries",
       description:
         "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
-      images: ["/project-previews/defendre-solutions.jpg"],
+      images: [
+        {
+          url: "/project-previews/defendre-solutions.jpg",
+          alt: "Steve Defendre portfolio preview",
+        },
+      ],
     });
   });
 });
