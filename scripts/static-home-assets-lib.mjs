@@ -21,6 +21,7 @@ const inputFiles = [
   "src/data/navigation.ts",
   "src/data/projects.ts",
   "src/data/socials.ts",
+  "src/lib/site-metadata.ts",
   "scripts/check-static-home-assets.mjs",
   "scripts/check-static-home-runtime.mjs",
   "scripts/render-static-home.tsx",

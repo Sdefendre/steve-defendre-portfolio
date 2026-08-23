@@ -25,7 +25,12 @@ const metadataBase =
   normalizeSiteUrl(process.env.VERCEL_URL) ??
   localSiteUrl;
 const canonicalUrl = new URL("/", metadataBase);
-const previewImage = "/project-previews/defendre-solutions.jpg";
+export const socialPreviewImage = {
+  url: "/project-previews/defendre-solutions.jpg",
+  width: 1440,
+  height: 900,
+  alt: "Steve Defendre portfolio preview",
+} as const;
 const siteTitle = "Steve Defendre | Full-Stack Developer";
 const siteDescription =
   "Veteran-owned software development. Transforming ideas into production-ready applications.";
@@ -34,12 +39,12 @@ const sharedOpenGraph = {
   type: "website",
   locale: "en_US",
   siteName: "Steve Defendre Portfolio",
-  images: [{ url: previewImage, width: 1280, height: 720, alt: "Steve Defendre portfolio preview" }],
+  images: [socialPreviewImage],
 } satisfies NonNullable<Metadata["openGraph"]>;
 
 const sharedTwitter = {
   card: "summary_large_image",
-  images: [previewImage],
+  images: [{ url: socialPreviewImage.url, alt: socialPreviewImage.alt }],
 } satisfies NonNullable<Metadata["twitter"]>;
 
 type PageMetadataOptions = {

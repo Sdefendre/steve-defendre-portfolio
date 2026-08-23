@@ -51,6 +51,11 @@ test('About Page preserves shared Open Graph metadata', () => {
   })
   expect(metadata.twitter).toMatchObject({
     title: 'About Steve Defendre | Veteran Software Builder',
-    images: ['/project-previews/defendre-solutions.jpg'],
+    images: [
+      {
+        url: '/project-previews/defendre-solutions.jpg',
+        alt: 'Steve Defendre portfolio preview',
+      },
+    ],
   })
 })
