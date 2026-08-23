@@ -115,6 +115,7 @@ describe('Projects Data', () => {
     expect(featuredProject.role).toMatch(/Founder/i);
     expect(featuredProject.outcome).toMatch(/studio brand/i);
     expect(featuredProject.ctaLabel).toBe('Visit studio');
+    expect(featuredProject.priority).toBeUndefined();
   });
 
   it('should have unique titles', () => {

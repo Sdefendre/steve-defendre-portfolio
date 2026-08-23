@@ -63,8 +63,8 @@ describe('Sidebar', () => {
     mockUsePathname.mockReturnValue('/');
     render(<Sidebar />);
 
-    const githubLink = screen.getByRole('link', { name: /github/i });
-    const linkedInLink = screen.getByRole('link', { name: /linkedin/i });
+    const githubLink = screen.getByRole('link', { name: 'GitHub (opens in a new tab)' });
+    const linkedInLink = screen.getByRole('link', { name: 'LinkedIn (opens in a new tab)' });
     expect(githubLink).toHaveAttribute('href', 'https://github.com/Sdefendre');
     expect(githubLink).toHaveAttribute('target', '_blank');
     expect(githubLink.className).toContain('focus-ring');
@@ -83,6 +83,8 @@ describe('Sidebar', () => {
     const headshotSrc = headshot.getAttribute('src');
     expect(headshotSrc).not.toBeNull();
     expect(decodeURIComponent(headshotSrc ?? '')).toContain('/headshot.jpg');
+    expect(headshot).toHaveAttribute('loading', 'lazy');
+    expect(headshot).not.toHaveAttribute('fetchpriority', 'high');
   });
 
   it('renders a clear contact CTA', () => {

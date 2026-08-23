@@ -1,5 +1,5 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ContactComposer, buildContactMailtoUrl } from "../ContactComposer";
 
 const trackAnalyticsEvent = vi.hoisted(() => vi.fn());
@@ -11,6 +11,11 @@ vi.mock("@/utils/analytics", () => ({
 describe("ContactComposer", () => {
   beforeEach(() => {
     trackAnalyticsEvent.mockClear();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it("validates required fields and email on blur and submit", () => {
@@ -87,8 +92,16 @@ describe("ContactComposer", () => {
     clickSpy.mockRestore();
   });
 
-  it("announces validation and success status with accessible semantics", async () => {
-    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+  it("renders a perceivable busy state before handoff, then makes no delivery claim", () => {
+    vi.useFakeTimers();
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {
+      expect(screen.getByRole("button", { name: /preparing draft/i })).toBeDisabled();
+      expect(screen.getByRole("button", { name: /preparing draft/i }).closest("form")).toHaveAttribute(
+        "aria-busy",
+        "true",
+      );
+      expect(screen.getByRole("status")).toHaveTextContent(/preparing your email draft/i);
+    });
     const { container } = render(<ContactComposer />);
     const form = container.querySelector("form");
 
@@ -111,10 +124,77 @@ describe("ContactComposer", () => {
 
     fireEvent.submit(form!);
 
-    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent(/mail app should open/i));
-    expect(screen.getByRole("button", { name: /prepare email draft/i })).toBeInTheDocument();
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("button", { name: /preparing draft/i })).toBeDisabled();
 
-    clickSpy.mockRestore();
+    act(() => {
+      vi.advanceTimersByTime(299);
+    });
+    expect(screen.getByRole("button", { name: /preparing draft/i })).toBeDisabled();
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+
+    expect(screen.getByRole("status")).toHaveTextContent(/email draft requested/i);
+    expect(screen.getByRole("status")).toHaveTextContent(/nothing was sent/i);
+    expect(screen.getByRole("status")).toHaveTextContent(/if no mail app opened/i);
+    expect(screen.getByRole("status")).not.toHaveTextContent(/message sent|email sent/i);
+    expect(screen.getByRole("button", { name: /prepare email draft/i })).toBeInTheDocument();
+    expect(form).toHaveAttribute("aria-busy", "false");
+  });
+
+  it("clears the preparing timer when the composer unmounts", () => {
+    vi.useFakeTimers();
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+    const clearTimeoutSpy = vi.spyOn(window, "clearTimeout");
+    const { container, unmount } = render(<ContactComposer />);
+
+    fillValidForm();
+    fireEvent.submit(container.querySelector("form")!);
+    unmount();
+
+    expect(clearTimeoutSpy).toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("bounds field values and rejects a mailto URL that exceeds cross-app limits", () => {
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+    const { container } = render(<ContactComposer />);
+
+    expect(screen.getByLabelText(/your name/i)).toHaveAttribute("maxlength", "80");
+    expect(screen.getByLabelText(/email address/i)).toHaveAttribute("maxlength", "254");
+    expect(screen.getByRole("textbox", { name: /message/i })).toHaveAttribute("maxlength", "1000");
+
+    fireEvent.change(screen.getByLabelText(/your name/i), { target: { value: "Steve Example" } });
+    fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: "steve@example.com" } });
+    fireEvent.change(screen.getByLabelText(/project type/i), { target: { value: "new-website" } });
+    fireEvent.change(screen.getByLabelText(/budget range/i), { target: { value: "10k-25k" } });
+    fireEvent.change(screen.getByRole("textbox", { name: /message/i }), {
+      target: { value: "🙂".repeat(500) },
+    });
+
+    expect(screen.getByText(/1000\/1000/i)).toBeInTheDocument();
+    fireEvent.submit(container.querySelector("form")!);
+
+    expect(screen.getByText(/shorten your message or use fewer special characters/i)).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /message/i })).toHaveFocus();
+    expect(clickSpy).not.toHaveBeenCalled();
+    expect(trackAnalyticsEvent).not.toHaveBeenCalled();
+  });
+
+  it("reports a failed mail-app handoff without implying that anything was sent", () => {
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {
+      throw new Error("No mail handler");
+    });
+    const { container } = render(<ContactComposer />);
+
+    fillValidForm();
+    fireEvent.submit(container.querySelector("form")!);
+
+    expect(screen.getByRole("alert")).toHaveTextContent(/could not be opened/i);
+    expect(screen.getByRole("alert")).toHaveTextContent(/nothing was sent/i);
+    expect(screen.getByRole("button", { name: /prepare email draft/i })).toBeEnabled();
   });
 
   it("drops undefined analytics properties before calling track", async () => {
@@ -147,3 +227,13 @@ describe("ContactComposer", () => {
     }));
   });
 });
+
+function fillValidForm() {
+  fireEvent.change(screen.getByLabelText(/your name/i), { target: { value: "Steve Example" } });
+  fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: "steve@example.com" } });
+  fireEvent.change(screen.getByLabelText(/project type/i), { target: { value: "new-website" } });
+  fireEvent.change(screen.getByLabelText(/budget range/i), { target: { value: "10k-25k" } });
+  fireEvent.change(screen.getByRole("textbox", { name: /message/i }), {
+    target: { value: "This is a detailed enough project inquiry." },
+  });
+}

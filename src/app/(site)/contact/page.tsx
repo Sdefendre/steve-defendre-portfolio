@@ -5,6 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { CopyEmailButton } from "@/components/CopyEmailButton";
 import { ContactComposer } from "@/components/ContactComposer";
+import { ExternalLink } from "@/components/ExternalLink";
 import { contactLinks } from "@/data/socials";
 import { isSafeHref } from "@/utils/url";
 
@@ -29,10 +30,6 @@ const footerContactLinks = contactLinks.filter((link) => link.priority === "foot
 
 function safeHref(href: string) {
   return isSafeHref(href) ? href : "#";
-}
-
-function isMailTo(href: string) {
-  return href.startsWith("mailto:");
 }
 
 export default function Contact() {
@@ -103,9 +100,9 @@ export default function Contact() {
 
       <section
         aria-labelledby="contact-composer-heading"
-        className="spatial-window spatial-reveal grid gap-8 rounded-[2rem] border border-[var(--border)] p-5 sm:p-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:p-10"
+        className="spatial-window spatial-reveal !overflow-visible grid gap-8 rounded-[2rem] border border-[var(--border)] p-5 sm:p-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:p-10"
       >
-        <div className="space-y-4 lg:sticky lg:top-8">
+        <div className="space-y-4 lg:sticky lg:top-36">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
             Draft first
           </p>
@@ -141,10 +138,9 @@ export default function Contact() {
         <ul className="grid gap-4 lg:grid-cols-3">
           {secondaryContactLinks.map((link, index) => (
             <li key={link.name} className={index === 1 ? "lg:mt-8" : ""}>
-              <a
+              <ExternalLink
                 href={safeHref(link.href)}
-                target={isMailTo(link.href) ? undefined : "_blank"}
-                rel={isMailTo(link.href) ? undefined : "noopener noreferrer"}
+                aria-label={link.name}
                 className="spatial-glass focus-ring group flex min-h-52 h-full flex-col justify-between rounded-[1.75rem] border border-[var(--border)] p-5 transition-[transform,background-color] duration-300 hover:-translate-y-1 hover:bg-[var(--surface-elevated)] active:translate-y-0"
               >
                 <div>
@@ -175,7 +171,7 @@ export default function Contact() {
                     link.value
                   )}
                 </p>
-              </a>
+              </ExternalLink>
             </li>
           ))}
         </ul>
@@ -197,16 +193,14 @@ export default function Contact() {
         {footerContactLinks.length > 0 && (
           <div className="flex flex-wrap gap-3">
             {footerContactLinks.map((link) => (
-              <a
+              <ExternalLink
                 key={link.name}
                 href={safeHref(link.href)}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="focus-ring inline-flex min-h-11 items-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-5 text-sm font-bold text-[var(--foreground)] transition-colors hover:bg-[var(--surface-elevated)]"
                 aria-label={`${link.name} Defendre Solutions`}
               >
                 {link.name}
-              </a>
+              </ExternalLink>
             ))}
           </div>
         )}

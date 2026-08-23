@@ -8,6 +8,14 @@ describe("HomeNavigation", () => {
     const homeLinks = screen.getAllByRole("link", { name: "Home" });
     expect(homeLinks).toHaveLength(2);
     homeLinks.forEach((link) => expect(link).toHaveAttribute("aria-current", "page"));
-    expect(screen.getByRole("link", { name: "GitHub" })).toHaveAttribute("rel", "noopener noreferrer");
+    const githubLink = screen.getByRole("link", {
+      name: "GitHub (opens in a new tab)",
+    });
+    expect(githubLink).toHaveAttribute("target", "_blank");
+    expect(githubLink).toHaveAttribute("rel", "noopener noreferrer");
+
+    const avatar = screen.getByRole("img", { name: "Steve Defendre" });
+    expect(avatar).toHaveAttribute("loading", "lazy");
+    expect(avatar).toHaveAttribute("fetchpriority", "low");
   });
 });

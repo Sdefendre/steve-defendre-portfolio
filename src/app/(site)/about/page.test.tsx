@@ -13,7 +13,7 @@ test('About Page renders founder and veteran narrative', () => {
   render(<About />)
   expect(screen.getByText('Veteran founder building practical software')).toBeDefined()
   expect(screen.getByText(/military veteran, full-stack engineer/i)).toBeDefined()
-  expect(screen.getByRole('link', { name: 'Defendre Solutions' })).toHaveAttribute(
+  expect(screen.getByRole('link', { name: 'Defendre Solutions (opens in a new tab)' })).toHaveAttribute(
     'href',
     'https://defendresolutions.com'
   )

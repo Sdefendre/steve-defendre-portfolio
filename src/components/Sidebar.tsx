@@ -19,7 +19,6 @@ export default function Sidebar() {
               width={46}
               height={46}
               className="h-[46px] w-[46px] rounded-full object-cover object-top ring-1 ring-[var(--border-strong)] shadow-[0_10px_28px_rgba(0,4,8,0.46)]"
-              priority
             />
             <span
               aria-hidden="true"

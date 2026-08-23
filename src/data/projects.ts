@@ -29,7 +29,7 @@ export const projects: Project[] = [
     outcome: "Established the studio brand, service positioning, and delivery home base for client software work.",
     category: "Studio", year: 2026, status: "Live",
     caseStudy: { challenge: "Present a broad software practice with enough clarity for small teams to understand where the studio fits.", approach: "Built a focused studio narrative around custom applications, practical consulting, and disciplined delivery.", impact: "Created a clear, public home for the studio's positioning, services, and client conversations." },
-    tags: ["Next.js", "React", "TypeScript"], gradient: "from-slate-600 to-indigo-600", url: "https://defendresolutions.com", image: "/project-previews/defendre-solutions.jpg", priority: true, ctaLabel: "Visit studio",
+    tags: ["Next.js", "React", "TypeScript"], gradient: "from-slate-600 to-indigo-600", url: "https://defendresolutions.com", image: "/project-previews/defendre-solutions.jpg", ctaLabel: "Visit studio",
   },
   {
     initials: "FV", title: "FreeVoiceTranscribe",

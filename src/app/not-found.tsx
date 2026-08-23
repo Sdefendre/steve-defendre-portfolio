@@ -3,6 +3,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { BriefcaseIcon, EnvelopeIcon, HomeIcon } from "@heroicons/react/24/outline";
 import HomeNavigation from "@/components/HomeNavigation";
+import { ExternalLink } from "@/components/ExternalLink";
 
 export const metadata: Metadata = {
   title: "Page Not Found | Steve Defendre",
@@ -86,14 +87,12 @@ export default async function NotFound() {
 
               <p className="relative border-t border-[var(--border)] pt-5 text-xs text-[var(--muted)]">
                 Built by{" "}
-                <a
+                <ExternalLink
                   href="https://defendresolutions.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="focus-ring rounded-sm font-bold text-[var(--foreground)] underline decoration-[var(--accent)] underline-offset-4 transition-colors hover:text-[var(--accent)]"
                 >
                   Defendre Solutions
-                </a>
+                </ExternalLink>
               </p>
             </div>
           </div>

@@ -49,12 +49,21 @@ test.describe("contact form", () => {
     await page.getByLabel("Project type").selectOption("new-website");
     await page.getByLabel("Budget range").selectOption("5k-10k");
     await page.getByLabel("Message").fill("A proof-led site & launch plan? Yes.");
+    const draftStatus = page
+      .locator("form")
+      .filter({ has: page.getByLabel("Your name") })
+      .getByRole("status");
 
     await page.getByRole("button", { name: "Prepare email draft" }).click();
 
-    await expect(
-      page.getByText("Your mail app should open with the draft ready to review.", { exact: true }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: "Preparing draft" })).toBeVisible();
+    await expect(draftStatus).toHaveText("Preparing your email draft.");
+
+    await expect(draftStatus).toContainText("Email draft requested.");
+    await expect(draftStatus).toContainText("Nothing was sent.");
+    await expect(draftStatus).toContainText(
+      "If no mail app opened, use Email Steve or copy the address above.",
+    );
 
     const draftHref = await page.evaluate(() => {
       const values = (window as Window & { __interceptedMailtoHrefs?: string[] }).__interceptedMailtoHrefs;
