@@ -24,7 +24,7 @@ describe("Contact page", () => {
     expect(screen.getByLabelText(/budget range/i)).toBeInTheDocument();
   });
 
-  it("renders GitHub, LinkedIn, and Defendre Solutions as secondary links", () => {
+  it("exposes secure new-tab context for GitHub, LinkedIn, and Defendre Solutions", () => {
     render(<Contact />);
 
     const secondarySection = screen
@@ -34,27 +34,52 @@ describe("Contact page", () => {
     expect(secondarySection).not.toBeNull();
 
     const secondary = within(secondarySection as HTMLElement);
-    expect(secondary.getByRole("link", { name: /github/i })).toHaveAttribute(
-      "href",
-      "https://github.com/Sdefendre",
-    );
-    expect(secondary.getByRole("link", { name: /linkedin/i })).toHaveAttribute(
-      "href",
-      "https://www.linkedin.com/in/joseph-m-defendre-a11a47225/",
-    );
-    expect(secondary.getByRole("link", { name: /defendre solutions/i })).toHaveAttribute(
-      "href",
-      "https://defendresolutions.com",
-    );
+    const expectedLinks = [
+      ["GitHub", "https://github.com/Sdefendre"],
+      ["LinkedIn", "https://www.linkedin.com/in/joseph-m-defendre-a11a47225/"],
+      ["Defendre Solutions", "https://defendresolutions.com"],
+    ] as const;
+
+    for (const [name, href] of expectedLinks) {
+      const link = secondary.getByRole("link", {
+        name: `${name} (opens in a new tab)`,
+      });
+
+      expect(link).toHaveAttribute("href", href);
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      expect(link).toHaveTextContent(name);
+      expect(link).not.toHaveTextContent("opens in a new tab");
+    }
     expect(secondary.queryByRole("link", { name: /support/i })).not.toBeInTheDocument();
   });
 
-  it("demotes Support to a low-priority footer link", () => {
+  it("exposes secure new-tab context for the low-priority Support footer link", () => {
     render(<Contact />);
 
-    const supportLink = screen.getByRole("link", { name: /support defendre solutions/i });
+    const supportLink = screen.getByRole("link", {
+      name: "Support Defendre Solutions (opens in a new tab)",
+    });
     expect(supportLink).toHaveAttribute("href", "https://buymeacoffee.com/defendresolutions");
+    expect(supportLink).toHaveAttribute("target", "_blank");
+    expect(supportLink).toHaveAttribute("rel", "noopener noreferrer");
     expect(supportLink).toHaveClass("rounded-full");
+    expect(supportLink).toHaveTextContent("Support");
+    expect(supportLink).not.toHaveTextContent("opens in a new tab");
+  });
+
+  it("keeps the desktop draft panel sticky with clearance from the fixed dock", () => {
+    render(<Contact />);
+
+    const heading = screen.getByRole("heading", {
+      name: /prepare an email draft without losing the thread/i,
+    });
+    const explainer = heading.parentElement;
+    const composerSection = heading.closest("section");
+
+    expect(composerSection).toHaveClass("!overflow-visible");
+    expect(explainer).toHaveClass("lg:sticky", "lg:top-36");
+    expect(explainer).not.toHaveClass("lg:top-8");
   });
 
   it("exports route-specific contact metadata", () => {

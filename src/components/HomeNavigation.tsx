@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { primaryNavItems } from "@/data/navigation";
 import { socialLinks } from "@/data/socials";
+import { ExternalLink } from "./ExternalLink";
 
 const desktopLinkClass =
   "focus-ring dock-link group relative flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border px-3 text-sm font-semibold xl:px-4";
@@ -20,6 +21,9 @@ export default function HomeNavigation({ activeHref = "/" }: { activeHref?: stri
                 alt="Steve Defendre"
                 width="46"
                 height="46"
+                loading="lazy"
+                fetchPriority="low"
+                decoding="async"
                 className="h-[46px] w-[46px] rounded-full object-cover object-top ring-1 ring-[var(--border-strong)] shadow-[0_10px_28px_rgba(0,4,8,0.46)]"
               />
               <span aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-[3px] border-[var(--surface-opaque)] bg-[var(--success)] shadow-[0_0_12px_rgba(137,215,173,0.72)]" />
@@ -50,9 +54,9 @@ export default function HomeNavigation({ activeHref = "/" }: { activeHref?: stri
             </div>
             <nav className="hidden items-center 2xl:flex" aria-label="Social links">
               {socialLinks.map((link) => (
-                <a key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.name} className="focus-ring dock-link flex min-h-11 min-w-11 items-center justify-center rounded-full text-[var(--muted)] hover:bg-[rgba(207,244,251,0.055)] hover:text-[var(--foreground)]">
+                <ExternalLink key={link.name} href={link.href} aria-label={link.name} className="focus-ring dock-link flex min-h-11 min-w-11 items-center justify-center rounded-full text-[var(--muted)] hover:bg-[rgba(207,244,251,0.055)] hover:text-[var(--foreground)]">
                   <link.icon aria-hidden="true" className="h-[17px] w-[17px]" />
-                </a>
+                </ExternalLink>
               ))}
             </nav>
             <a href="/contact" aria-label="Start a project" className="focus-ring group flex min-h-11 w-11 shrink-0 items-center justify-center gap-0 rounded-full bg-[var(--accent-strong)] px-0 text-sm font-extrabold text-[var(--accent-foreground)] shadow-[0_10px_28px_rgba(0,4,8,0.38)] transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0 md:w-auto md:gap-2 md:px-4">

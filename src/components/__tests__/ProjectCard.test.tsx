@@ -76,20 +76,24 @@ describe('ProjectCard', () => {
     expect(anchor).toHaveAttribute('href', props.url);
   });
 
-  it('renders a custom image when image prop is provided', () => {
+  it.each(['Live', 'Prototype'] as const)(
+    'renders an accurate custom image alternative for %s status',
+    (status) => {
     const props = { ...defaultProps, image: '/test-image.png' };
-    render(<ProjectCard {...props} />);
+    render(<ProjectCard {...props} status={status} />);
 
     const img = screen.getByRole('img');
     const imgSrc = img.getAttribute('src');
     expect(imgSrc).not.toBeNull();
     expect(decodeURIComponent(imgSrc ?? '')).toContain(props.image);
-    expect(img).toHaveAttribute('alt', `${props.title} live project preview for ${props.role}`);
+    expect(img).toHaveAttribute('alt', `Preview of the ${props.title} project`);
+    expect(img).not.toHaveAttribute('alt', expect.stringMatching(/live/i));
     expect(img).toHaveAttribute(
       'sizes',
       '(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 50vw, 520px'
     );
-  });
+    },
+  );
 
   it('renders compact variant with shorter text treatment and compact image sizes', () => {
     const props = {
@@ -113,6 +117,19 @@ describe('ProjectCard', () => {
     render(<ProjectCard {...defaultProps} variant="detailed" />);
 
     expect(screen.getByText(defaultProps.description)).not.toHaveClass('line-clamp-2');
+  });
+
+  it('keeps featured images lazy unless project data explicitly requests priority', () => {
+    const props = { ...defaultProps, image: '/test-image.png' };
+    const { rerender } = render(<ProjectCard {...props} variant="featured" />);
+
+    const image = screen.getByRole('img');
+    expect(image).toHaveAttribute('loading', 'lazy');
+    expect(image).not.toHaveAttribute('fetchpriority', 'high');
+
+    rerender(<ProjectCard {...props} variant="featured" priority />);
+    expect(screen.getByRole('img')).toHaveAttribute('loading', 'eager');
+    expect(screen.getByRole('img')).toHaveAttribute('fetchpriority', 'high');
   });
 
   it('renders a linked fallback preview without an iframe when url is provided and image is missing', () => {

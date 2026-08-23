@@ -66,7 +66,7 @@ function ProjectCard({
   const isFeatured = variant === "featured";
   const hasSafeUrl = Boolean(url && isSafeHref(url));
   const isLive = status === "Live";
-  const imageAlt = `${title} live project preview for ${role}`;
+  const imageAlt = `Preview of the ${title} project`;
   const imageSizes = isCompact
     ? "(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 42vw, 420px"
     : isFeatured
@@ -111,7 +111,7 @@ function ProjectCard({
             alt={imageAlt}
             sizes={imageSizes}
             className="pointer-events-none object-cover object-top motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.015] motion-reduce:transition-none"
-            priority={priority || isFeatured}
+            priority={priority}
           />
         ) : (
           <ProjectPreviewFallback initials={initials} gradient={gradient} />

@@ -5,6 +5,7 @@ import {
   WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { ExternalLink } from "@/components/ExternalLink";
 
 export const metadata: Metadata = {
   title: "About Steve Defendre | Veteran Software Builder",
@@ -116,14 +117,12 @@ export default function About() {
                 <p>
                   I&apos;m Steve Defendre, a military veteran, full-stack engineer,
                   and founder of{" "}
-                  <a
+                  <ExternalLink
                     href="https://defendresolutions.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="focus-ring rounded-sm font-bold text-[var(--foreground)] underline decoration-[var(--accent)] decoration-2 underline-offset-4 transition-colors hover:text-[var(--accent)]"
                   >
                     Defendre Solutions
-                  </a>
+                  </ExternalLink>
                   . I build software for founders and small businesses that need a
                   partner who can translate a rough need into a usable product.
                 </p>

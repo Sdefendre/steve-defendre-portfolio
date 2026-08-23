@@ -35,6 +35,14 @@ export function NavLink({
 
   const isExternal = href.startsWith("http") || target === "_blank";
   const safeHref = isSafeHref(href) ? href : "#";
+  const opensInNewTab = target === "_blank";
+  const textLabel =
+    typeof resolvedChildren === "string" ? resolvedChildren : undefined;
+  const baseAccessibleLabel = ariaLabel ?? textLabel;
+  const accessibleLabel =
+    opensInNewTab && baseAccessibleLabel
+      ? `${baseAccessibleLabel} (opens in a new tab)`
+      : ariaLabel;
 
   if (isExternal || forceDocumentNavigation) {
     return (
@@ -43,9 +51,12 @@ export function NavLink({
         className={resolvedClassName}
         target={target}
         rel={rel || (target === "_blank" ? "noopener noreferrer" : undefined)}
-        aria-label={ariaLabel}
+        aria-label={accessibleLabel}
       >
         {resolvedChildren}
+        {opensInNewTab && !baseAccessibleLabel && (
+          <span className="sr-only"> — opens in a new tab</span>
+        )}
       </a>
     );
   }
@@ -56,7 +67,7 @@ export function NavLink({
       prefetch={false}
       className={resolvedClassName}
       aria-current={isActive ? "page" : undefined}
-      aria-label={ariaLabel}
+      aria-label={accessibleLabel}
     >
       {resolvedChildren}
     </Link>

@@ -2,6 +2,7 @@ import ProjectCard from "@/components/ProjectCard";
 import { projects } from "@/data/projects";
 import { ArrowRightIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import ResponsiveImage from "@/components/ResponsiveImage";
+import { ExternalLink } from "@/components/ExternalLink";
 
 const telemetry = [
   {
@@ -58,14 +59,12 @@ export default function Home() {
 
             <p className="mt-7 max-w-[62ch] text-base leading-8 text-[var(--muted-foreground)] sm:text-lg">
               I&apos;m Steve Defendre, a veteran and founder of{" "}
-              <a
+              <ExternalLink
                 href="https://defendresolutions.com"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="focus-ring rounded-sm font-semibold text-[var(--foreground)] underline decoration-[var(--accent)] decoration-2 underline-offset-4 transition-colors hover:text-[var(--accent)]"
               >
                 Defendre Solutions
-              </a>
+              </ExternalLink>
               . I turn loose requirements into dependable applications, booking
               flows, portfolios, and operational tools.
             </p>

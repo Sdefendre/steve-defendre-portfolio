@@ -3,11 +3,17 @@
 import {
   PaperAirplaneIcon,
 } from "@heroicons/react/24/outline";
-import { useId, useState } from "react";
+import { flushSync } from "react-dom";
+import { useEffect, useId, useRef, useState } from "react";
 import type { ChangeEventHandler, FormEvent, ReactNode } from "react";
 import { trackAnalyticsEvent } from "@/utils/analytics";
 
 const RECIPIENT_EMAIL = "steve@defendresolutions.com";
+const NAME_MAX_LENGTH = 80;
+const EMAIL_MAX_LENGTH = 254;
+const MESSAGE_MAX_LENGTH = 1000;
+const MAILTO_URL_MAX_LENGTH = 2000;
+const PREPARING_STATUS_DURATION_MS = 300;
 
 const PROJECT_TYPE_OPTIONS = [
   { value: "new-website", label: "New website" },
@@ -74,12 +80,23 @@ export function ContactComposer() {
   const projectTypeId = useId();
   const budgetRangeId = useId();
   const messageId = useId();
+  const readyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [values, setValues] = useState<ContactComposerValues>(INITIAL_VALUES);
   const [errors, setErrors] = useState<ContactComposerErrors>({});
   const [touched, setTouched] = useState<ContactComposerTouched>({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
-  const [status, setStatus] = useState<"idle" | "preparing" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "preparing" | "ready" | "validation-error" | "handoff-error"
+  >("idle");
+
+  useEffect(() => {
+    return () => {
+      if (readyTimer.current) {
+        clearTimeout(readyTimer.current);
+      }
+    };
+  }, []);
 
   const showError = (field: ContactFieldName) => Boolean((submitAttempted || touched[field]) && errors[field]);
 
@@ -106,6 +123,15 @@ export function ContactComposer() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (status === "preparing") {
+      return;
+    }
+
+    if (readyTimer.current) {
+      clearTimeout(readyTimer.current);
+      readyTimer.current = null;
+    }
+
     setSubmitAttempted(true);
 
     const trimmedValues: ContactComposerValues = {
@@ -124,7 +150,7 @@ export function ContactComposer() {
     );
 
     if (firstInvalidField) {
-      setStatus("error");
+      setStatus("validation-error");
       setTouched({
         name: true,
         email: true,
@@ -142,7 +168,28 @@ export function ContactComposer() {
       return;
     }
 
-    setStatus("preparing");
+    const mailtoUrl = buildContactMailtoUrl(trimmedValues);
+
+    if (mailtoUrl.length > MAILTO_URL_MAX_LENGTH) {
+      setErrors((current) => ({
+        ...current,
+        message: "Shorten your message or use fewer special characters so the email draft works across mail apps.",
+      }));
+      setTouched((current) => ({ ...current, message: true }));
+      setStatus("validation-error");
+      focusField("message", {
+        nameId,
+        emailId,
+        projectTypeId,
+        budgetRangeId,
+        messageId,
+      });
+      return;
+    }
+
+    // Keep the mailto click in the original user gesture while committing the
+    // busy UI first, so browsers do not treat the handoff as a popup.
+    flushSync(() => setStatus("preparing"));
     trackAnalyticsEvent("contact_mailto_draft", {
       project_type: trimmedValues.projectType,
       budget_range: trimmedValues.budgetRange,
@@ -150,28 +197,31 @@ export function ContactComposer() {
 
     try {
       const draftLink = document.createElement("a");
-      draftLink.href = buildContactMailtoUrl(trimmedValues);
+      draftLink.href = mailtoUrl;
       draftLink.rel = "noreferrer noopener";
       draftLink.click();
-      setStatus("success");
+      readyTimer.current = setTimeout(() => {
+        readyTimer.current = null;
+        setStatus("ready");
+      }, PREPARING_STATUS_DURATION_MS);
     } catch {
-      setStatus("error");
+      setStatus("handoff-error");
     }
   }
 
   const statusMessage =
     status === "preparing"
       ? "Preparing your email draft."
-      : status === "success"
-        ? "Your mail app should open with the draft ready to review."
-        : status === "error"
+      : status === "ready"
+        ? "Email draft requested. Nothing was sent. If no mail app opened, use Email Steve or copy the address above."
+        : status === "validation-error"
           ? "Check the highlighted fields and try again."
+          : status === "handoff-error"
+            ? "The email draft could not be opened. Nothing was sent; use Email Steve or copy the address above."
           : "This form prepares an email draft in your mail app. Nothing is sent automatically.";
 
   const statusTone =
-    status === "success"
-      ? "text-emerald-300"
-      : status === "error"
+    status === "validation-error" || status === "handoff-error"
         ? "text-rose-300"
         : "text-[var(--muted-foreground)]";
 
@@ -193,7 +243,9 @@ export function ContactComposer() {
           onBlur={() => handleBlur("name")}
           onChange={(value) => updateField("name", value)}
         >
-          {(fieldProps) => <input type="text" autoComplete="name" {...fieldProps} />}
+          {(fieldProps) => (
+            <input type="text" autoComplete="name" maxLength={NAME_MAX_LENGTH} {...fieldProps} />
+          )}
         </Field>
 
         <Field
@@ -206,7 +258,15 @@ export function ContactComposer() {
           onBlur={() => handleBlur("email")}
           onChange={(value) => updateField("email", value)}
         >
-          {(fieldProps) => <input type="email" autoComplete="email" inputMode="email" {...fieldProps} />}
+          {(fieldProps) => (
+            <input
+              type="email"
+              autoComplete="email"
+              inputMode="email"
+              maxLength={EMAIL_MAX_LENGTH}
+              {...fieldProps}
+            />
+          )}
         </Field>
 
         <Field
@@ -263,12 +323,12 @@ export function ContactComposer() {
           id={messageId}
           value={values.message}
           error={showError("message") ? errors.message : undefined}
-          hint="A few sentences about the work is enough."
+          hint={`A few sentences about the work is enough. ${values.message.length}/${MESSAGE_MAX_LENGTH}`}
           onBlur={() => handleBlur("message")}
           onChange={(value) => updateField("message", value)}
           className="md:col-span-2"
         >
-          {(fieldProps) => <textarea rows={6} {...fieldProps} />}
+          {(fieldProps) => <textarea rows={6} maxLength={MESSAGE_MAX_LENGTH} {...fieldProps} />}
         </Field>
       </div>
 
@@ -298,8 +358,8 @@ export function ContactComposer() {
 
       <p
         id={statusId}
-        role={status === "error" ? "alert" : "status"}
-        aria-live={status === "error" ? "assertive" : "polite"}
+        role={status === "validation-error" || status === "handoff-error" ? "alert" : "status"}
+        aria-live={status === "validation-error" || status === "handoff-error" ? "assertive" : "polite"}
         aria-atomic="true"
         className={`mt-4 min-h-6 text-sm leading-6 ${statusTone}`}
       >
@@ -422,6 +482,14 @@ function validateField(
     return "Enter a valid email address.";
   }
 
+  if (field === "name" && trimmedValue.length > NAME_MAX_LENGTH) {
+    return `Keep your name to ${NAME_MAX_LENGTH} characters or fewer.`;
+  }
+
+  if (field === "email" && trimmedValue.length > EMAIL_MAX_LENGTH) {
+    return `Keep your email address to ${EMAIL_MAX_LENGTH} characters or fewer.`;
+  }
+
   if (field === "projectType" && !getOptionLabel(PROJECT_TYPE_OPTIONS, trimmedValue)) {
     return "Choose the kind of project you want help with.";
   }
@@ -432,6 +500,10 @@ function validateField(
 
   if (field === "message" && trimmedValue.length < 10) {
     return "Add a bit more detail so I can prepare the draft.";
+  }
+
+  if (field === "message" && trimmedValue.length > MESSAGE_MAX_LENGTH) {
+    return `Keep your message to ${MESSAGE_MAX_LENGTH} characters or fewer.`;
   }
 
   void normalizedValues;

@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { getLocalPlaywrightHost } from "./playwright.config.helpers";
+import {
+  browserProjectNames,
+  getLocalPlaywrightHost,
+} from "./playwright.config.helpers";
 
 describe("getLocalPlaywrightHost", () => {
   it.each([
@@ -10,5 +13,11 @@ describe("getLocalPlaywrightHost", () => {
     ["https://portfolio.example.com", undefined],
   ])("classifies %s", (baseURL, expectedHost) => {
     expect(getLocalPlaywrightHost(baseURL)).toBe(expectedHost);
+  });
+});
+
+describe("browserProjectNames", () => {
+  it("keeps focused accessibility coverage on all supported engines", () => {
+    expect(browserProjectNames).toEqual(["chromium", "firefox", "webkit"]);
   });
 });

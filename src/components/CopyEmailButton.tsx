@@ -15,7 +15,9 @@ interface CopyEmailButtonProps {
 export function CopyEmailButton({ email, className }: CopyEmailButtonProps) {
   const statusId = useId();
   const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const consecutiveFailures = useRef(0);
   const [status, setStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [failureAnnouncement, setFailureAnnouncement] = useState(0);
 
   useEffect(() => {
     return () => {
@@ -31,17 +33,24 @@ export function CopyEmailButton({ email, className }: CopyEmailButtonProps) {
     }
 
     if (typeof navigator === "undefined" || !navigator.clipboard?.writeText) {
-      setStatus("error");
+      announceFailure();
       return;
     }
 
     try {
       await navigator.clipboard.writeText(email);
+      consecutiveFailures.current = 0;
       setStatus("copied");
       resetTimer.current = setTimeout(() => setStatus("idle"), 2500);
     } catch {
-      setStatus("error");
+      announceFailure();
     }
+  }
+
+  function announceFailure() {
+    consecutiveFailures.current += 1;
+    setFailureAnnouncement(consecutiveFailures.current);
+    setStatus("error");
   }
 
   const isCopied = status === "copied";
@@ -49,7 +58,7 @@ export function CopyEmailButton({ email, className }: CopyEmailButtonProps) {
   const statusMessage = isCopied
     ? `${email} copied to clipboard.`
     : isError
-      ? "Email copy failed. Select the address above and copy it manually."
+      ? `Copy attempt ${failureAnnouncement} failed. Select the address above and copy it manually.`
       : "Copy the email address to keep it handy.";
 
   return (

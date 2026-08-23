@@ -57,8 +57,28 @@ describe("CopyEmailButton", () => {
     fireEvent.click(screen.getByRole("button", { name: /copy email/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole("status")).toHaveTextContent("Email copy failed");
+      expect(screen.getByRole("status")).toHaveTextContent("Copy attempt 1 failed");
     });
     expect(alertSpy).not.toHaveBeenCalled();
+  });
+
+  it("changes the live-region text for every consecutive copy failure", async () => {
+    const writeText = vi.fn().mockRejectedValue(new Error("Clipboard denied"));
+    setClipboard(writeText);
+
+    render(<CopyEmailButton email="steve@defendresolutions.com" />);
+
+    fireEvent.click(screen.getByRole("button", { name: /copy email/i }));
+    await waitFor(() => {
+      expect(screen.getByRole("status")).toHaveTextContent("Copy attempt 1 failed");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /try copy again/i }));
+    await waitFor(() => {
+      expect(screen.getByRole("status")).toHaveTextContent("Copy attempt 2 failed");
+    });
+
+    expect(writeText).toHaveBeenCalledTimes(2);
+    expect(screen.getByRole("status")).toHaveAttribute("aria-live", "polite");
   });
 });

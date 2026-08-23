@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import Sidebar from "@/components/Sidebar";
 import MobileNav from "@/components/MobileNav";
+import { ExternalLink } from "@/components/ExternalLink";
 
 export default async function RootLayout({
   children,
@@ -30,14 +31,12 @@ export default async function RootLayout({
             <footer className="mt-16 flex flex-col items-center gap-3 border-t border-[var(--border)] py-7 text-center sm:flex-row sm:justify-between sm:text-left lg:mt-24">
               <p className="text-sm leading-relaxed text-[var(--muted)]">
                 Made by{" "}
-                <a
+                <ExternalLink
                   href="https://defendresolutions.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="focus-ring rounded-sm font-semibold text-[var(--accent-strong)] transition-colors duration-200 hover:text-[var(--foreground)]"
                 >
                   Defendre Solutions
-                </a>
+                </ExternalLink>
               </p>
               <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
                 <span

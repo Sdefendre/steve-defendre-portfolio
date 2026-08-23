@@ -86,8 +86,21 @@ describe('NavLink', () => {
       </NavLink>
     );
 
-    const link = screen.getByRole('link', { name: /download/i });
+    const link = screen.getByRole('link', { name: 'Download (opens in a new tab)' });
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('extends an explicit label with the new-tab disclosure', () => {
+    mockUsePathname.mockReturnValue('/');
+    render(
+      <NavLink href="https://example.com" target="_blank" aria-label="Example profile">
+        <span aria-hidden="true">Icon</span>
+      </NavLink>
+    );
+
+    expect(screen.getByRole('link', {
+      name: 'Example profile (opens in a new tab)',
+    })).toHaveAttribute('rel', 'noopener noreferrer');
   });
 });

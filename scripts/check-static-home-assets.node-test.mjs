@@ -45,3 +45,31 @@ test("detects tampered committed static homepage output", () => {
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+test("keeps hidden navigation and below-fold project images out of the eager preload set", () => {
+  const manifest = readFileSync(
+    join(repository, "src/generated/static-home-assets.ts"),
+    "utf8",
+  );
+  const htmlPath = JSON.parse(
+    manifest.match(/staticHomeHtml = ("[^"]+")/)?.[1] ?? "",
+  );
+  const html = readFileSync(join(repository, "public", htmlPath.slice(1)), "utf8");
+
+  assert.doesNotMatch(
+    html,
+    /<link rel="preload" as="image"[^>]+headshot\.jpg[^>]+w=48/,
+  );
+  assert.doesNotMatch(
+    html,
+    /<link rel="preload" as="image"[^>]+project-previews/,
+  );
+  assert.match(
+    html,
+    /<img[^>]+alt="Steve Defendre"[^>]+loading="lazy"[^>]+fetchPriority="low"/,
+  );
+  assert.match(
+    html,
+    /<img[^>]+alt="Preview of the Defendre Solutions project"[^>]+loading="lazy"/,
+  );
+});
