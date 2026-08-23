@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import {
   ArrowTopRightOnSquareIcon,
   EnvelopeIcon,
@@ -7,22 +6,15 @@ import { CopyEmailButton } from "@/components/CopyEmailButton";
 import { ContactComposer } from "@/components/ContactComposer";
 import { ExternalLink } from "@/components/ExternalLink";
 import { contactLinks } from "@/data/socials";
+import { createPageMetadata } from "@/lib/site-metadata";
 import { isSafeHref } from "@/utils/url";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Contact Steve Defendre | Project Inquiries",
   description:
     "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
-  alternates: {
-    canonical: "/contact",
-  },
-  openGraph: {
-    title: "Contact Steve Defendre | Project Inquiries",
-    description:
-      "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
-    url: "/contact",
-  },
-};
+  canonical: "/contact",
+});
 
 const primaryContact = contactLinks.find((link) => link.priority === "primary");
 const secondaryContactLinks = contactLinks.filter((link) => link.priority === "secondary");

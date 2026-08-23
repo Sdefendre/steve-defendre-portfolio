@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Projects from "./page";
+import Projects, { metadata } from "./page";
 import { projectCategories, projects } from "@/data/projects";
 import { expect, test, vi } from "vitest";
 
@@ -26,4 +26,19 @@ test("passes the project catalog and categories into ProjectExplorer", () => {
 
   expect(props.projects).toBe(projects);
   expect(props.categories).toBe(projectCategories);
+});
+
+test("preserves shared Open Graph metadata for the projects route", () => {
+  expect(metadata.alternates?.canonical).toBe("/projects");
+  expect(metadata.openGraph).toMatchObject({
+    type: "website",
+    locale: "en_US",
+    url: "/projects",
+    siteName: "Steve Defendre Portfolio",
+    images: [{ url: "/project-previews/defendre-solutions.jpg" }],
+  });
+  expect(metadata.twitter).toMatchObject({
+    title: "Projects | Steve Defendre",
+    images: ["/project-previews/defendre-solutions.jpg"],
+  });
 });

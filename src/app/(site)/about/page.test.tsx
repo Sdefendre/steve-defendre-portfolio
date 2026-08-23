@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
-import About from './page'
+import About, { metadata } from './page'
 
 test('About Page renders headings', () => {
   render(<About />)
@@ -38,4 +38,19 @@ test('About Page renders proof points and operating principles', () => {
   expect(screen.getByText('Mission clarity')).toBeDefined()
   expect(screen.getByText('Delivery discipline')).toBeDefined()
   expect(screen.getByText('Owner-level judgment')).toBeDefined()
+})
+
+test('About Page preserves shared Open Graph metadata', () => {
+  expect(metadata.alternates?.canonical).toBe('/about')
+  expect(metadata.openGraph).toMatchObject({
+    type: 'website',
+    locale: 'en_US',
+    url: '/about',
+    siteName: 'Steve Defendre Portfolio',
+    images: [{ url: '/project-previews/defendre-solutions.jpg' }],
+  })
+  expect(metadata.twitter).toMatchObject({
+    title: 'About Steve Defendre | Veteran Software Builder',
+    images: ['/project-previews/defendre-solutions.jpg'],
+  })
 })

@@ -43,6 +43,42 @@ test.describe("contact form", () => {
     await expectNoHorizontalOverflow(page);
   });
 
+  test("renders complete route-specific and shared social metadata", async ({ page }) => {
+    await expect(page).toHaveTitle("Contact Steve Defendre | Project Inquiries");
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      "content",
+      "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/contact$/);
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      "content",
+      "Contact Steve Defendre | Project Inquiries",
+    );
+    await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
+      "content",
+      "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+    );
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute("content", /\/contact$/);
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "website");
+    await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute("content", "en_US");
+    await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
+      "content",
+      "Steve Defendre Portfolio",
+    );
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      "content",
+      /\/project-previews\/defendre-solutions\.jpg$/,
+    );
+    await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
+      "content",
+      /\/project-previews\/defendre-solutions\.jpg$/,
+    );
+    await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute(
+      "content",
+      "Contact Steve Defendre | Project Inquiries",
+    );
+  });
+
   test("opens an encoded mailto draft without sending email", async ({ page }) => {
     await page.getByLabel("Your name").fill("Ada Lovelace");
     await page.getByLabel("Email address").fill("ada@example.com");
