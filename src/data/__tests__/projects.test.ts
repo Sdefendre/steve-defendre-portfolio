@@ -113,7 +113,7 @@ describe('Projects Data', () => {
 
     expect(featuredProject.title).toBe('Defendre Solutions');
     expect(featuredProject.role).toMatch(/Founder/i);
-    expect(featuredProject.outcome).toMatch(/studio brand/i);
+    expect(featuredProject.outcome).toMatch(/studio site/i);
     expect(featuredProject.ctaLabel).toBe('Visit studio');
     expect(featuredProject.priority).toBeUndefined();
   });

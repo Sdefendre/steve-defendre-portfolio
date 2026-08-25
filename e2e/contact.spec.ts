@@ -44,19 +44,19 @@ test.describe("contact form", () => {
   });
 
   test("renders complete route-specific and shared social metadata", async ({ page }) => {
-    await expect(page).toHaveTitle("Contact Steve Defendre | Project Inquiries");
+    await expect(page).toHaveTitle("Contact Steve Defendre | Project inquiries");
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       "content",
-      "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+      "Email Steve Defendre about a software project, or find him on GitHub and LinkedIn.",
     );
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/contact$/);
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       "content",
-      "Contact Steve Defendre | Project Inquiries",
+      "Contact Steve Defendre | Project inquiries",
     );
     await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
       "content",
-      "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+      "Email Steve Defendre about a software project, or find him on GitHub and LinkedIn.",
     );
     await expect(page.locator('meta[property="og:url"]')).toHaveAttribute("content", /\/contact$/);
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "website");
@@ -75,7 +75,7 @@ test.describe("contact form", () => {
     );
     await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute(
       "content",
-      "Contact Steve Defendre | Project Inquiries",
+      "Contact Steve Defendre | Project inquiries",
     );
   });
 

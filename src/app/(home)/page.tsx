@@ -10,12 +10,12 @@ const telemetry = [
     value: "Defendre Solutions",
   },
   {
-    label: "Build mode",
-    value: "Strategy through launch",
+    label: "Work",
+    value: "From plan to launch",
   },
   {
-    label: "Operating edge",
-    value: "Veteran discipline",
+    label: "Background",
+    value: "Veteran, CS graduate",
   },
 ] as const;
 
@@ -45,7 +45,7 @@ export default function Home() {
                   aria-hidden="true"
                   className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_1rem_rgba(52,211,153,0.8)]"
                 />
-                Available for select builds
+                Open to new work
               </span>
               <span className="inline-flex items-center gap-2 px-1">
                 <SparklesIcon aria-hidden="true" className="h-4 w-4 text-[var(--accent)]" />
@@ -54,19 +54,20 @@ export default function Home() {
             </div>
 
             <h1 className="max-w-[13ch] font-display text-[clamp(2.5rem,7vw,7rem)] font-medium leading-[0.92] tracking-[-0.055em] text-[var(--foreground)]">
-              Software with clarity, depth, and staying power.
+              I build software you can keep.
             </h1>
 
             <p className="mt-7 max-w-[62ch] text-base leading-8 text-[var(--muted-foreground)] sm:text-lg">
-              I&apos;m Steve Defendre, a veteran and founder of{" "}
+              I&apos;m Steve Defendre, a veteran, CS graduate, and founder of{" "}
               <ExternalLink
                 href="https://defendresolutions.com"
                 className="focus-ring rounded-sm font-semibold text-[var(--foreground)] underline decoration-[var(--accent)] decoration-2 underline-offset-4 transition-colors hover:text-[var(--accent)]"
               >
                 Defendre Solutions
               </ExternalLink>
-              . I turn loose requirements into dependable applications, booking
-              flows, portfolios, and operational tools.
+              . I take loose requirements and ship booking flows, portfolios,
+              ops tools, and the other applications a small team still has to
+              run next year.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -81,7 +82,7 @@ export default function Home() {
                 href="/projects"
                 className="focus-ring inline-flex min-h-12 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-6 text-sm font-bold text-[var(--foreground)] transition-[transform,background-color] duration-300 hover:-translate-y-1 hover:bg-[var(--surface-elevated)] active:translate-y-0"
               >
-                Explore the work
+                View projects
               </a>
             </div>
           </div>
@@ -138,7 +139,7 @@ export default function Home() {
               id="selected-work-heading"
               className="mt-3 max-w-[15ch] font-display text-[clamp(2.4rem,5vw,4.5rem)] font-medium leading-none tracking-[-0.04em] text-[var(--foreground)]"
             >
-              A constellation of shipped systems.
+              A few I shipped.
             </h2>
           </div>
           <a

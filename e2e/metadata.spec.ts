@@ -6,27 +6,27 @@ const previewImageAlt = "Steve Defendre portfolio preview";
 const routes = [
   {
     path: "/",
-    title: "Steve Defendre | Full-Stack Developer",
+    title: "Steve Defendre | Full-stack developer",
     description:
-      "Veteran-owned software development. Transforming ideas into production-ready applications.",
+      "Veteran-owned software studio. I build web apps, booking flows, and ops tools for small teams.",
   },
   {
     path: "/about",
-    title: "About Steve Defendre | Veteran Software Builder",
+    title: "About Steve Defendre | Veteran software builder",
     description:
-      "Meet Steve Defendre, a military veteran, full-stack engineer, and founder of Defendre Solutions.",
+      "Steve Defendre is a military veteran, CS graduate, and founder of Defendre Solutions. He builds software for small teams that need a usable product.",
   },
   {
     path: "/projects",
     title: "Projects | Steve Defendre",
     description:
-      "Explore software, booking, healthcare, transition, and portfolio projects built by Steve Defendre.",
+      "Client sites, studio work, and products Steve Defendre has shipped, including booking, healthcare, and local tools.",
   },
   {
     path: "/contact",
-    title: "Contact Steve Defendre | Project Inquiries",
+    title: "Contact Steve Defendre | Project inquiries",
     description:
-      "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+      "Email Steve Defendre about a software project, or find him on GitHub and LinkedIn.",
   },
 ] as const;
 

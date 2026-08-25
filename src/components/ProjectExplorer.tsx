@@ -60,7 +60,7 @@ export default function ProjectExplorer({
       <header className="spatial-window spatial-reveal grid gap-8 rounded-[2rem] border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(16rem,0.75fr)] lg:p-10">
         <div className="max-w-3xl">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-            Project explorer
+            Shipped work
           </p>
           <h1
             id="project-explorer-heading"
@@ -69,9 +69,8 @@ export default function ProjectExplorer({
             Projects
           </h1>
           <p className="mt-6 max-w-[58ch] text-base leading-8 text-[var(--muted-foreground)] sm:text-lg">
-            Browse studio, client, and product work by context. Each project
-            keeps the full-card summary up front and exposes the challenge,
-            approach, and impact inline when you want the deeper read.
+            Studio work, client sites, and my own products. Open a case study if
+            you want the problem, what I did, and what changed.
           </p>
         </div>
 
@@ -90,7 +89,7 @@ export default function ProjectExplorer({
             </div>
             <p className="max-w-[11rem] text-sm leading-6 text-[var(--muted-foreground)]">
               {activeCategory === "All"
-                ? "The full archive is on display."
+                ? "Every project is here."
                 : `${activeCategory} projects only.`}
             </p>
           </div>
@@ -111,8 +110,7 @@ export default function ProjectExplorer({
             </p>
           </div>
           <p className="max-w-[32ch] text-sm leading-6 text-[var(--muted-foreground)]">
-            Use a category chip to narrow the archive without losing the page
-            context.
+            Filter by studio, client, or product.
           </p>
         </div>
 
@@ -228,8 +226,7 @@ export default function ProjectExplorer({
             Nothing in {activeCategory} right now.
           </h2>
           <p className="mt-4 max-w-[44ch] text-base leading-7 text-[var(--muted-foreground)]">
-            Reset the filter to scan the full archive, or try a different
-            category if you were looking for a specific kind of build.
+            Show everything, or pick another category.
           </p>
           <button
             type="button"

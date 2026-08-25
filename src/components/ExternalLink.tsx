@@ -28,7 +28,7 @@ export function ExternalLink({
     >
       {children}
       {!accessibleLabel && (
-        <span className="sr-only"> — {newTabDisclosure}</span>
+        <span className="sr-only">, {newTabDisclosure}</span>
       )}
     </a>
   );

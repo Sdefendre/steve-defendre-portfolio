@@ -5,8 +5,9 @@ import HomeShell from "../src/components/HomeShell";
 import { socialPreviewImage } from "../src/lib/site-metadata";
 
 export function renderStaticHomeDocument(cssPath: string, fontClasses: string, canonical: string) {
-  const title = "Steve Defendre | Full-Stack Developer";
-  const description = "Veteran-owned software development. Transforming ideas into production-ready applications.";
+  const title = "Steve Defendre | Full-stack developer";
+  const description =
+    "Veteran-owned software studio. I build web apps, booking flows, and ops tools for small teams.";
   const image = new URL(socialPreviewImage.url, canonical).toString();
   return "<!doctype html>" + renderToStaticMarkup(
     <html lang="en" data-scroll-behavior="smooth"><head>

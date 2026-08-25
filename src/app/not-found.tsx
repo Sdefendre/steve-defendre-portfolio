@@ -6,9 +6,9 @@ import HomeNavigation from "@/components/HomeNavigation";
 import { ExternalLink } from "@/components/ExternalLink";
 
 export const metadata: Metadata = {
-  title: "Page Not Found | Steve Defendre",
+  title: "Page not found | Steve Defendre",
   description:
-    "The requested page could not be found. Return to Steve Defendre's portfolio, projects, or contact page.",
+    "That page is missing. Go back to the home page, projects, or contact.",
 };
 
 const recoveryLinks = [
@@ -58,14 +58,13 @@ export default async function NotFound() {
 
               <div className="relative max-w-2xl py-6 sm:py-16">
                 <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--accent)]">
-                  Steve Defendre · Signal lost
+                  Steve Defendre · Wrong address
                 </p>
                 <h1 className="mt-4 max-w-[9ch] font-display text-[clamp(3.25rem,8vw,7rem)] font-medium leading-[0.9] tracking-[-0.055em] text-[var(--foreground)]">
                   Page not found.
                 </h1>
                 <p className="mt-6 max-w-[54ch] text-base leading-8 text-[var(--muted-foreground)]">
-                  This route drifted out of view. The portfolio, project work, and contact
-                  channel are still online.
+                  That page is gone. Home, projects, and contact still work.
                 </p>
 
                 <nav aria-label="Page recovery" className="mt-7 sm:mt-9">

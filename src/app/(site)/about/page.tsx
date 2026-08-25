@@ -8,30 +8,30 @@ import { ExternalLink } from "@/components/ExternalLink";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 export const metadata = createPageMetadata({
-  title: "About Steve Defendre | Veteran Software Builder",
+  title: "About Steve Defendre | Veteran software builder",
   description:
-    "Meet Steve Defendre, a military veteran, full-stack engineer, and founder of Defendre Solutions.",
+    "Steve Defendre is a military veteran, CS graduate, and founder of Defendre Solutions. He builds software for small teams that need a usable product.",
   canonical: "/about",
 });
 
 const principles = [
   {
     icon: ShieldCheckIcon,
-    title: "Mission clarity",
+    title: "Start with the outcome",
     description:
-      "Every build starts with the outcome, the user path, and the decision the software needs to make easier.",
+      "I begin with the job the software has to do, who uses it, and which decision it should make easier.",
   },
   {
     icon: WrenchScrewdriverIcon,
-    title: "Delivery discipline",
+    title: "Ship the next usable version",
     description:
-      "Military habits shape the cadence: define the objective, reduce ambiguity, and ship the next usable version.",
+      "I still work the way I did in the service. Name the objective, cut the fog, ship something you can use, then improve it.",
   },
   {
     icon: LightBulbIcon,
-    title: "Owner-level judgment",
+    title: "Own it after launch",
     description:
-      "As the founder of Defendre Solutions, I think beyond the screen into operations, maintenance, and business fit.",
+      "As the founder of Defendre Solutions, I stay with operations, maintenance, and whether the thing still fits the business next quarter.",
   },
 ] as const;
 
@@ -41,11 +41,11 @@ const proofPoints = [
     value: "Founder of Defendre Solutions",
   },
   {
-    label: "Delivery range",
-    value: "Client web, local AI products, desktop tools, and agent workflows",
+    label: "What I ship",
+    value: "Client sites, local AI tools, desktop apps, and agent workflows",
   },
   {
-    label: "Core stack",
+    label: "Stack",
     value: "Next.js, React, TypeScript, Python, Electron, PostgreSQL, AWS",
   },
 ] as const;
@@ -53,22 +53,22 @@ const proofPoints = [
 const capabilities = [
   {
     name: "Interface",
-    description: "Clear, responsive product surfaces that make the next action obvious.",
+    description: "React and Next.js UIs where the next click is obvious.",
     skills: ["React", "Next.js", "Tailwind CSS"],
   },
   {
     name: "Systems",
-    description: "Typed application logic and APIs built for real operating workflows.",
+    description: "TypeScript backends and APIs that match how the work runs.",
     skills: ["TypeScript", "Node.js", "REST APIs", "GraphQL"],
   },
   {
     name: "Delivery",
-    description: "Practical release habits that keep software moving after launch.",
+    description: "Git, Docker, and AWS so a release still ships after the first launch.",
     skills: ["Git", "Docker", "AWS"],
   },
   {
     name: "Infrastructure",
-    description: "Data and automation foundations selected for durability, not novelty.",
+    description: "PostgreSQL and Python when the data and jobs have to last.",
     skills: ["PostgreSQL", "Python"],
   },
 ] as const;
@@ -89,10 +89,10 @@ export default function About() {
             />
             <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-[color-mix(in_oklab,var(--background)_76%,transparent)] p-4 backdrop-blur-xl">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                Current mission
+                Right now
               </p>
               <p className="mt-2 text-sm font-bold leading-6 text-[var(--foreground)]">
-                Helping small teams turn rough needs into software they can depend on.
+                I turn a rough need into software a small team can run without me in the room.
               </p>
             </div>
           </div>
@@ -100,28 +100,28 @@ export default function About() {
           <div className="flex flex-col justify-between py-1">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-                Veteran founder building practical software
+                Veteran, CS graduate, product engineer
               </p>
               <h1 className="mt-4 max-w-[10ch] font-display text-[clamp(3rem,6vw,6rem)] font-medium leading-[0.94] tracking-[-0.05em] text-[var(--foreground)]">
-                About Me
+                About me
               </h1>
               <div className="mt-7 max-w-[62ch] space-y-5 text-base leading-8 text-[var(--muted-foreground)]">
                 <p>
-                  I&apos;m Steve Defendre, a military veteran, full-stack engineer,
-                  and founder of{" "}
+                  I&apos;m Steve Defendre, a military veteran, CS graduate, and
+                  founder of{" "}
                   <ExternalLink
                     href="https://defendresolutions.com"
                     className="focus-ring rounded-sm font-bold text-[var(--foreground)] underline decoration-[var(--accent)] decoration-2 underline-offset-4 transition-colors hover:text-[var(--accent)]"
                   >
                     Defendre Solutions
                   </ExternalLink>
-                  . I build software for founders and small businesses that need a
-                  partner who can translate a rough need into a usable product.
+                  . I build for founders and small businesses that need someone
+                  who can take a messy request and ship a product they can use.
                 </p>
                 <p>
-                  My work sits between product thinking and hands-on engineering:
-                  scope the mission, design the path, build the interface, wire the
-                  backend, and keep the result maintainable after launch.
+                  I do the product calls and the engineering. I scope the work,
+                  design the path, build the UI, wire the backend, and leave
+                  something you can maintain after launch.
                 </p>
               </div>
             </div>
@@ -154,11 +154,11 @@ export default function About() {
             id="mission-path-heading"
             className="mt-3 max-w-[10ch] font-display text-[clamp(2.5rem,5vw,4.75rem)] font-medium leading-none tracking-[-0.04em] text-[var(--foreground)]"
           >
-            The mission path.
+            How I take a project.
           </h2>
           <p className="mt-5 max-w-[42ch] text-base leading-7 text-[var(--muted-foreground)]">
-            Strategy, engineering, and ownership stay connected from the first
-            conversation through the live release.
+            I stay on the work from the first call through launch, including the
+            parts that usually get handed off.
           </p>
         </div>
 
@@ -187,13 +187,13 @@ export default function About() {
       <section aria-labelledby="capabilities-heading">
         <div className="mb-8 max-w-2xl">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-            Working range
+            What I work with
           </p>
           <h2
             id="capabilities-heading"
             className="mt-3 font-display text-[clamp(2.5rem,5vw,4.75rem)] font-medium leading-none tracking-[-0.04em] text-[var(--foreground)]"
           >
-            Capabilities
+            What I use
           </h2>
         </div>
 
