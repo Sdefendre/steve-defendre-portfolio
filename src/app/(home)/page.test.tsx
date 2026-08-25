@@ -54,24 +54,24 @@ test("renders Home page with header information", () => {
   expect(screen.getByText(/Veteran founder · Full-stack builder/i)).toBeInTheDocument();
   expect(
     screen.getByRole("heading", {
-      name: /Software with clarity, depth, and staying power/i,
+      name: /I build software you can keep/i,
       level: 1,
     })
   ).toBeInTheDocument();
 
-  expect(screen.getByText(/I'm Steve Defendre, a veteran and founder of/i)).toBeInTheDocument();
+  expect(screen.getByText(/I'm Steve Defendre, a veteran, CS graduate, and founder of/i)).toBeInTheDocument();
 
   const link = screen.getByRole("link", { name: /Defendre Solutions/i });
   expect(link).toHaveAttribute("href", "https://defendresolutions.com");
 
   expect(screen.getByRole("link", { name: /Start a project/i })).toHaveAttribute("href", "/contact");
-  expect(screen.getByRole("link", { name: "Explore the work" })).toHaveAttribute("href", "/projects");
+  expect(screen.getByRole("link", { name: "View projects" })).toHaveAttribute("href", "/projects");
 });
 
 test("renders Projects section with correct heading", () => {
   render(<Home />);
   expect(
-    screen.getByRole("heading", { name: /A constellation of shipped systems/i, level: 2 }),
+    screen.getByRole("heading", { name: /A few I shipped/i, level: 2 }),
   ).toBeInTheDocument();
 });
 

@@ -100,7 +100,7 @@ function ProjectCard({
                     : "bg-amber-300 shadow-[0_0_0.75rem_rgba(252,211,77,0.7)]",
                 )}
               />
-              {isLive ? "Live deployment" : "Prototype"}
+              {isLive ? "Live" : "Prototype"}
             </span>
           {image && <span>{initials}</span>}
         </div>

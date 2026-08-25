@@ -31,14 +31,14 @@ describe('ProjectCard', () => {
     const { rerender } = render(<ProjectCard {...defaultProps} status="Live" />);
 
     const liveStatus = screen.getByTestId('project-status');
-    expect(liveStatus).toHaveTextContent('Live deployment');
+    expect(liveStatus).toHaveTextContent('Live');
     expect(liveStatus.firstElementChild).toHaveClass('bg-emerald-400');
 
     rerender(<ProjectCard {...defaultProps} status="Prototype" />);
 
     const prototypeStatus = screen.getByTestId('project-status');
     expect(prototypeStatus).toHaveTextContent('Prototype');
-    expect(prototypeStatus).not.toHaveTextContent('Live deployment');
+    expect(prototypeStatus).not.toHaveTextContent('Live');
     expect(prototypeStatus.firstElementChild).toHaveClass('bg-amber-300');
   });
 

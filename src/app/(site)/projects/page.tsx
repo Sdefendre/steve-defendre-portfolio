@@ -5,7 +5,7 @@ import { createPageMetadata } from "@/lib/site-metadata";
 export const metadata = createPageMetadata({
   title: "Projects | Steve Defendre",
   description:
-    "Explore software, booking, healthcare, transition, and portfolio projects built by Steve Defendre.",
+    "Client sites, studio work, and products Steve Defendre has shipped, including booking, healthcare, and local tools.",
   canonical: "/projects",
 });
 

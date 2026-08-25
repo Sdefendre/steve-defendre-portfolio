@@ -48,7 +48,7 @@ export default function HomeNavigation({ activeHref = "/" }: { activeHref?: stri
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-1.5">
-            <div className="hidden min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-transparent px-2 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[var(--muted-foreground)] lg:flex xl:px-3" title="Available for select builds and advisory work">
+            <div className="hidden min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-transparent px-2 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[var(--muted-foreground)] lg:flex xl:px-3" title="Open to new work">
               <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-[var(--success)] shadow-[0_0_10px_rgba(137,215,173,0.62)]" />
               <span className="hidden xl:inline">Available</span><span className="sr-only xl:hidden">Available for work</span>
             </div>

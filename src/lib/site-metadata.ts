@@ -31,9 +31,9 @@ export const socialPreviewImage = {
   height: 900,
   alt: "Steve Defendre portfolio preview",
 } as const;
-const siteTitle = "Steve Defendre | Full-Stack Developer";
+const siteTitle = "Steve Defendre | Full-stack developer";
 const siteDescription =
-  "Veteran-owned software development. Transforming ideas into production-ready applications.";
+  "Veteran-owned software studio. I build web apps, booking flows, and ops tools for small teams.";
 
 const sharedOpenGraph = {
   type: "website",

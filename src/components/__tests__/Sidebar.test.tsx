@@ -17,7 +17,7 @@ describe('Sidebar', () => {
 
     const header = screen.getByRole('complementary');
     const identity = screen.getByText('Steve Defendre').parentElement;
-    const status = screen.getByTitle('Available for select builds and advisory work');
+    const status = screen.getByTitle('Open to new work');
     const cta = screen.getByRole('link', { name: /start a project/i });
 
     expect(header).toHaveClass(

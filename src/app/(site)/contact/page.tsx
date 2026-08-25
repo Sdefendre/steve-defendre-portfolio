@@ -10,9 +10,9 @@ import { createPageMetadata } from "@/lib/site-metadata";
 import { isSafeHref } from "@/utils/url";
 
 export const metadata = createPageMetadata({
-  title: "Contact Steve Defendre | Project Inquiries",
+  title: "Contact Steve Defendre | Project inquiries",
   description:
-    "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+    "Email Steve Defendre about a software project, or find him on GitHub and LinkedIn.",
   canonical: "/contact",
 });
 
@@ -36,14 +36,14 @@ export default function Contact() {
           <EnvelopeIcon aria-hidden="true" className="h-6 w-6" />
         </div>
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--accent)]">
-          Open channel
+          Contact
         </p>
         <h1 className="mt-4 font-display text-[clamp(3.25rem,7vw,7rem)] font-medium leading-[0.9] tracking-[-0.055em] text-[var(--foreground)]">
-          Start a project conversation.
+          Tell me what you need built.
         </h1>
         <p className="mx-auto mt-6 max-w-[60ch] text-base leading-8 text-[var(--muted-foreground)]">
-          For software builds, product cleanup, and small-business web work, email
-          is the fastest way to start. I read every project inquiry directly.
+          For new sites, cleanup work, and small-business tools, email is the
+          fastest way in. I read every project note myself.
         </p>
       </header>
 
@@ -61,7 +61,7 @@ export default function Contact() {
               aria-hidden="true"
               className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_1rem_rgba(52,211,153,0.75)]"
             />
-            Available for select new projects
+            Open to new work
           </div>
 
           <h2
@@ -96,18 +96,18 @@ export default function Contact() {
       >
         <div className="space-y-4 lg:sticky lg:top-36">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-            Draft first
+            Email draft
           </p>
           <h2
             id="contact-composer-heading"
             className="font-display text-[clamp(2.25rem,4vw,3.75rem)] font-medium leading-[0.95] tracking-[-0.045em] text-[var(--foreground)]"
           >
-            Prepare an email draft without losing the thread.
+            Write the email here, then open it in your mail app.
           </h2>
           <p className="max-w-[42ch] text-sm leading-7 text-[var(--muted-foreground)]">
-            This form prepares a properly encoded email draft in your mail app.
-            Nothing sends automatically, and you still keep the copy button and
-            direct contact links above if that is faster.
+            This form opens a draft in your mail app. Nothing sends on its own.
+            You can still copy the address or use the links above if that is
+            faster.
           </p>
         </div>
 
@@ -117,13 +117,13 @@ export default function Contact() {
       <section aria-labelledby="secondary-contact-heading">
         <div className="mb-8 max-w-2xl">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-            Peripheral channels
+            Also
           </p>
           <h2
             id="secondary-contact-heading"
             className="mt-3 font-display text-[clamp(2.5rem,5vw,4.5rem)] font-medium leading-none tracking-[-0.04em] text-[var(--foreground)]"
           >
-            Other ways to connect
+            GitHub, LinkedIn, and the studio
           </h2>
         </div>
 
@@ -175,11 +175,11 @@ export default function Contact() {
             Defendre Solutions
           </p>
           <h2 className="mt-3 font-display text-3xl font-medium tracking-[-0.04em] text-[var(--foreground)]">
-            Veteran-owned software development.
+            Veteran-owned software studio.
           </h2>
           <p className="mt-3 max-w-[58ch] text-sm leading-7 text-[var(--muted-foreground)]">
-            Helping small businesses compete digitally with thoughtful products and
-            dependable delivery.
+            I build sites and tools for small businesses that want something they
+            can keep, without renting a whole agency.
           </p>
         </div>
         {footerContactLinks.length > 0 && (

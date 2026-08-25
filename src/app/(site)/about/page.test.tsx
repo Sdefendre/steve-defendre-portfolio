@@ -4,15 +4,15 @@ import About, { metadata } from './page'
 
 test('About Page renders headings', () => {
   render(<About />)
-  expect(screen.getAllByText('About Me').length).toBeGreaterThan(0)
-  expect(screen.getByRole('heading', { name: 'The mission path.' })).toBeDefined()
-  expect(screen.getByRole('heading', { name: 'Capabilities' })).toBeDefined()
+  expect(screen.getAllByText('About me').length).toBeGreaterThan(0)
+  expect(screen.getByRole('heading', { name: 'How I take a project.' })).toBeDefined()
+  expect(screen.getByRole('heading', { name: 'What I use' })).toBeDefined()
 })
 
 test('About Page renders founder and veteran narrative', () => {
   render(<About />)
-  expect(screen.getByText('Veteran founder building practical software')).toBeDefined()
-  expect(screen.getByText(/military veteran, full-stack engineer/i)).toBeDefined()
+  expect(screen.getByText('Veteran, CS graduate, product engineer')).toBeDefined()
+  expect(screen.getByText(/military veteran, CS graduate/i)).toBeDefined()
   expect(screen.getByRole('link', { name: 'Defendre Solutions (opens in a new tab)' })).toHaveAttribute(
     'href',
     'https://defendresolutions.com'
@@ -34,10 +34,10 @@ test('About Page renders skills', () => {
 test('About Page renders proof points and operating principles', () => {
   render(<About />)
   expect(screen.getByText('Founder of Defendre Solutions')).toBeDefined()
-  expect(screen.getByText(/Client web, local AI products/i)).toBeDefined()
-  expect(screen.getByText('Mission clarity')).toBeDefined()
-  expect(screen.getByText('Delivery discipline')).toBeDefined()
-  expect(screen.getByText('Owner-level judgment')).toBeDefined()
+  expect(screen.getByText(/Client sites, local AI tools/i)).toBeDefined()
+  expect(screen.getByText('Start with the outcome')).toBeDefined()
+  expect(screen.getByText('Ship the next usable version')).toBeDefined()
+  expect(screen.getByText('Own it after launch')).toBeDefined()
 })
 
 test('About Page preserves shared Open Graph metadata', () => {
@@ -50,7 +50,7 @@ test('About Page preserves shared Open Graph metadata', () => {
     images: [{ url: '/project-previews/defendre-solutions.jpg' }],
   })
   expect(metadata.twitter).toMatchObject({
-    title: 'About Steve Defendre | Veteran Software Builder',
+    title: 'About Steve Defendre | Veteran software builder',
     images: [
       {
         url: '/project-previews/defendre-solutions.jpg',

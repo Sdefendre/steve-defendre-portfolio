@@ -78,7 +78,7 @@ export default function Sidebar() {
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
           <div
             className="hidden min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-transparent px-2 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[var(--muted-foreground)] lg:flex xl:px-3"
-            title="Available for select builds and advisory work"
+            title="Open to new work"
           >
             <span
               aria-hidden="true"

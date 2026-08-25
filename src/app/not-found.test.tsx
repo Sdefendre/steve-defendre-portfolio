@@ -28,7 +28,7 @@ describe("not-found page", () => {
   it("renders branded recovery CTAs with the server-only home shell", async () => {
     render(await NotFound());
 
-    expect(screen.getByText(/Steve Defendre · Signal lost/i)).toBeInTheDocument();
+    expect(screen.getByText(/Steve Defendre · Wrong address/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /page not found/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /home/i })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: /projects/i })).toHaveAttribute("href", "/projects");
@@ -45,7 +45,7 @@ describe("not-found page", () => {
   });
 
   it("exports a specific page title and recovery description", () => {
-    expect(metadata.title).toBe("Page Not Found | Steve Defendre");
-    expect(metadata.description).toContain("portfolio, projects, or contact page");
+    expect(metadata.title).toBe("Page not found | Steve Defendre");
+    expect(metadata.description).toContain("home page, projects, or contact");
   });
 });

@@ -34,7 +34,7 @@ export const contactLinks = [
     value: "steve@defendresolutions.com",
     href: "mailto:steve@defendresolutions.com",
     icon: EnvelopeIcon,
-    description: "Best for project inquiries and availability",
+    description: "Best for new work and scheduling",
     priority: "primary",
   },
   {
@@ -42,7 +42,7 @@ export const contactLinks = [
     value: "github.com/Sdefendre",
     href: "https://github.com/Sdefendre",
     icon: GitHubIcon,
-    description: "Review shipped projects and source work",
+    description: "Code and public repos",
     priority: "secondary",
   },
   {
@@ -51,7 +51,7 @@ export const contactLinks = [
     mobileValue: "LinkedIn profile",
     href: "https://www.linkedin.com/in/joseph-m-defendre-a11a47225/",
     icon: LinkedInIcon,
-    description: "Connect professionally",
+    description: "Work history and messages",
     priority: "secondary",
   },
   {

@@ -1,6 +1,6 @@
-# Steve Defendre Portfolio
+# Steve Defendre portfolio
 
-Personal portfolio site built with Next.js App Router. It presents Steve Defendre's profile, project showcase, and contact links with a visionOS-inspired spatial layout (desktop sidebar + mobile dock).
+Personal site for Steve Defendre. Next.js App Router, with a desktop sidebar and a mobile dock.
 
 **Live:** [steve-defendre-portfolio.vercel.app](https://steve-defendre-portfolio.vercel.app)
 
@@ -12,7 +12,7 @@ Personal portfolio site built with Next.js App Router. It presents Steve Defendr
 - Vitest + Testing Library + jsdom for tests
 - ESLint 9 + `eslint-config-next`
 
-## Getting Started
+## Getting started
 ```bash
 npm install
 npm run dev
@@ -21,13 +21,13 @@ npm run dev
 Open `http://localhost:3000`.
 
 ## Scripts
-- `npm run dev` — start local dev server
-- `npm run build` — build production bundle
-- `npm run start` — run built app
-- `npm run lint` — run ESLint
-- `npm run test` — run Vitest once (`vitest run`)
+- `npm run dev`. Start local dev server
+- `npm run build`. Build production bundle
+- `npm run start`. Run built app
+- `npm run lint`. Run ESLint
+- `npm run test`. Run Vitest once (`vitest run`)
 
-## Environment Variables
+## Environment variables
 `src/app/layout.tsx` computes `siteUrl` in this order:
 1. `NEXT_PUBLIC_SITE_URL` (if set)
 2. `https://${VERCEL_URL}` (if `NEXT_PUBLIC_SITE_URL` is unset and `VERCEL_URL` exists)
@@ -36,18 +36,18 @@ Open `http://localhost:3000`.
 This value is used for `metadataBase`, social metadata, robots, and sitemap.
 
 ## Routes
-- `/` — home intro + selected project cards
-- `/about` — bio, mission path, and capabilities
-- `/projects` — featured build + project archive
-- `/contact` — primary email inquiry + secondary links
-- `/robots.txt` — crawl rules
-- `/sitemap.xml` — sitemap
+- `/`. Home intro and selected project cards
+- `/about`. Bio, how I work, and skills
+- `/projects`. Featured build and project list
+- `/contact`. Primary email inquiry and secondary links
+- `/robots.txt`. Crawl rules
+- `/sitemap.xml`. Sitemap
 
 ## Content
 - Projects: [`src/data/projects.ts`](src/data/projects.ts)
 - Contact / socials: [`src/data/socials.ts`](src/data/socials.ts)
 
-Public contact email is **`steve@defendresolutions.com`** (studio address only — not personal Gmail).
+Public contact email is **`steve@defendresolutions.com`** (studio address only, not personal Gmail).
 
 `Project` fields:
 - Required: `initials`, `title`, `description`, `role`, `outcome`, `tags`, `gradient`, `url`

@@ -7,11 +7,11 @@ describe("Contact page", () => {
     render(<Contact />);
 
     expect(
-      screen.getByRole("heading", { name: /start a project conversation/i }),
+      screen.getByRole("heading", { name: /tell me what you need built/i }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /project inquiry/i })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: /prepare an email draft without losing the thread/i }),
+      screen.getByRole("heading", { name: /write the email here, then open it in your mail app/i }),
     ).toBeInTheDocument();
 
     const emailLink = screen.getByRole("link", { name: /email steve/i });
@@ -28,7 +28,7 @@ describe("Contact page", () => {
     render(<Contact />);
 
     const secondarySection = screen
-      .getByRole("heading", { name: /other ways to connect/i })
+      .getByRole("heading", { name: /github, linkedin, and the studio/i })
       .closest("section");
 
     expect(secondarySection).not.toBeNull();
@@ -72,7 +72,7 @@ describe("Contact page", () => {
     render(<Contact />);
 
     const heading = screen.getByRole("heading", {
-      name: /prepare an email draft without losing the thread/i,
+      name: /write the email here, then open it in your mail app/i,
     });
     const explainer = heading.parentElement;
     const composerSection = heading.closest("section");
@@ -83,16 +83,16 @@ describe("Contact page", () => {
   });
 
   it("exports route-specific contact metadata", () => {
-    expect(metadata.title).toBe("Contact Steve Defendre | Project Inquiries");
-    expect(metadata.description).toContain("Start a project inquiry");
+    expect(metadata.title).toBe("Contact Steve Defendre | Project inquiries");
+    expect(metadata.description).toContain("Email Steve Defendre about a software project");
     expect(metadata.alternates?.canonical).toBe("/contact");
     expect(metadata.openGraph).toMatchObject({
       type: "website",
       locale: "en_US",
       url: "/contact",
-      title: "Contact Steve Defendre | Project Inquiries",
+      title: "Contact Steve Defendre | Project inquiries",
       description:
-        "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+        "Email Steve Defendre about a software project, or find him on GitHub and LinkedIn.",
       siteName: "Steve Defendre Portfolio",
       images: [
         {
@@ -105,9 +105,9 @@ describe("Contact page", () => {
     });
     expect(metadata.twitter).toMatchObject({
       card: "summary_large_image",
-      title: "Contact Steve Defendre | Project Inquiries",
+      title: "Contact Steve Defendre | Project inquiries",
       description:
-        "Start a project inquiry with Steve Defendre and Defendre Solutions, or connect through GitHub and LinkedIn.",
+        "Email Steve Defendre about a software project, or find him on GitHub and LinkedIn.",
       images: [
         {
           url: "/project-previews/defendre-solutions.jpg",
