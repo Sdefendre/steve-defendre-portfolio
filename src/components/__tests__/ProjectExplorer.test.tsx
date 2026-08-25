@@ -143,7 +143,7 @@ describe("ProjectExplorer", () => {
     expect(projectLink).toHaveAttribute("rel", "noopener noreferrer");
 
     const caseStudySummary = screen
-      .getByText(/case study/i)
+      .getByText("Case study")
       .closest("summary");
 
     expect(caseStudySummary).not.toBeNull();

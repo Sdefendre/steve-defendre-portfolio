@@ -59,7 +59,7 @@ test("renders Home page with header information", () => {
     })
   ).toBeInTheDocument();
 
-  expect(screen.getByText(/I'm Steve Defendre, a veteran and founder of/i)).toBeInTheDocument();
+  expect(screen.getByText(/I'm Steve Defendre, a veteran, CS graduate, and founder of/i)).toBeInTheDocument();
 
   const link = screen.getByRole("link", { name: /Defendre Solutions/i });
   expect(link).toHaveAttribute("href", "https://defendresolutions.com");
