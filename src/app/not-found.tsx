@@ -4,11 +4,22 @@ import { headers } from "next/headers";
 import { BriefcaseIcon, EnvelopeIcon, HomeIcon } from "@heroicons/react/24/outline";
 import HomeNavigation from "@/components/HomeNavigation";
 import { ExternalLink } from "@/components/ExternalLink";
+import { createPageMetadata } from "@/lib/site-metadata";
+
+const notFoundTitle = "Page not found | Steve Defendre";
+const notFoundDescription =
+  "That page is gone. Home, projects, and contact still work.";
 
 export const metadata: Metadata = {
-  title: "Page not found | Steve Defendre",
-  description:
-    "That page is missing. Go back to the home page, projects, or contact.",
+  ...createPageMetadata({
+    title: notFoundTitle,
+    description: notFoundDescription,
+    canonical: "/",
+  }),
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 const recoveryLinks = [
@@ -64,7 +75,7 @@ export default async function NotFound() {
                   Page not found.
                 </h1>
                 <p className="mt-6 max-w-[54ch] text-base leading-8 text-[var(--muted-foreground)]">
-                  That page is gone. Home, projects, and contact still work.
+                  {notFoundDescription}
                 </p>
 
                 <nav aria-label="Page recovery" className="mt-7 sm:mt-9">

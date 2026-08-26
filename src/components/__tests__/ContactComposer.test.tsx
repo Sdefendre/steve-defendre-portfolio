@@ -42,6 +42,19 @@ describe("ContactComposer", () => {
     expect(screen.getByText(/add a short message so i can prepare the draft/i)).toBeInTheDocument();
   });
 
+  it("clears the validation banner after the last invalid field is fixed", () => {
+    const { container } = render(<ContactComposer />);
+    const form = container.querySelector("form");
+
+    fireEvent.submit(form!);
+    expect(screen.getByRole("alert")).toHaveTextContent(/check the highlighted fields/i);
+
+    fillValidForm();
+
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent(/nothing is sent automatically/i);
+  });
+
   it("builds a properly encoded mailto draft and tracks the draft action", async () => {
     const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
     const { container } = render(<ContactComposer />);

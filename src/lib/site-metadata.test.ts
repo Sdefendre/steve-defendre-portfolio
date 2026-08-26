@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { metadata as aboutMetadata } from "@/app/(site)/about/page";
 import { metadata as contactMetadata } from "@/app/(site)/contact/page";
 import { metadata as projectsMetadata } from "@/app/(site)/projects/page";
+import { metadata as notFoundMetadata } from "@/app/not-found";
 import { siteMetadata } from "./site-metadata";
 
 const previewImagePath = "public/project-previews/defendre-solutions.jpg";
@@ -14,6 +15,7 @@ const routeMetadata = [
   ["/about", aboutMetadata],
   ["/projects", projectsMetadata],
   ["/contact", contactMetadata],
+  ["/404", notFoundMetadata],
 ] as const;
 
 const startOfFrameMarkers = new Set([

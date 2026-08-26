@@ -28,6 +28,11 @@ const routes = [
     description:
       "Email Steve Defendre about a software project, or find him on GitHub and LinkedIn.",
   },
+  {
+    path: "/this-page-does-not-exist",
+    title: "Page not found | Steve Defendre",
+    description: "That page is gone. Home, projects, and contact still work.",
+  },
 ] as const;
 
 test.describe("social metadata", () => {

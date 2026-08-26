@@ -80,8 +80,8 @@ export function CopyEmailButton({ email, className }: CopyEmailButtonProps) {
       </button>
       <p
         id={statusId}
-        role="status"
-        aria-live="polite"
+        role={isError ? "alert" : "status"}
+        aria-live={isError ? "assertive" : "polite"}
         className={cx(
           "max-w-xs text-center text-xs leading-5",
           isCopied && "text-emerald-300",

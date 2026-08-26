@@ -6,9 +6,8 @@ import {
 import { flushSync } from "react-dom";
 import { useEffect, useId, useRef, useState } from "react";
 import type { ChangeEventHandler, FormEvent, ReactNode } from "react";
+import { primaryContactEmail } from "@/data/socials";
 import { trackAnalyticsEvent } from "@/utils/analytics";
-
-const RECIPIENT_EMAIL = "steve@defendresolutions.com";
 const NAME_MAX_LENGTH = 80;
 const EMAIL_MAX_LENGTH = 254;
 const MESSAGE_MAX_LENGTH = 1000;
@@ -70,7 +69,7 @@ export function buildContactMailtoUrl(values: ContactComposerValues): string {
     "This draft was prepared from the Steve Defendre portfolio contact form.",
   ].join("\r\n");
 
-  return `mailto:${RECIPIENT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return `mailto:${primaryContactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 export function ContactComposer() {
@@ -105,19 +104,29 @@ export function ContactComposer() {
     setValues(nextValues);
 
     if (submitAttempted || touched[field]) {
-      setErrors((current) => ({
-        ...current,
-        [field]: validateField(field, value, nextValues),
-      }));
+      applyFieldError(field, value, nextValues);
     }
   }
 
   function handleBlur(field: ContactFieldName) {
     setTouched((current) => ({ ...current, [field]: true }));
+    applyFieldError(field, values[field], values);
+  }
+
+  function applyFieldError(
+    field: ContactFieldName,
+    value: string,
+    nextValues: ContactComposerValues,
+  ) {
     setErrors((current) => ({
       ...current,
-      [field]: validateField(field, values[field], values),
+      [field]: validateField(field, value, nextValues) ?? undefined,
     }));
+
+    // Drop the stale "check the highlighted fields" banner once the form is valid again.
+    if (status === "validation-error" && !hasFormErrors(validateContactForm(nextValues))) {
+      setStatus("idle");
+    }
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -334,7 +343,7 @@ export function ContactComposer() {
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs leading-5 text-[var(--muted-foreground)]">
-          The button below prepares a `mailto:` draft to {RECIPIENT_EMAIL}.
+          The button below prepares a `mailto:` draft to {primaryContactEmail}.
         </p>
 
         <button
@@ -513,6 +522,10 @@ function validateField(
 
 function getOptionLabel(options: readonly OptionValue[], value: string) {
   return options.find((option) => option.value === value)?.label;
+}
+
+function hasFormErrors(errors: ContactComposerErrors) {
+  return (Object.keys(INITIAL_VALUES) as ContactFieldName[]).some((field) => Boolean(errors[field]));
 }
 
 function focusField(

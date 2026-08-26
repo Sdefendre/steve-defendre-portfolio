@@ -1,4 +1,4 @@
-import { contactLinks, socialLinks, supportLink } from '../socials';
+import { contactLinks, primaryContactEmail, socialLinks, supportLink } from '../socials';
 
 describe('Socials Data', () => {
   describe('socialLinks', () => {
@@ -68,6 +68,14 @@ describe('Socials Data', () => {
       const names = contactLinks.map(l => l.name);
       const uniqueNames = new Set(names);
       expect(uniqueNames.size).toBe(names.length);
+    });
+
+    it('keeps the public studio email as the single primary contact address', () => {
+      const primaryContact = contactLinks.find((link) => link.priority === 'primary');
+
+      expect(primaryContactEmail).toBe('steve@defendresolutions.com');
+      expect(primaryContact?.value).toBe(primaryContactEmail);
+      expect(primaryContact?.href).toBe(`mailto:${primaryContactEmail}`);
     });
 
     it('should keep Support as a footer-priority contact link', () => {

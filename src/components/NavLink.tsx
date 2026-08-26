@@ -51,6 +51,7 @@ export function NavLink({
         className={resolvedClassName}
         target={target}
         rel={rel || (target === "_blank" ? "noopener noreferrer" : undefined)}
+        aria-current={isActive ? "page" : undefined}
         aria-label={accessibleLabel}
       >
         {resolvedChildren}

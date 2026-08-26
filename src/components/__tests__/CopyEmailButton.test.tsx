@@ -57,7 +57,7 @@ describe("CopyEmailButton", () => {
     fireEvent.click(screen.getByRole("button", { name: /copy email/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole("status")).toHaveTextContent("Copy attempt 1 failed");
+      expect(screen.getByRole("alert")).toHaveTextContent("Copy attempt 1 failed");
     });
     expect(alertSpy).not.toHaveBeenCalled();
   });
@@ -70,15 +70,15 @@ describe("CopyEmailButton", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /copy email/i }));
     await waitFor(() => {
-      expect(screen.getByRole("status")).toHaveTextContent("Copy attempt 1 failed");
+      expect(screen.getByRole("alert")).toHaveTextContent("Copy attempt 1 failed");
     });
 
     fireEvent.click(screen.getByRole("button", { name: /try copy again/i }));
     await waitFor(() => {
-      expect(screen.getByRole("status")).toHaveTextContent("Copy attempt 2 failed");
+      expect(screen.getByRole("alert")).toHaveTextContent("Copy attempt 2 failed");
     });
 
     expect(writeText).toHaveBeenCalledTimes(2);
-    expect(screen.getByRole("status")).toHaveAttribute("aria-live", "polite");
+    expect(screen.getByRole("alert")).toHaveAttribute("aria-live", "assertive");
   });
 });

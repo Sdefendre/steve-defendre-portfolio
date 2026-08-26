@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- 404 pages now use their own Open Graph and Twitter titles instead of the
+  homepage, stay out of the search index, and no longer canonicalize a missing
+  URL.
+- Contact form validation copy now clears once every field is valid, instead of
+  leaving "Check the highlighted fields" on screen.
+- Copy-email failures are announced as alerts so they are harder to miss.
+- Home links that do a full page load now mark the current page for
+  screen readers, same as the other nav items.
+- `robots.txt` host no longer includes a trailing slash.
 - Phone layout now keeps the bottom menu off the home portrait and project
   cards (photo first on small screens, shorter featured card, more bottom space).
 - Long project titles such as FreeVoiceTranscribe wrap instead of getting

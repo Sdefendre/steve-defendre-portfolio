@@ -44,8 +44,27 @@ describe("not-found page", () => {
     );
   });
 
-  it("exports a specific page title and recovery description", () => {
+  it("exports page-specific social metadata and keeps the 404 out of the index", () => {
     expect(metadata.title).toBe("Page not found | Steve Defendre");
-    expect(metadata.description).toContain("home page, projects, or contact");
+    expect(metadata.description).toBe(
+      "That page is gone. Home, projects, and contact still work.",
+    );
+    expect(metadata.alternates?.canonical).toBe("/");
+    expect(metadata.robots).toEqual({
+      index: false,
+      follow: true,
+    });
+    expect(metadata.openGraph).toMatchObject({
+      type: "website",
+      locale: "en_US",
+      url: "/",
+      title: "Page not found | Steve Defendre",
+      description: "That page is gone. Home, projects, and contact still work.",
+      siteName: "Steve Defendre Portfolio",
+    });
+    expect(metadata.twitter).toMatchObject({
+      title: "Page not found | Steve Defendre",
+      description: "That page is gone. Home, projects, and contact still work.",
+    });
   });
 });
