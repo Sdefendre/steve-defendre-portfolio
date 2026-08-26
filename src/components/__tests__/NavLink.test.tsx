@@ -52,6 +52,17 @@ describe('NavLink', () => {
     expect(link).toHaveAttribute('aria-current', 'page');
   });
 
+  it('sets aria-current="page" on document-navigation links when active', () => {
+    mockUsePathname.mockReturnValue('/');
+    render(
+      <NavLink href="/" forceDocumentNavigation>
+        Home
+      </NavLink>
+    );
+
+    expect(screen.getByRole('link', { name: /home/i })).toHaveAttribute('aria-current', 'page');
+  });
+
   it('applies active class when isActive is true (function className)', () => {
     mockUsePathname.mockReturnValue('/about');
     render(

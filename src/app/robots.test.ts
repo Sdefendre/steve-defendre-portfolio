@@ -51,7 +51,7 @@ describe("robots metadata route", () => {
         allow: "/",
       },
       sitemap: "https://portfolio.defendresolutions.com/sitemap.xml",
-      host: "https://portfolio.defendresolutions.com/",
+      host: "https://portfolio.defendresolutions.com",
     });
   });
 });

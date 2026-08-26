@@ -59,6 +59,13 @@ describe('Sidebar', () => {
     expect(homeLink.className).toContain('border-transparent');
   });
 
+  it('marks Home as the current page when the full-load home link is active', () => {
+    mockUsePathname.mockReturnValue('/');
+    render(<Sidebar />);
+
+    expect(screen.getByRole('link', { name: /home/i })).toHaveAttribute('aria-current', 'page');
+  });
+
   it('renders available social links correctly', () => {
     mockUsePathname.mockReturnValue('/');
     render(<Sidebar />);

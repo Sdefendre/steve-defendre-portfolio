@@ -19,6 +19,8 @@ export const socialLinks = [
   },
 ];
 
+export const primaryContactEmail = "steve@defendresolutions.com";
+
 export const supportLink = {
   name: "Support",
   value: "buymeacoffee.com/defendresolutions",
@@ -31,8 +33,8 @@ export const supportLink = {
 export const contactLinks = [
   {
     name: "Email",
-    value: "steve@defendresolutions.com",
-    href: "mailto:steve@defendresolutions.com",
+    value: primaryContactEmail,
+    href: `mailto:${primaryContactEmail}`,
     icon: EnvelopeIcon,
     description: "Best for new work and scheduling",
     priority: "primary",
