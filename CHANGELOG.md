@@ -33,6 +33,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   previews under `public/project-previews/`.
 
 ### Changed
+- Traces project card and homepage CTA now open the live GitHub Pages
+  marketing site (`https://sdefendre.github.io/traces-app/`) instead of the
+  source repo.
 - Reorganized the `/projects` archive into a clean equal-height two-column
   grid with numbered rows, replacing the staggered constellation layout.
 - Replaced stylized SVG project previews and older root PNGs with fresh

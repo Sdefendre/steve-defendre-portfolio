@@ -56,7 +56,7 @@ export const projects: Project[] = [
     outcome: "Built an Electron + Next.js app with CodeMirror editing, React Three Fiber graph views, and vault-aware AI tooling.",
     category: "Product", year: 2026, status: "Prototype",
     caseStudy: { challenge: "Keep a personal knowledge workspace on the machine, and still make note links easy to follow and edit.", approach: "I combined a markdown vault, a graph view, rich editing, and vault-aware AI tools in a desktop app.", impact: "The prototype lets you navigate and edit connected notes without sending the vault to a host." },
-    tags: ["Electron", "Next.js", "R3F", "TypeScript"], gradient: "from-indigo-500 to-sky-600", url: "https://github.com/Sdefendre/traces-app", image: "/project-previews/traces.jpg", ctaLabel: "View on GitHub",
+    tags: ["Electron", "Next.js", "R3F", "TypeScript"], gradient: "from-indigo-500 to-sky-600", url: "https://sdefendre.github.io/traces-app/", image: "/project-previews/traces.jpg", ctaLabel: "View product site",
   },
   {
     initials: "KS", title: "Krystin Sylvia",

@@ -118,6 +118,49 @@ describe('Projects Data', () => {
     expect(featuredProject.priority).toBeUndefined();
   });
 
+  it('points Traces at the live GitHub Pages marketing site', () => {
+    const traces = projects.find((project) => project.title === 'Traces');
+
+    expect(traces).toBeDefined();
+    expect(traces?.url).toBe('https://sdefendre.github.io/traces-app/');
+    expect(traces?.ctaLabel).toBe('View product site');
+  });
+
+  it('leaves every other project URL and CTA unchanged', () => {
+    expect(
+      Object.fromEntries(
+        projects
+          .filter((project) => project.title !== 'Traces')
+          .map((project) => [project.title, { url: project.url, ctaLabel: project.ctaLabel }]),
+      ),
+    ).toEqual({
+      'Defendre Solutions': {
+        url: 'https://defendresolutions.com',
+        ctaLabel: 'Visit studio',
+      },
+      FreeVoiceTranscribe: {
+        url: 'https://github.com/Sdefendre/freevoicetranscribe',
+        ctaLabel: 'View on GitHub',
+      },
+      BraidsbyRose: {
+        url: 'https://braidsbyrose.com',
+        ctaLabel: 'View booking site',
+      },
+      'Krystin Sylvia': {
+        url: 'https://krystinsylvia.com',
+        ctaLabel: 'View portfolio',
+      },
+      'Velocity Care LLC': {
+        url: 'https://velocitycarellc.com',
+        ctaLabel: 'Visit healthcare site',
+      },
+      'Command.AI': {
+        url: 'https://trycommand.vercel.app',
+        ctaLabel: 'Open platform',
+      },
+    });
+  });
+
   it('should have unique titles', () => {
     const titles = projects.map(p => p.title);
     const uniqueTitles = new Set(titles);
