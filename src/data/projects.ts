@@ -59,6 +59,15 @@ export const projects: Project[] = [
     tags: ["Electron", "Next.js", "R3F", "TypeScript"], gradient: "from-indigo-500 to-sky-600", url: "https://sdefendre.github.io/traces-app/", image: "/project-previews/traces.jpg", ctaLabel: "View product site",
   },
   {
+    initials: "WW", title: "WealthWise",
+    description: "Next.js money dashboard. Import a CSV or PDF statement, chart it, or load the bundled sample. You run the app. No Plaid. No live bank login.",
+    role: "Founder product and full-stack engineer",
+    outcome: "Working prototype with CSV/PDF import, charts, sample data, and Supabase email login.",
+    category: "Product", year: 2026, status: "Prototype",
+    caseStudy: { challenge: "Review a bank statement on your own machine without handing over a live bank login.", approach: "I built a Next.js dashboard that imports CSV or PDF statements, charts them with Recharts, and ships a bundled sample. Login is optional Supabase email auth.", impact: "A public Pages site shows the prototype. The numbers there are the bundled sample CSV, not a live balance." },
+    tags: ["Next.js", "TypeScript", "Supabase", "Recharts"], gradient: "from-slate-800 to-emerald-600", url: "https://sdefendre.github.io/Wealthwise/", image: "/project-previews/wealthwise.jpg", ctaLabel: "View product site",
+  },
+  {
     initials: "KS", title: "Krystin Sylvia",
     description: "Professional portfolio for an RN / BSN case manager. Experience timeline, credentials, resume download, and contact paths.",
     role: "Frontend developer",

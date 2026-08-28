@@ -5,8 +5,8 @@ test("filters projects and reveals an inline case study", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/projects");
 
-  await expect(page.getByText("Showing 7 of 7 projects")).toBeVisible();
-  await expect(page.getByRole("article")).toHaveCount(7);
+  await expect(page.getByText("Showing 8 of 8 projects")).toBeVisible();
+  await expect(page.getByRole("article")).toHaveCount(8);
 
   await page.getByRole("button", { name: "Client", exact: true }).click();
 

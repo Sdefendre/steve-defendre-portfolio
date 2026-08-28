@@ -29,6 +29,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Case study arrows now rotate when a project’s deeper read is open.
 
 ### Added
+- WealthWise product card on `/projects`, pointing at the public Pages
+  marketing site. Preview is a 1440×900 JPEG of the live hero and sample
+  dashboard. Copy stays honest: CSV/PDF import, bundled sample numbers, no
+  Plaid or live bank login.
 - Portfolio projects for FreeVoiceTranscribe and Traces, with matching SVG
   previews under `public/project-previews/`.
 
