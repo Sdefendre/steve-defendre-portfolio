@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ProjectExplorer from "@/components/ProjectExplorer";
 import { projectCategories, projects } from "@/data/projects";
 import { createPageMetadata } from "@/lib/site-metadata";
@@ -10,5 +11,9 @@ export const metadata = createPageMetadata({
 });
 
 export default function Projects() {
-  return <ProjectExplorer projects={projects} categories={projectCategories} />;
+  return (
+    <Suspense>
+      <ProjectExplorer projects={projects} categories={projectCategories} />
+    </Suspense>
+  );
 }

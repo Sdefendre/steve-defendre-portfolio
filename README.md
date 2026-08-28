@@ -45,7 +45,22 @@ This value is used for `metadataBase`, social metadata, robots, and sitemap.
 
 ## Content
 - Projects: [`src/data/projects.ts`](src/data/projects.ts)
+- About facts: [`src/data/about.ts`](src/data/about.ts)
 - Contact / socials: [`src/data/socials.ts`](src/data/socials.ts)
+
+## WebMCP
+Browsers that implement [WebMCP](https://webmachinelearning.github.io/webmcp/)
+can call page-level tools registered from the root layout. There is no extra
+UI. The tools wrap the same catalog, filters, routes, and contact page the
+site already uses.
+
+| Tool | What it does |
+| --- | --- |
+| `list-projects` | Public catalog: title, category, status, URL, short description |
+| `filter-projects` | Same catalog filtered by Studio / Client / Product, then opens `/projects` |
+| `navigate` | Allowlisted paths only: `/`, `/about`, `/projects`, `/contact` |
+| `open-contact` | Opens `/contact` and returns `steve@defendresolutions.com`. A person still sends the message. |
+| `get-about` | Facts already published on `/about` |
 
 Public contact email is **`steve@defendresolutions.com`** (studio address only, not personal Gmail).
 
