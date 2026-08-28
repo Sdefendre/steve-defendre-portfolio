@@ -22,6 +22,7 @@ describe('Projects Data', () => {
       'FreeVoiceTranscribe',
       'BraidsbyRose',
       'Traces',
+      'WealthWise',
       'Krystin Sylvia',
       'Velocity Care LLC',
       'Command.AI',
@@ -126,11 +127,34 @@ describe('Projects Data', () => {
     expect(traces?.ctaLabel).toBe('View product site');
   });
 
+  it('points WealthWise at the live GitHub Pages marketing site', () => {
+    const wealthwise = projects.find((project) => project.title === 'WealthWise');
+    const catalogText = [
+      wealthwise?.description,
+      wealthwise?.outcome,
+      wealthwise?.caseStudy.challenge,
+      wealthwise?.caseStudy.approach,
+      wealthwise?.caseStudy.impact,
+    ].join(' ');
+
+    expect(wealthwise).toBeDefined();
+    expect(wealthwise?.category).toBe('Product');
+    expect(wealthwise?.status).toBe('Prototype');
+    expect(wealthwise?.url).toBe('https://sdefendre.github.io/Wealthwise/');
+    expect(wealthwise?.ctaLabel).toBe('View product site');
+    expect(wealthwise?.image).toBe('/project-previews/wealthwise.jpg');
+    expect(wealthwise?.url).not.toMatch(/github\.com\/Sdefendre\/Wealthwise/i);
+    expect(catalogText).toMatch(/No Plaid/);
+    expect(catalogText).toMatch(/bundled sample/i);
+    expect(catalogText).toMatch(/not a live balance/i);
+    expect(catalogText).not.toMatch(/Plaid connects|open source/i);
+  });
+
   it('leaves every other project URL and CTA unchanged', () => {
     expect(
       Object.fromEntries(
         projects
-          .filter((project) => project.title !== 'Traces')
+          .filter((project) => project.title !== 'Traces' && project.title !== 'WealthWise')
           .map((project) => [project.title, { url: project.url, ctaLabel: project.ctaLabel }]),
       ),
     ).toEqual({

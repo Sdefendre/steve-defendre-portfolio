@@ -29,6 +29,13 @@ test("prototype preview text does not claim a live deployment", async ({ page })
     tracesCard.getByAltText("Preview of the Traces project"),
   ).toBeVisible();
   await expect(tracesCard.locator("img")).not.toHaveAttribute("alt", /live/i);
+
+  const wealthwiseCard = page.getByRole("article").filter({ hasText: "WealthWise" });
+  await expect(wealthwiseCard.getByTestId("project-status")).toHaveText("Prototype");
+  await expect(
+    wealthwiseCard.getByAltText("Preview of the WealthWise project"),
+  ).toBeVisible();
+  await expect(wealthwiseCard.locator("img")).not.toHaveAttribute("alt", /live/i);
 });
 
 test("keyboard users can reveal and activate the skip link", async ({ page }, testInfo) => {
