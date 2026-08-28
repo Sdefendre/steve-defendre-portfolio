@@ -2,7 +2,14 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
-import { projectCategories, projects, type ProjectStatus } from '../projects';
+import {
+  filterProjectCatalog,
+  listPublicProjects,
+  projectCategories,
+  projects,
+  projectsFilterHref,
+  type ProjectStatus,
+} from '../projects';
 
 const projectStatuses = ['Live', 'Prototype'] satisfies ProjectStatus[];
 const repositoryRoot = path.resolve(
@@ -199,5 +206,27 @@ describe('Projects Data', () => {
 
   it('exports a stable category list for filtering', () => {
     expect(projectCategories).toEqual(['Studio', 'Client', 'Product']);
+  });
+});
+
+describe('project catalog helpers', () => {
+  it('lists the public fields agents can read', () => {
+    const catalog = listPublicProjects();
+
+    expect(catalog).toHaveLength(projects.length);
+    expect(catalog[4]).toEqual({
+      title: 'WealthWise',
+      category: 'Product',
+      status: 'Prototype',
+      url: 'https://sdefendre.github.io/Wealthwise/',
+      description: projects[4].description,
+    });
+    expect(filterProjectCatalog(projects, 'Product').map((project) => project.title)).toEqual([
+      'FreeVoiceTranscribe',
+      'Traces',
+      'WealthWise',
+      'Command.AI',
+    ]);
+    expect(projectsFilterHref('Product')).toBe('/projects?category=Product');
   });
 });

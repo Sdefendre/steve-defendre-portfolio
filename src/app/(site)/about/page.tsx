@@ -5,6 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { ExternalLink } from "@/components/ExternalLink";
+import { aboutFacts } from "@/data/about";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 export const metadata = createPageMetadata({
@@ -14,64 +15,11 @@ export const metadata = createPageMetadata({
   canonical: "/about",
 });
 
-const principles = [
-  {
-    icon: ShieldCheckIcon,
-    title: "Start with the outcome",
-    description:
-      "I begin with the job the software has to do, who uses it, and which decision it should make easier.",
-  },
-  {
-    icon: WrenchScrewdriverIcon,
-    title: "Ship the next usable version",
-    description:
-      "I still work the way I did in the service. Name the objective, cut the fog, ship something you can use, then improve it.",
-  },
-  {
-    icon: LightBulbIcon,
-    title: "Own it after launch",
-    description:
-      "As the founder of Defendre Solutions, I stay with operations, maintenance, and whether the thing still fits the business next quarter.",
-  },
-] as const;
-
-const proofPoints = [
-  {
-    label: "Studio",
-    value: "Founder of Defendre Solutions",
-  },
-  {
-    label: "What I ship",
-    value: "Client sites, local AI tools, desktop apps, and agent workflows",
-  },
-  {
-    label: "Stack",
-    value: "Next.js, React, TypeScript, Python, Electron, PostgreSQL, AWS",
-  },
-] as const;
-
-const capabilities = [
-  {
-    name: "Interface",
-    description: "React and Next.js UIs where the next click is obvious.",
-    skills: ["React", "Next.js", "Tailwind CSS"],
-  },
-  {
-    name: "Systems",
-    description: "TypeScript backends and APIs that match how the work runs.",
-    skills: ["TypeScript", "Node.js", "REST APIs", "GraphQL"],
-  },
-  {
-    name: "Delivery",
-    description: "Git, Docker, and AWS so a release still ships after the first launch.",
-    skills: ["Git", "Docker", "AWS"],
-  },
-  {
-    name: "Infrastructure",
-    description: "PostgreSQL and Python when the data and jobs have to last.",
-    skills: ["PostgreSQL", "Python"],
-  },
-] as const;
+const principleIcons = {
+  "Start with the outcome": ShieldCheckIcon,
+  "Ship the next usable version": WrenchScrewdriverIcon,
+  "Own it after launch": LightBulbIcon,
+} as const;
 
 export default function About() {
   return (
@@ -127,7 +75,7 @@ export default function About() {
             </div>
 
             <dl className="mt-10 grid border-t border-[var(--border)] sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              {proofPoints.map((point) => (
+              {aboutFacts.proofPoints.map((point) => (
                 <div
                   key={point.label}
                   className="border-b border-[var(--border)] py-5 sm:border-b-0 sm:border-r sm:px-4 sm:last:border-r-0 sm:first:pl-0 lg:border-b lg:border-r-0 lg:px-0 xl:border-b-0 xl:border-r xl:px-4 xl:first:pl-0"
@@ -163,24 +111,28 @@ export default function About() {
         </div>
 
         <ol className="relative space-y-6 before:absolute before:bottom-8 before:left-[1.45rem] before:top-8 before:w-px before:bg-[var(--border)]">
-          {principles.map((principle, index) => (
-            <li key={principle.title} className="spatial-reveal relative grid grid-cols-[3rem_1fr] gap-4">
-              <div className="spatial-glass z-10 flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] text-[var(--accent)] shadow-[0_12px_30px_var(--shadow-warm)]">
-                <principle.icon aria-hidden="true" className="h-5 w-5" />
-              </div>
-              <div className="spatial-glass rounded-[1.75rem] border border-[var(--border)] p-5 sm:p-6">
-                <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">
-                  Phase {String(index + 1).padStart(2, "0")}
-                </p>
-                <h3 className="mt-2 font-display text-2xl font-medium tracking-[-0.03em] text-[var(--foreground)]">
-                  {principle.title}
-                </h3>
-                <p className="mt-3 max-w-[58ch] text-sm leading-7 text-[var(--muted-foreground)]">
-                  {principle.description}
-                </p>
-              </div>
-            </li>
-          ))}
+          {aboutFacts.principles.map((principle, index) => {
+            const PrincipleIcon = principleIcons[principle.title];
+
+            return (
+              <li key={principle.title} className="spatial-reveal relative grid grid-cols-[3rem_1fr] gap-4">
+                <div className="spatial-glass z-10 flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] text-[var(--accent)] shadow-[0_12px_30px_var(--shadow-warm)]">
+                  <PrincipleIcon aria-hidden="true" className="h-5 w-5" />
+                </div>
+                <div className="spatial-glass rounded-[1.75rem] border border-[var(--border)] p-5 sm:p-6">
+                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">
+                    Phase {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-2 font-display text-2xl font-medium tracking-[-0.03em] text-[var(--foreground)]">
+                    {principle.title}
+                  </h3>
+                  <p className="mt-3 max-w-[58ch] text-sm leading-7 text-[var(--muted-foreground)]">
+                    {principle.description}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
         </ol>
       </section>
 
@@ -198,7 +150,7 @@ export default function About() {
         </div>
 
         <div className="grid gap-px overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[var(--border)] md:grid-cols-2">
-          {capabilities.map((capability, index) => (
+          {aboutFacts.capabilities.map((capability, index) => (
             <article
               key={capability.name}
               className="spatial-glass min-h-64 p-6 sm:p-8"

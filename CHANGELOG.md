@@ -29,6 +29,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Case study arrows now rotate when a project’s deeper read is open.
 
 ### Added
+- Page-level WebMCP tools for browsers that expose `document.modelContext`:
+  `list-projects`, `filter-projects`, `navigate`, `open-contact`, and
+  `get-about`. Humans keep the existing UI. Tools read the same project
+  catalog, category chips, routes, contact email, and /about facts. They do
+  not send email or invent a booking flow.
 - WealthWise product card on `/projects`, pointing at the public Pages
   marketing site. Preview is a 1440×900 JPEG of the live hero and sample
   dashboard. Copy stays honest: CSV/PDF import, bundled sample numbers, no

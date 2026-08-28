@@ -1,7 +1,17 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import ProjectExplorer from "../ProjectExplorer";
 import type { Project, ProjectCategory } from "@/data/projects";
+
+const navigation = vi.hoisted(() => ({
+  replace: vi.fn(),
+  params: new URLSearchParams(),
+}));
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: navigation.replace }),
+  useSearchParams: () => navigation.params,
+}));
 
 const categories: ProjectCategory[] = ["Studio", "Client", "Product"];
 
@@ -66,6 +76,11 @@ const projects: Project[] = [
 ];
 
 describe("ProjectExplorer", () => {
+  beforeEach(() => {
+    navigation.replace.mockReset();
+    navigation.params = new URLSearchParams();
+  });
+
   it("renders the filter controls and visible result count", () => {
     render(<ProjectExplorer projects={projects} categories={categories} />);
 
@@ -75,6 +90,15 @@ describe("ProjectExplorer", () => {
     expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByRole("button", { name: "Client" })).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("opens the Product chip when the URL already has that category", () => {
+    navigation.params = new URLSearchParams("category=Product");
+    render(<ProjectExplorer projects={projects} categories={categories} />);
+
+    expect(screen.getByRole("button", { name: "Product" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Showing 1 Product project")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /open prototype for command prototype/i })).toBeInTheDocument();
   });
 
   it("filters projects by category and updates the visible count", () => {
@@ -89,6 +113,7 @@ describe("ProjectExplorer", () => {
     expect(screen.getByText("Showing 1 Client project")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /visit site for beta care/i })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /visit studio for alpha launch/i })).not.toBeInTheDocument();
+    expect(navigation.replace).toHaveBeenCalledWith("/projects?category=Client", { scroll: false });
   });
 
   it("shows an empty state when a filter has no matches and allows reset", () => {

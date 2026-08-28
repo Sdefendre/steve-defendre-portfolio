@@ -1,11 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ProjectCard from "@/components/ProjectCard";
-import type { Project, ProjectCategory } from "@/data/projects";
-
-type ProjectFilter = "All" | ProjectCategory;
+import {
+  filterProjectCatalog,
+  parseProjectFilter,
+  projectsFilterHref,
+  type Project,
+  type ProjectCategory,
+  type ProjectFilter,
+} from "@/data/projects";
 
 interface ProjectExplorerProps {
   projects: readonly Project[];
@@ -35,15 +41,25 @@ export default function ProjectExplorer({
   projects,
   categories,
 }: ProjectExplorerProps) {
-  const [activeCategory, setActiveCategory] = useState<ProjectFilter>("All");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlCategory = parseProjectFilter(searchParams.get("category"));
+  const [activeCategory, setActiveCategory] = useState<ProjectFilter>(urlCategory);
 
-  const visibleProjects = useMemo(() => {
-    if (activeCategory === "All") {
-      return projects;
-    }
+  useEffect(() => {
+    setActiveCategory(urlCategory);
+  }, [urlCategory]);
 
-    return projects.filter((project) => project.category === activeCategory);
-  }, [activeCategory, projects]);
+  function selectCategory(category: ProjectFilter) {
+    setActiveCategory(category);
+    const href = category === "All" ? "/projects" : projectsFilterHref(category);
+    router.replace(href, { scroll: false });
+  }
+
+  const visibleProjects = useMemo(
+    () => filterProjectCatalog(projects, activeCategory),
+    [activeCategory, projects],
+  );
 
   const totalCount = projects.length;
   const visibleCount = visibleProjects.length;
@@ -127,7 +143,7 @@ export default function ProjectExplorer({
                 key={category}
                 type="button"
                 aria-pressed={pressed}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => selectCategory(category)}
                 className={cx(
                   "focus-ring inline-flex min-h-11 items-center justify-center rounded-full border px-4 py-2 text-sm font-bold transition-colors",
                   pressed
@@ -230,7 +246,7 @@ export default function ProjectExplorer({
           </p>
           <button
             type="button"
-            onClick={() => setActiveCategory("All")}
+            onClick={() => selectCategory("All")}
             className="focus-ring mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] px-5 text-sm font-bold text-[var(--foreground)] transition-colors hover:bg-[var(--surface)]"
           >
             Show all projects

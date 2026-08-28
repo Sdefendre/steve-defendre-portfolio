@@ -2,6 +2,15 @@ export const projectCategories = ["Studio", "Client", "Product"] as const;
 
 export type ProjectCategory = (typeof projectCategories)[number];
 export type ProjectStatus = "Live" | "Prototype";
+export type ProjectFilter = "All" | ProjectCategory;
+
+export interface PublicProjectSummary {
+  title: string;
+  category: ProjectCategory;
+  status: ProjectStatus;
+  url: string;
+  description: string;
+}
 
 export interface Project {
   initials: string;
@@ -95,3 +104,53 @@ export const projects: Project[] = [
     tags: ["Next.js", "TypeScript", "Convex"], gradient: "from-emerald-500 to-teal-600", url: "https://trycommand.vercel.app", image: "/project-previews/command-ai.jpg", ctaLabel: "Open platform",
   },
 ];
+
+export function isProjectCategory(value: string): value is ProjectCategory {
+  for (const category of projectCategories) {
+    if (category === value) return true;
+  }
+  return false;
+}
+
+export function parseProjectFilter(value: string | null | undefined): ProjectFilter {
+  if (typeof value === "string" && isProjectCategory(value)) return value;
+  return "All";
+}
+
+export function filterProjectCatalog<T extends { category: ProjectCategory }>(
+  catalog: readonly T[],
+  category: ProjectFilter,
+): readonly T[] {
+  switch (category) {
+    case "All":
+      return catalog;
+    case "Studio":
+    case "Client":
+    case "Product":
+      return catalog.filter((project) => project.category === category);
+    default: {
+      const _exhaustive: never = category;
+      return _exhaustive;
+    }
+  }
+}
+
+export function toPublicProjectSummary(project: Project): PublicProjectSummary {
+  return {
+    title: project.title,
+    category: project.category,
+    status: project.status,
+    url: project.url,
+    description: project.description,
+  };
+}
+
+export function listPublicProjects(
+  catalog: readonly Project[] = projects,
+): PublicProjectSummary[] {
+  return catalog.map(toPublicProjectSummary);
+}
+
+export function projectsFilterHref(category: ProjectCategory): string {
+  return `/projects?category=${category}`;
+}
