@@ -42,8 +42,30 @@ stop_pid() {
   echo "cleanup: force-stopped ${label} ${pid}"
 }
 
+# Snapshot the tree before START_PID dies. npm exits first and leaves next-server.
+tree_pids=""
+if [[ -n "${START_PID:-}" ]]; then
+  tree_pids="$(portfolio_verify_descendant_pids "${START_PID}")"
+fi
+
 stop_pid "${START_PID:-}" "START_PID"
 stop_pid "${LISTEN_PID:-}" "LISTEN_PID"
+while read -r pid; do
+  [[ -z "${pid}" ]] && continue
+  stop_pid "${pid}" "child"
+done <<< "${tree_pids}"
+
+if [[ -n "${HOST:-}" && -n "${PORT:-}" ]]; then
+  for _ in $(seq 1 20); do
+    if ! portfolio_verify_port_open "${HOST}" "${PORT}"; then
+      break
+    fi
+    sleep 0.25
+  done
+  if portfolio_verify_port_open "${HOST}" "${PORT}"; then
+    echo "cleanup: warning: ${HOST}:${PORT} still accepts connections after tree stop" >&2
+  fi
+fi
 
 rm -f "${env_file}"
 

@@ -48,7 +48,8 @@ Pass means:
 
 - `instance.env` exists for this `RUN_ID`
 - `START_PID` is alive
-- `LISTEN_PID` still owns `$PORT`
+- `$HOST:$PORT` accepts a TCP connection
+- when a listen pid is visible under `/proc`, it is in the `START_PID` tree
 - `GET` `/`, `/about`, `/projects`, `/contact` each return 200
 - those four documents have the titles in `e2e/metadata.spec.ts`
 - home HTML includes `I build software you can keep.`
@@ -139,7 +140,7 @@ Proof standards:
 .cursor/skills/verify-portfolio/helpers/cleanup.sh "$RUN_ID"
 ```
 
-This kills only `START_PID` and `LISTEN_PID` from that run's `instance.env`, then deletes `instance.env`. It does not `pkill next`, does not free other ports, and does not remove `/tmp/portfolio-verify-$RUN_ID/evidence/`.
+This kills `START_PID`, `LISTEN_PID`, and the descendant tree snapshotted before npm exits (`next-server` is a child of `npm run start`). Then it deletes `instance.env`. It does not `pkill next`, does not free other ports, and does not remove `/tmp/portfolio-verify-$RUN_ID/evidence/`.
 
 After cleanup, `ls /tmp/portfolio-verify-$RUN_ID/evidence` must still list the artifacts. A cleanup that ate the proof failed.
 

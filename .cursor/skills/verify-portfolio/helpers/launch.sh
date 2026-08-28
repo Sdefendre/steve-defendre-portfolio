@@ -34,9 +34,12 @@ if [[ -f "${env_file}" ]]; then
   rm -f "${env_file}"
 fi
 
-existing_pids="$(portfolio_verify_port_pids "${port}")"
-if [[ -n "${existing_pids}" ]]; then
-  echo "error: port ${port} is already listening (pids: ${existing_pids})" >&2
+if portfolio_verify_port_open "${host}" "${port}"; then
+  existing_pids="$(portfolio_verify_port_pids "${port}")"
+  echo "error: ${base_url} is already accepting connections" >&2
+  if [[ -n "${existing_pids}" ]]; then
+    echo "listening pids: ${existing_pids}" >&2
+  fi
   echo "pick another port: helpers/launch.sh ${run_id} 3101" >&2
   echo "do not drive that listener. it was not started by this RUN_ID" >&2
   exit 1
@@ -74,7 +77,7 @@ for _ in $(seq 1 60); do
     tail -n 40 "${log_file}" >&2 || true
     exit 1
   fi
-  if curl -fsS --max-time 2 "${base_url}/" -o /dev/null; then
+  if curl -fs --max-time 2 "${base_url}/" -o /dev/null; then
     ready="1"
     break
   fi

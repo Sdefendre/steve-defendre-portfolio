@@ -32,7 +32,7 @@ Preconditions:
 
 - **Open projects.** Go to `/projects`. Run `await page.setViewportSize({ width: 1440, height: 1000 })` then `await page.goto("/projects")`. Heading level 1 is `Projects`. Title is `Projects | Steve Defendre`.
 - **All state.** Text `Showing 8 of 8 projects` is visible. Role `article` count is `8`. Button `All` has `aria-pressed=true`. The other three filter buttons are `false`. URL has no `category` query.
-- **Client filter.** Choose `Client`. Run `page.getByRole("button", { name: "Client", exact: true }).click()`. Text `Showing 3 Client projects` is visible. Role `article` count is `3`. Visible titles are BraidsbyRose, Krystin Sylvia, and Velocity Care LLC. URL is `/projects?category=Client`. Button `Client` is `aria-pressed=true`.
+- **Client filter.** Choose `Client`. Run `page.getByRole("button", { name: "Client", exact: true }).click()`. Text `Showing 3 Client projects` is visible. Role `article` count is `3`. Visible titles are BraidsbyRose, Krystin Sylvia, and Velocity Care LLC. Wait for `page.waitForURL("**/projects?category=Client")` before reading the address bar. Button `Client` is `aria-pressed=true`.
 - **URL entry.** Run `page.goto("/projects?category=Client")` on a fresh load. The Client chip is pressed and the same three articles render without another click.
 - **Studio filter.** Choose `Studio`. Run `page.getByRole("button", { name: "Studio", exact: true }).click()`. Text `Showing 1 Studio project` is visible. One article remains, titled Defendre Solutions. URL is `/projects?category=Studio`.
 - **Product filter.** Choose `Product`. Run `page.getByRole("button", { name: "Product", exact: true }).click()`. Text `Showing 4 Product projects` is visible. Titles are FreeVoiceTranscribe, Traces, WealthWise, and Command.AI. URL is `/projects?category=Product`.
@@ -44,6 +44,7 @@ Preconditions:
 
 ## Gotchas
 
+- The live region and article count update before `router.replace` writes `?category=`. Wait for the URL. Reading `page.url()` on the next line still sees `/projects`.
 - Filter buttons share names with category chips on each card. Use `getByRole("button", { name: "Client", exact: true })`, not `getByText("Client")`.
 - Count copy is singular for one match: `Showing 1 Studio project`. Do not assert `projects` on Studio.
 - `?category=` is case-sensitive. `client` or `CLIENT` parses as All.
