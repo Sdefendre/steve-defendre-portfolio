@@ -20,10 +20,10 @@ const telemetry = [
 ] as const;
 
 const constellationPlacement = [
-  "md:col-span-7",
-  "md:col-span-5 md:mt-16",
-  "md:col-span-5",
-  "md:col-span-7 md:mt-10",
+  "lg:col-span-7",
+  "lg:col-span-5 lg:mt-16",
+  "lg:col-span-5",
+  "lg:col-span-7 lg:mt-10",
 ] as const;
 
 export default function Home() {
@@ -151,7 +151,7 @@ export default function Home() {
           </a>
         </div>
 
-        <div className="grid auto-cols-[minmax(18rem,86vw)] grid-flow-col gap-5 overflow-x-auto pb-5 [scrollbar-width:none] snap-x snap-mandatory md:grid-flow-row md:auto-cols-auto md:grid-cols-12 md:items-start md:overflow-visible md:pb-0">
+        <div className="grid auto-cols-[clamp(18rem,86vw,36rem)] grid-flow-col gap-5 overflow-x-auto pb-5 [scrollbar-width:none] snap-x snap-mandatory lg:grid-flow-row lg:auto-cols-auto lg:grid-cols-12 lg:items-start lg:overflow-visible lg:pb-0">
           {selectedProjects.map((project, index) => (
             <div
               key={project.title}
