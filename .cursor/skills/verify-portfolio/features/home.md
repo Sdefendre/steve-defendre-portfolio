@@ -39,5 +39,5 @@ Preconditions:
 - `/` is rewritten to static HTML. Choosing Home from another page does a full document load. `page.goto("/")` is the reliable return, not a client back-transition.
 - Desktop Home nav labels are `aria-label` values. The visible word Home is `aria-hidden` on large desktop. Use the role name `Home`, not a CSS query on the span.
 - The studio name on home is an external link. Its accessible name is `Defendre Solutions (opens in a new tab)`. Following it leaves this origin. Reading the `href` `https://defendresolutions.com` is enough.
-- Selected work is a horizontal snap row below the `md` breakpoint. Assert titles, not column position.
+- Selected work is a horizontal snap row below the `lg` breakpoint. Assert titles, not column position.
 - Do not treat `npm run dev` on port 3000 as this instance unless launch started it.

@@ -123,11 +123,15 @@ function ProjectCard({
       </div>
 
       <div className={cx("flex min-w-0 flex-1 flex-col p-5 sm:p-6", isFeatured && "lg:p-8")}>
-        <div className="flex items-start justify-between gap-5">
+        <div className="flex items-start justify-between gap-3">
           <h3
             className={cx(
               "min-w-0 break-words font-display font-medium tracking-[-0.04em] text-[var(--foreground)]",
-              isFeatured ? "text-2xl sm:text-3xl lg:text-5xl" : "text-2xl sm:text-3xl",
+              isFeatured
+                ? "text-2xl sm:text-3xl lg:text-[2.75rem] lg:leading-none"
+                : isCompact
+                  ? "text-[clamp(1.25rem,6vw,1.875rem)] leading-[1.2]"
+                  : "text-2xl sm:text-3xl",
             )}
           >
             {title}
