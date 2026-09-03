@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/check-static-home-assets.mjs",
+    "prebuild": "node scripts/ensure-static-home-assets.mjs",
     "build": "next build && node scripts/check-static-home-runtime.mjs",
     "sync:static-home": "node scripts/sync-static-home-assets.mjs",
     "check:static-home": "node scripts/check-static-home-assets.mjs && node scripts/check-static-home-runtime.mjs",
