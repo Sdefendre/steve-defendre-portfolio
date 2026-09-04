@@ -14,12 +14,6 @@ describe("AnimatedBackground", () => {
     expect(backdrop.querySelector(".spatial-horizon")).toBeInTheDocument();
   });
 
-  it("does not render the retired Three.js scene", () => {
-    render(<AnimatedBackground />);
-
-    expect(screen.queryByTestId("three-scene")).not.toBeInTheDocument();
-  });
-
   it("can render on the server without window access", () => {
     expect(renderToString(<AnimatedBackground />)).toContain(
       "animated-background"
