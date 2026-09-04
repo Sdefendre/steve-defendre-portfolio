@@ -8,7 +8,7 @@ Personal site for Steve Defendre. Next.js App Router, with a desktop sidebar and
 - Next.js `16.2.9` (App Router) + React `19.2.7` + TypeScript
 - Tailwind CSS `v4` (via `@import "tailwindcss"` in `src/app/globals.css`)
 - Heroicons (`@heroicons/react`) for UI icons
-- Three.js for desktop animated background
+- CSS for the animated background
 - Vitest + Testing Library + jsdom for tests
 - ESLint 9 + `eslint-config-next`
 
@@ -78,7 +78,7 @@ User-visible changes are tracked in [`CHANGELOG.md`](CHANGELOG.md).
 npm test
 ```
 
-Coverage includes route pages, layout/proxy/robots/sitemap, ProjectCard, Sidebar, MobileNav, CopyEmailButton, and Three.js lifecycle hooks.
+Coverage includes route pages, layout/proxy/robots/sitemap, ProjectCard, Sidebar, MobileNav, CopyEmailButton, and the CSS background.
 
 ## Structure
 
@@ -90,7 +90,6 @@ portfolio/
     app/                  # App Router pages + layout + global styles
     components/           # UI, nav, project cards, background
     data/                 # projects + socials source data
-    hooks/three/          # Three.js lifecycle/animation hooks
     test/setup.ts         # Test setup (jest-dom)
   next.config.ts
   vitest.config.ts

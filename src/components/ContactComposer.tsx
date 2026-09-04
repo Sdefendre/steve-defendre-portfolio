@@ -120,7 +120,7 @@ export function ContactComposer() {
   ) {
     setErrors((current) => ({
       ...current,
-      [field]: validateField(field, value, nextValues) ?? undefined,
+      [field]: validateField(field, value) ?? undefined,
     }));
 
     // Drop the stale "check the highlighted fields" banner once the form is valid again.
@@ -456,24 +456,19 @@ function Field({
 
 function validateContactForm(values: ContactComposerValues): ContactComposerErrors {
   return {
-    name: validateField("name", values.name, values) ?? undefined,
-    email: validateField("email", values.email, values) ?? undefined,
-    projectType: validateField("projectType", values.projectType, values) ?? undefined,
-    budgetRange: validateField("budgetRange", values.budgetRange, values) ?? undefined,
-    message: validateField("message", values.message, values) ?? undefined,
+    name: validateField("name", values.name) ?? undefined,
+    email: validateField("email", values.email) ?? undefined,
+    projectType: validateField("projectType", values.projectType) ?? undefined,
+    budgetRange: validateField("budgetRange", values.budgetRange) ?? undefined,
+    message: validateField("message", values.message) ?? undefined,
   };
 }
 
 function validateField(
   field: ContactFieldName,
   value: string,
-  currentValues: ContactComposerValues,
 ): string | null {
   const trimmedValue = value.trim();
-  const normalizedValues = {
-    ...currentValues,
-    [field]: trimmedValue,
-  };
 
   if (!trimmedValue) {
     return field === "email"
@@ -514,8 +509,6 @@ function validateField(
   if (field === "message" && trimmedValue.length > MESSAGE_MAX_LENGTH) {
     return `Keep your message to ${MESSAGE_MAX_LENGTH} characters or fewer.`;
   }
-
-  void normalizedValues;
 
   return null;
 }
