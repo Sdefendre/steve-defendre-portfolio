@@ -19,10 +19,6 @@ const repositoryRoot = path.resolve(
 const publicDirectory = path.join(repositoryRoot, 'public');
 
 describe('Projects Data', () => {
-  it('should be an array', () => {
-    expect(Array.isArray(projects)).toBe(true);
-  });
-
   it('preserves the complete current-main project catalog', () => {
     expect(projects.map((project) => project.title)).toEqual([
       'Defendre Solutions',

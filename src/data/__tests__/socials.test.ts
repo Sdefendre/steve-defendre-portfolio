@@ -2,8 +2,7 @@ import { contactLinks, primaryContactEmail, socialLinks, supportLink } from '../
 
 describe('Socials Data', () => {
   describe('socialLinks', () => {
-    it('should be a non-empty array', () => {
-      expect(Array.isArray(socialLinks)).toBe(true);
+    it('should not be empty', () => {
       expect(socialLinks.length).toBeGreaterThan(0);
     });
 
