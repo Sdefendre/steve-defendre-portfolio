@@ -239,7 +239,7 @@ export function ContactComposer() {
       noValidate
       onSubmit={handleSubmit}
       aria-busy={status === "preparing"}
-      className="sm:spatial-glass sm:rounded-[1.75rem] sm:border sm:border-[var(--border)] sm:bg-[var(--surface)] sm:p-6"
+      className="sm:rounded-[1.75rem] sm:border sm:border-[var(--border)] sm:bg-[var(--surface)] sm:p-6"
     >
       <div className="grid gap-4 md:grid-cols-2">
         <Field

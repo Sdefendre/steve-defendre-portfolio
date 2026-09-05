@@ -31,7 +31,7 @@ test.describe("contact form", () => {
   test("shows required-field validation and copies the contact email", async ({ page }) => {
     await expect(page.getByText("Opens a draft in your email app. You review and send it.")).toBeVisible();
     await expect(page.getByText(/mailto:/i)).toHaveCount(0);
-    await expect(page.getByLabel("Your name")).toHaveClass(/text-base/);
+    await expect(page.getByLabel("Your name")).toHaveCSS("font-size", "16px");
 
     await page.getByRole("button", { name: "Prepare email draft" }).click();
 
