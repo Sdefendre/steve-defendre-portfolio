@@ -29,6 +29,10 @@ test.describe("contact form", () => {
   });
 
   test("shows required-field validation and copies the contact email", async ({ page }) => {
+    await expect(page.getByText("Opens a draft in your email app. You review and send it.")).toBeVisible();
+    await expect(page.getByText(/mailto:/i)).toHaveCount(0);
+    await expect(page.getByLabel("Your name")).toHaveClass(/text-base/);
+
     await page.getByRole("button", { name: "Prepare email draft" }).click();
 
     await expect(page.getByText("Check the highlighted fields and try again.", { exact: true })).toBeVisible();
