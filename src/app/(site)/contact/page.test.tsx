@@ -11,7 +11,7 @@ describe("Contact page", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /project inquiry/i })).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: /write the email here, then open it in your mail app/i }),
+      screen.getByRole("heading", { name: /tell me about the project/i }),
     ).toBeInTheDocument();
 
     const emailLink = screen.getByRole("link", { name: /email steve/i });
@@ -72,7 +72,7 @@ describe("Contact page", () => {
     render(<Contact />);
 
     const heading = screen.getByRole("heading", {
-      name: /write the email here, then open it in your mail app/i,
+      name: /tell me about the project/i,
     });
     const explainer = heading.parentElement;
     const composerSection = heading.closest("section");

@@ -227,7 +227,7 @@ export function ContactComposer() {
           ? "Check the highlighted fields and try again."
           : status === "handoff-error"
             ? "The email draft could not be opened. Nothing was sent; use Email Steve or copy the address above."
-          : "This form prepares an email draft in your mail app. Nothing is sent automatically.";
+            : "Opens a draft in your email app. You review and send it.";
 
   const statusTone =
     status === "validation-error" || status === "handoff-error"
@@ -239,7 +239,7 @@ export function ContactComposer() {
       noValidate
       onSubmit={handleSubmit}
       aria-busy={status === "preparing"}
-      className="spatial-glass rounded-[1.75rem] border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-6"
+      className="sm:rounded-[1.75rem] sm:border sm:border-[var(--border)] sm:bg-[var(--surface)] sm:p-6"
     >
       <div className="grid gap-4 md:grid-cols-2">
         <Field
@@ -341,11 +341,7 @@ export function ContactComposer() {
         </Field>
       </div>
 
-      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs leading-5 text-[var(--muted-foreground)]">
-          The button below prepares a `mailto:` draft to {primaryContactEmail}.
-        </p>
-
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
         <button
           type="submit"
           disabled={status === "preparing"}
@@ -433,7 +429,7 @@ function Field({
         "aria-invalid": Boolean(error),
         "aria-describedby": describedBy || undefined,
         className: [
-          "focus-ring block w-full min-h-11 rounded-2xl border bg-[var(--surface-elevated)] px-4 py-3 text-sm text-[var(--foreground)] shadow-[0_1px_0_rgba(255,255,255,0.02)] outline-none transition-[border-color,background-color,box-shadow] duration-200 placeholder:text-[var(--muted)] focus-visible:bg-[var(--surface)]",
+          "focus-ring block w-full min-h-11 rounded-2xl border bg-[var(--surface-elevated)] px-4 py-3 text-base text-[var(--foreground)] shadow-[0_1px_0_rgba(255,255,255,0.02)] outline-none transition-[border-color,background-color,box-shadow] duration-200 placeholder:text-[var(--muted)] focus-visible:bg-[var(--surface)]",
           error
             ? "border-rose-300 focus-visible:border-rose-300"
             : "border-[var(--border)] focus-visible:border-[color-mix(in_oklab,var(--accent)_55%,var(--border))]",

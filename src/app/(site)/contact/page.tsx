@@ -102,12 +102,11 @@ export default function Contact() {
             id="contact-composer-heading"
             className="font-display text-[clamp(2.25rem,4vw,3.75rem)] font-medium leading-[0.95] tracking-[-0.045em] text-[var(--foreground)]"
           >
-            Write the email here, then open it in your mail app.
+            Tell me about the project.
           </h2>
           <p className="max-w-[42ch] text-sm leading-7 text-[var(--muted-foreground)]">
-            This form opens a draft in your mail app. Nothing sends on its own.
-            You can still copy the address or use the links above if that is
-            faster.
+            Share the scope, timing, and budget range. You can also use the
+            contact options above.
           </p>
         </div>
 

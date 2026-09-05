@@ -52,7 +52,9 @@ describe("ContactComposer", () => {
     fillValidForm();
 
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    expect(screen.getByRole("status")).toHaveTextContent(/nothing is sent automatically/i);
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Opens a draft in your email app. You review and send it.",
+    );
   });
 
   it("builds a properly encoded mailto draft and tracks the draft action", async () => {
@@ -118,7 +120,12 @@ describe("ContactComposer", () => {
     const { container } = render(<ContactComposer />);
     const form = container.querySelector("form");
 
-    expect(screen.getByRole("status")).toHaveTextContent(/nothing is sent automatically/i);
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Opens a draft in your email app. You review and send it.",
+    );
+    expect(screen.queryByText(/mailto:/i)).not.toBeInTheDocument();
+    expect(form).not.toHaveClass("border", "bg-[var(--surface)]", "p-4");
+    expect(screen.getByLabelText(/your name/i)).toHaveClass("text-base");
 
     const emailInput = screen.getByLabelText(/email address/i);
     fireEvent.change(screen.getByLabelText(/your name/i), { target: { value: "Steve Example" } });
