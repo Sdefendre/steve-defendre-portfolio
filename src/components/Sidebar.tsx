@@ -65,7 +65,7 @@ export default function Sidebar() {
                           : "text-[var(--muted)] group-hover:text-[var(--accent)]"
                       }`}
                     />
-                    <span aria-hidden="true" className="hidden lg:inline">
+                    <span aria-hidden="true" className="inline">
                       {item.name}
                     </span>
                   </>

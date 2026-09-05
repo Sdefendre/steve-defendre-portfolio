@@ -95,7 +95,7 @@ describe('ProjectCard', () => {
     },
   );
 
-  it('renders compact variant with shorter text treatment and compact image sizes', () => {
+  it('renders compact variant with complete descriptions and compact image sizes', () => {
     const props = {
       ...defaultProps,
       image: '/test-image.png',
@@ -105,8 +105,8 @@ describe('ProjectCard', () => {
     render(<ProjectCard {...props} variant="compact" />);
 
     expect(screen.getByText(props.title)).toHaveClass('min-w-0', 'break-words');
-    expect(screen.getByText(props.description)).toHaveClass('line-clamp-3');
-    expect(screen.getByText(props.outcome)).toHaveClass('line-clamp-3');
+    expect(screen.getByText(props.description)).not.toHaveClass('line-clamp-3');
+    expect(screen.getByText(props.outcome)).not.toHaveClass('line-clamp-3');
     expect(screen.getByRole('img')).toHaveAttribute(
       'sizes',
       '(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 42vw, 420px'

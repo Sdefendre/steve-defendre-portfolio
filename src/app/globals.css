@@ -45,7 +45,6 @@
 }
 
 html {
-  min-width: 20rem;
   scroll-behavior: smooth;
   scroll-padding-top: 2rem;
   scroll-padding-bottom: var(--mobile-nav-clearance);

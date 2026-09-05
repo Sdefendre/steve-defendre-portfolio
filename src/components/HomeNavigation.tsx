@@ -41,7 +41,7 @@ export default function HomeNavigation({ activeHref = "/" }: { activeHref?: stri
               return (
                 <a key={item.name} href={item.href} aria-label={item.name} aria-current={isActive ? "page" : undefined} className={`${desktopLinkClass} ${isActive ? "dock-link-active" : "border-transparent text-[var(--muted-foreground)] hover:border-[var(--border)] hover:bg-[rgba(207,244,251,0.055)] hover:text-[var(--foreground)]"}`}>
                   <Icon aria-hidden="true" className={`h-[18px] w-[18px] shrink-0 transition-colors duration-200 ${isActive ? "text-[var(--accent-strong)]" : "text-[var(--muted)] group-hover:text-[var(--accent)]"}`} />
-                  <span aria-hidden="true" className="hidden lg:inline">{item.name}</span>
+                  <span aria-hidden="true" className="inline">{item.name}</span>
                 </a>
               );
             })}
