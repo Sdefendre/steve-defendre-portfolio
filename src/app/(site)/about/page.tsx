@@ -26,7 +26,7 @@ export default function About() {
     <div className="space-y-20 lg:space-y-28">
       <header className="spatial-window spatial-reveal relative overflow-hidden rounded-[2rem] p-5 sm:p-8 lg:p-10">
         <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(16rem,0.72fr)_minmax(0,1.28fr)] lg:gap-12">
-          <div className="spatial-glass relative min-h-[22rem] overflow-hidden rounded-[2rem] border border-[var(--border)] sm:min-h-[30rem] lg:min-h-[36rem]">
+          <div className="spatial-glass relative order-2 mx-auto aspect-[4/5] w-full max-w-[16rem] overflow-hidden rounded-[2rem] border border-[var(--border)] lg:order-1 lg:aspect-auto lg:max-w-none lg:min-h-[36rem]">
             <Image
               src="/headshot.jpg"
               alt="Steve Defendre, founder of Defendre Solutions"
@@ -45,7 +45,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-between py-1">
+          <div className="order-1 flex flex-col justify-between py-1 lg:order-2">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
                 Veteran, CS graduate, product engineer

@@ -19,6 +19,7 @@ interface ProjectCardProps {
   priority?: boolean;
   ctaLabel?: string;
   variant?: ProjectCardVariant;
+  showStatus?: boolean;
 }
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -61,6 +62,7 @@ function ProjectCard({
   priority = false,
   ctaLabel = "View live site",
   variant = "detailed",
+  showStatus = true,
 }: ProjectCardProps) {
   const isCompact = variant === "compact";
   const isFeatured = variant === "featured";
@@ -75,21 +77,21 @@ function ProjectCard({
 
   const cardClassName = cx(
     "spatial-window group relative isolate flex flex-col overflow-hidden rounded-[2rem] border border-[var(--border)]",
-    !isCompact && "h-full",
+    "h-full",
     hasSafeUrl &&
       "focus-ring cursor-pointer motion-safe:transition-[transform,background-color] motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:hover:bg-[var(--surface-elevated)] motion-safe:active:translate-y-0 motion-reduce:transition-none",
-    isFeatured && "lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]",
   );
 
   const mediaClassName = cx(
     "relative w-full flex-shrink-0 overflow-hidden bg-[var(--surface-muted)]",
-    isFeatured ? "aspect-[16/10] lg:aspect-auto lg:min-h-[31rem]" : "aspect-[16/10]",
+    "aspect-[16/10]",
   );
 
   const cardContent = (
     <>
       <div className={mediaClassName}>
-        <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-[color-mix(in_oklab,var(--background)_72%,transparent)] px-3 py-2 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[var(--foreground)] backdrop-blur-xl sm:inset-x-4 sm:top-4">
+        {showStatus && (
+          <div className="pointer-events-none absolute inset-x-3 top-3 z-10 flex items-center justify-between gap-3 rounded-full border border-white/20 bg-[color-mix(in_oklab,var(--background)_72%,transparent)] px-3 py-2 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[var(--foreground)] backdrop-blur-xl sm:inset-x-4 sm:top-4">
             <span className="inline-flex items-center gap-2" data-testid="project-status">
               <span
                 aria-hidden="true"
@@ -102,8 +104,9 @@ function ProjectCard({
               />
               {isLive ? "Live" : "Prototype"}
             </span>
-          {image && <span>{initials}</span>}
-        </div>
+            {image && <span>{initials}</span>}
+          </div>
+        )}
 
         {image ? (
           <ResponsiveImage
@@ -143,13 +146,7 @@ function ProjectCard({
           )}
         </div>
 
-        <p
-          className={cx(
-            "mt-4 text-sm leading-7 text-[var(--muted-foreground)]",
-            isCompact && "line-clamp-3",
-            isFeatured && "line-clamp-3 lg:line-clamp-none",
-          )}
-        >
+        <p className="mt-4 text-sm leading-7 text-[var(--muted-foreground)]">
           {description}
         </p>
 
@@ -166,13 +163,7 @@ function ProjectCard({
             <dt className="text-[0.65rem] font-bold uppercase tracking-[0.17em] text-[var(--muted)]">
               Outcome
             </dt>
-            <dd
-              className={cx(
-                "mt-2 text-xs leading-6 text-[var(--muted-foreground)]",
-                (isCompact || isFeatured) && "line-clamp-3",
-                isFeatured && "lg:line-clamp-none",
-              )}
-            >
+            <dd className="mt-2 text-xs leading-6 text-[var(--muted-foreground)]">
               {outcome}
             </dd>
           </div>

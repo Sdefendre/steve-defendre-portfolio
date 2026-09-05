@@ -38,9 +38,9 @@ export default function Home() {
         />
 
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(15rem,0.65fr)] lg:gap-14">
-          <div className="order-2 max-w-4xl lg:order-1">
-            <div className="mb-7 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-              <span className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4">
+          <div className="max-w-4xl">
+            <div className="mb-5 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+              <span className="hidden min-h-11 items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 lg:inline-flex">
                 <span
                   aria-hidden="true"
                   className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_1rem_rgba(52,211,153,0.8)]"
@@ -57,7 +57,7 @@ export default function Home() {
               I build software you can keep.
             </h1>
 
-            <p className="mt-7 max-w-[62ch] text-base leading-8 text-[var(--muted-foreground)] sm:text-lg">
+            <p className="mt-5 max-w-[62ch] text-base leading-8 text-[var(--muted-foreground)] sm:text-lg">
               I&apos;m Steve Defendre, a veteran, CS graduate, and founder of{" "}
               <ExternalLink
                 href="https://defendresolutions.com"
@@ -87,7 +87,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative order-1 mx-auto w-full max-w-[14.5rem] sm:max-w-[20rem] lg:order-2 lg:justify-self-end">
+          <div className="relative mx-auto w-full max-w-[14.5rem] sm:max-w-[16rem] lg:max-w-[20rem] lg:justify-self-end">
             <div
               aria-hidden="true"
               className="absolute inset-5 translate-x-5 translate-y-6 rounded-[2.5rem] border border-[var(--border)] bg-[var(--surface-muted)] opacity-60"
@@ -151,11 +151,11 @@ export default function Home() {
           </a>
         </div>
 
-        <div className="grid auto-cols-[clamp(18rem,86vw,36rem)] grid-flow-col gap-5 overflow-x-auto pb-5 [scrollbar-width:none] snap-x snap-mandatory lg:grid-flow-row lg:auto-cols-auto lg:grid-cols-12 lg:items-start lg:overflow-visible lg:pb-0">
+        <div className="grid gap-6 lg:grid-cols-12 lg:items-start">
           {selectedProjects.map((project, index) => (
             <div
               key={project.title}
-              className={`spatial-reveal snap-center ${constellationPlacement[index] ?? "md:col-span-6"}`}
+              className={`spatial-reveal ${constellationPlacement[index] ?? "md:col-span-6"}`}
             >
               <ProjectCard
                 {...project}

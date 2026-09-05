@@ -71,64 +71,28 @@ export default function ProjectExplorer({
   return (
     <section
       aria-labelledby="project-explorer-heading"
-      className="space-y-10 lg:space-y-14"
+      className="space-y-6 sm:space-y-8"
     >
-      <header className="spatial-window spatial-reveal grid gap-8 rounded-[2rem] border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(16rem,0.75fr)] lg:p-10">
-        <div className="max-w-3xl">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-            Shipped work
-          </p>
-          <h1
-            id="project-explorer-heading"
-            className="mt-4 max-w-[11ch] font-display text-[clamp(3rem,7vw,7rem)] font-medium leading-[0.9] tracking-[-0.055em] text-[var(--foreground)]"
-          >
-            Projects
-          </h1>
-          <p className="mt-6 max-w-[58ch] text-base leading-8 text-[var(--muted-foreground)] sm:text-lg">
-            Studio work, client sites, and my own products. Open a case study if
-            you want the problem, what I did, and what changed.
-          </p>
-        </div>
-
-        <div className="spatial-glass rounded-[1.75rem] border border-[var(--border)] p-5 sm:p-6">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">
-            Current view
-          </p>
-          <div className="mt-4 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.16em] text-[var(--muted-foreground)]">
-                Visible
-              </p>
-              <p className="mt-2 font-display text-[clamp(2.75rem,6vw,4.5rem)] font-medium leading-none tracking-[-0.05em] text-[var(--foreground)]">
-                {visibleCount}
-              </p>
-            </div>
-            <p className="max-w-[11rem] text-sm leading-6 text-[var(--muted-foreground)]">
-              {activeCategory === "All"
-                ? "Every project is here."
-                : `${activeCategory} projects only.`}
-            </p>
-          </div>
-        </div>
+      <header className="spatial-reveal max-w-3xl">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
+          Shipped work
+        </p>
+        <h1
+          id="project-explorer-heading"
+          className="mt-3 font-display text-[clamp(3rem,7vw,7rem)] font-medium leading-[0.9] tracking-[-0.055em] text-[var(--foreground)]"
+        >
+          Projects
+        </h1>
+        <p className="mt-4 max-w-[58ch] text-base leading-7 text-[var(--muted-foreground)] sm:text-lg">
+          Studio work, client sites, and independent products. Explore the work
+          and open a case study for the details.
+        </p>
       </header>
 
-      <div className="space-y-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
-              Filters
-            </p>
-            <p
-              aria-live="polite"
-              className="mt-2 text-sm font-semibold text-[var(--foreground)]"
-            >
-              {countLabel}
-            </p>
-          </div>
-          <p className="max-w-[32ch] text-sm leading-6 text-[var(--muted-foreground)]">
-            Filter by studio, client, or product.
-          </p>
-        </div>
+      <div className="space-y-3">
+        <p aria-live="polite" className="text-sm font-semibold text-[var(--muted-foreground)]">
+          {countLabel}
+        </p>
 
         <div
           aria-label="Project category filters"
@@ -159,11 +123,11 @@ export default function ProjectExplorer({
       </div>
 
       {visibleProjects.length > 0 ? (
-        <div className="grid gap-6 xl:grid-cols-2">
+        <div className="grid gap-x-6 gap-y-8 xl:grid-cols-2">
           {visibleProjects.map((project) => (
             <article
               key={project.title}
-              className="spatial-reveal relative space-y-4"
+              className="spatial-reveal relative grid grid-rows-[auto_1fr_auto] gap-4 xl:row-span-3 xl:grid-rows-subgrid"
             >
               <div className="flex flex-wrap items-center gap-2 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
                 <span className="inline-flex min-h-9 items-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-3">
@@ -171,6 +135,7 @@ export default function ProjectExplorer({
                 </span>
                 <span>{project.year}</span>
                 <span
+                  data-testid="project-status"
                   className={cx(
                     "inline-flex min-h-9 items-center gap-2 rounded-full border border-[var(--border)] px-3",
                     statusTone(project.status),
@@ -184,7 +149,7 @@ export default function ProjectExplorer({
                 </span>
               </div>
 
-              <ProjectCard {...project} variant="compact" />
+              <ProjectCard {...project} variant="compact" showStatus={false} />
 
               <details className="group relative z-10 rounded-[1.5rem] border border-[var(--border)] bg-[var(--surface)]/85 p-4 sm:p-5">
                 <summary className="focus-ring relative z-10 flex min-h-11 w-full cursor-pointer list-none items-center justify-between gap-4 rounded-[1.15rem] outline-none">
