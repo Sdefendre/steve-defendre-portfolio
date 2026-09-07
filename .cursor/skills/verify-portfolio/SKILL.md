@@ -56,7 +56,7 @@ Pass means:
 
 Fail means stop driving. Relaunch this `RUN_ID` after Cleanup, or pick a new `RUN_ID` and port. Do not point the browser at a listener doctor did not accept.
 
-`/projects` count text (`Showing 8 of 8 projects`) is rendered after hydration. Doctor uses curl, so it does not assert that string. Assert it in Drive after the page is interactive.
+`/projects` renders per request, so its curl HTML already carries `Showing 8 of 8 projects`. Doctor does not assert that string because it tracks the catalog, not launch health. Assert counts and filter changes in Drive.
 
 ## Drive
 
@@ -70,7 +70,7 @@ Stable handles from this repo:
 | Home / About / Projects / Contact | Role `link`, name `Home`, `About`, `Projects`, `Contact`. Desktop site-layout links also set `aria-label` to those names. |
 | Skip link | Role `link`, name `Skip to content`. First Tab (Alt+Tab on WebKit). Lands on `#main-content`. |
 | Home H1 | Role `heading` level 1, name `I build software you can keep.` |
-| Home CTAs | Role `link`, name `Start a project` → `/contact`. Name `View projects` → `/projects`. Name `View the full project list` → `/projects`. |
+| Home CTAs | Role `link`, name `Start a project` → `/contact`. Scope to `getByRole("main")`; from `md` up the dock has a second link with that name. Name `View projects` → `/projects`. Name `View the full project list` → `/projects`. |
 | About H1 | Role `heading` level 1, name `About me` |
 | Projects H1 | Role `heading` level 1, name `Projects` |
 | Project filters | Role `group`, name `Project category filters`. Buttons `All`, `Studio`, `Client`, `Product` with `aria-pressed`. |
