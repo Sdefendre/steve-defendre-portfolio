@@ -22,6 +22,8 @@ vi.mock("next/image", () => ({
 
 // Mock the projects data
 vi.mock("@/data/projects", () => ({
+  projectCategories: ["Studio", "Client", "Product"],
+  projectsFilterHref: (category: string) => `/projects?category=${category}`,
   projects: [
     {
       initials: "TP1",
@@ -33,6 +35,7 @@ vi.mock("@/data/projects", () => ({
       gradient: "from-red-500 to-blue-500",
       url: "https://test1.com",
       ctaLabel: "Open test 1",
+      status: "Live",
     },
     {
       initials: "TP2",
@@ -44,6 +47,7 @@ vi.mock("@/data/projects", () => ({
       gradient: "from-green-500 to-yellow-500",
       url: "https://test2.com",
       ctaLabel: "Open test 2",
+      status: "Prototype",
     },
   ],
 }));
