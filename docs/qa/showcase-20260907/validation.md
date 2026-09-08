@@ -5,7 +5,8 @@
 - Local lint completed successfully before the shared machine became overloaded.
 - GitHub Actions initially failed because the homepage unit-test mock omitted the newly used `projectCategories` and `projectsFilterHref` exports. Commit `9355da1` supplies those mock exports; the replacement CI run is the authoritative result.
 - Focused check passed: `npx vitest run 'src/app/(home)/page.test.tsx' --maxWorkers=1` (3 tests).
-- No browser capture was taken in this worktree while the shared machine load was elevated. Visual verification is reserved for the PR preview once it is stable.
+- Browser review completed 2026-09-08 against Vercel preview for a39aa58: desktop and 390px mobile layout; no horizontal overflow (382px document / 390px viewport). Client category navigation renders exactly three client projects. Before screenshot uses https://steve-defendre-portfolio.vercel.app. Before/after desktop and mobile screenshots are attached in this directory.
+- GitHub Validate, Browser regression, and Vercel checks pass for a39aa58.
 
 ## Cloud Agent follow-up — 2026-09-08
 
