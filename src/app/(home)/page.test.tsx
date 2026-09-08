@@ -79,6 +79,35 @@ test("renders Projects section with correct heading", () => {
   ).toBeInTheDocument();
 });
 
+test("renders showcase telemetry that separates live links from the catalog size", () => {
+  render(<Home />);
+
+  expect(screen.getByText("Showcase")).toBeInTheDocument();
+  expect(screen.getByText("2 public builds")).toBeInTheDocument();
+  expect(screen.getByText("Live now")).toBeInTheDocument();
+  expect(screen.getByText("1 active links")).toBeInTheDocument();
+});
+
+test("renders Studio, Client, and Product entry points into the filtered catalog", () => {
+  render(<Home />);
+
+  const categoryNav = screen.getByLabelText("Browse projects by category");
+
+  for (const category of ["Studio", "Client", "Product"]) {
+    const link = screen.getByRole("link", { name: category });
+    expect(categoryNav).toContainElement(link);
+    expect(link).toHaveAttribute("href", `/projects?category=${category}`);
+  }
+
+  expect(screen.getByRole("link", { name: /View the full project list/i })).toHaveAttribute(
+    "href",
+    "/projects",
+  );
+  expect(
+    screen.getByText(/the full catalog marks prototypes separately/i),
+  ).toBeInTheDocument();
+});
+
 test("renders all projects from the mocked data", () => {
   render(<Home />);
 
