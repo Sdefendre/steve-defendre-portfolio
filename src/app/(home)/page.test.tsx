@@ -22,6 +22,8 @@ vi.mock("next/image", () => ({
 
 // Mock the projects data
 vi.mock("@/data/projects", () => ({
+  projectCategories: ["Studio", "Client", "Product"],
+  projectsFilterHref: (category: string) => `/projects?category=${category}`,
   projects: [
     {
       initials: "TP1",
@@ -33,6 +35,7 @@ vi.mock("@/data/projects", () => ({
       gradient: "from-red-500 to-blue-500",
       url: "https://test1.com",
       ctaLabel: "Open test 1",
+      status: "Live",
     },
     {
       initials: "TP2",
@@ -44,6 +47,7 @@ vi.mock("@/data/projects", () => ({
       gradient: "from-green-500 to-yellow-500",
       url: "https://test2.com",
       ctaLabel: "Open test 2",
+      status: "Prototype",
     },
   ],
 }));
@@ -72,6 +76,35 @@ test("renders Projects section with correct heading", () => {
   render(<Home />);
   expect(
     screen.getByRole("heading", { name: /A few I shipped/i, level: 2 }),
+  ).toBeInTheDocument();
+});
+
+test("renders showcase telemetry that separates live links from the catalog size", () => {
+  render(<Home />);
+
+  expect(screen.getByText("Showcase")).toBeInTheDocument();
+  expect(screen.getByText("2 public builds")).toBeInTheDocument();
+  expect(screen.getByText("Live now")).toBeInTheDocument();
+  expect(screen.getByText("1 active links")).toBeInTheDocument();
+});
+
+test("renders Studio, Client, and Product entry points into the filtered catalog", () => {
+  render(<Home />);
+
+  const categoryNav = screen.getByRole("navigation", { name: "Browse projects by category" });
+
+  for (const category of ["Studio", "Client", "Product"]) {
+    const link = screen.getByRole("link", { name: category });
+    expect(categoryNav).toContainElement(link);
+    expect(link).toHaveAttribute("href", `/projects?category=${category}`);
+  }
+
+  expect(screen.getByRole("link", { name: /View the full project list/i })).toHaveAttribute(
+    "href",
+    "/projects",
+  );
+  expect(
+    screen.getByText(/the full catalog marks prototypes separately/i),
   ).toBeInTheDocument();
 });
 

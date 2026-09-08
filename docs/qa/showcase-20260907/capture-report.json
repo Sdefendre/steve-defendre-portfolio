@@ -1,0 +1,64 @@
+[
+  {
+    "label": "before",
+    "url": "https://steve-defendre-portfolio.vercel.app/",
+    "viewport": "desktop-1280x800",
+    "telemetry": "STUDIO | Defendre Solutions | WORK | From plan to launch | BACKGROUND | Veteran, CS graduate",
+    "categoryLinks": [],
+    "fullListHref": "/projects",
+    "sectionIntro": "A veteran-owned software studio for small teams that need custom web apps, practical consulting, and production discipline without agency drag."
+  },
+  {
+    "label": "before",
+    "url": "https://steve-defendre-portfolio.vercel.app/",
+    "viewport": "mobile-390x844",
+    "telemetry": "STUDIO | Defendre Solutions | WORK | From plan to launch | BACKGROUND | Veteran, CS graduate",
+    "categoryLinks": [],
+    "fullListHref": "/projects",
+    "sectionIntro": "A veteran-owned software studio for small teams that need custom web apps, practical consulting, and production discipline without agency drag."
+  },
+  {
+    "label": "after",
+    "url": "http://127.0.0.1:3100/",
+    "viewport": "desktop-1280x800",
+    "telemetry": "STUDIO | Defendre Solutions | SHOWCASE | 8 public builds | LIVE NOW | 6 active links",
+    "categoryLinks": [
+      {
+        "text": "Studio",
+        "href": "/projects?category=Studio"
+      },
+      {
+        "text": "Client",
+        "href": "/projects?category=Client"
+      },
+      {
+        "text": "Product",
+        "href": "/projects?category=Product"
+      }
+    ],
+    "fullListHref": "/projects",
+    "sectionIntro": "A current sample of studio, client, and product work. Each card opens the public project page or repository; the full catalog marks prototypes separately."
+  },
+  {
+    "label": "after",
+    "url": "http://127.0.0.1:3100/",
+    "viewport": "mobile-390x844",
+    "telemetry": "STUDIO | Defendre Solutions | SHOWCASE | 8 public builds | LIVE NOW | 6 active links",
+    "categoryLinks": [
+      {
+        "text": "Studio",
+        "href": "/projects?category=Studio"
+      },
+      {
+        "text": "Client",
+        "href": "/projects?category=Client"
+      },
+      {
+        "text": "Product",
+        "href": "/projects?category=Product"
+      }
+    ],
+    "fullListHref": "/projects",
+    "sectionIntro": "A current sample of studio, client, and product work. Each card opens the public project page or repository; the full catalog marks prototypes separately."
+  }
+]
