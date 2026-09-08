@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+- Refined the homepage showcase into a clearer public project entry point: it now states the catalog scope, distinguishes live links from prototypes, and offers direct Studio, Client, and Product routes before the selected work cards.
+
 ### Fixed
 - 404 pages now use their own Open Graph and Twitter titles instead of the
   homepage, stay out of the search index, and no longer canonicalize a missing

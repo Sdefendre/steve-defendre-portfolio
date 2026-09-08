@@ -1,23 +1,8 @@
 import ProjectCard from "@/components/ProjectCard";
-import { projects } from "@/data/projects";
+import { projectCategories, projects, projectsFilterHref } from "@/data/projects";
 import { ArrowRightIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import ResponsiveImage from "@/components/ResponsiveImage";
 import { ExternalLink } from "@/components/ExternalLink";
-
-const telemetry = [
-  {
-    label: "Studio",
-    value: "Defendre Solutions",
-  },
-  {
-    label: "Work",
-    value: "From plan to launch",
-  },
-  {
-    label: "Background",
-    value: "Veteran, CS graduate",
-  },
-] as const;
 
 const constellationPlacement = [
   "lg:col-span-7",
@@ -28,6 +13,12 @@ const constellationPlacement = [
 
 export default function Home() {
   const selectedProjects = projects.slice(0, 4);
+  const liveProjectCount = projects.filter((project) => project.status === "Live").length;
+  const telemetry = [
+    { label: "Studio", value: "Defendre Solutions" },
+    { label: "Showcase", value: `${projects.length} public builds` },
+    { label: "Live now", value: `${liveProjectCount} active links` },
+  ];
 
   return (
     <div className="space-y-20 lg:space-y-28">
@@ -130,7 +121,7 @@ export default function Home() {
       </header>
 
       <section aria-labelledby="selected-work-heading">
-        <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.62fr)] lg:items-end lg:gap-12">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)]">
               Selected work
@@ -141,14 +132,32 @@ export default function Home() {
             >
               A few I shipped.
             </h2>
+            <p className="mt-4 max-w-[54ch] text-base leading-7 text-[var(--muted-foreground)]">
+              A current sample of studio, client, and product work. Each card
+              opens the public project page or repository; the full catalog
+              marks prototypes separately.
+            </p>
           </div>
-          <a
-            href="/projects"
-            className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 rounded-full px-2 text-sm font-bold text-[var(--foreground)] transition-colors hover:text-[var(--accent)]"
-          >
-            View the full project list
-            <ArrowRightIcon aria-hidden="true" className="h-4 w-4" />
-          </a>
+          <div className="flex flex-col items-start gap-3 lg:items-end">
+            <div className="flex flex-wrap gap-2 lg:justify-end" aria-label="Browse projects by category">
+              {projectCategories.map((category) => (
+                <a
+                  key={category}
+                  href={projectsFilterHref(category)}
+                  className="focus-ring inline-flex min-h-10 items-center rounded-full border border-[var(--border)] bg-[color-mix(in_oklab,var(--surface)_82%,transparent)] px-3 text-xs font-bold text-[var(--muted-foreground)] transition-colors hover:border-[var(--accent)] hover:text-[var(--foreground)]"
+                >
+                  {category}
+                </a>
+              ))}
+            </div>
+            <a
+              href="/projects"
+              className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 rounded-full px-2 text-sm font-bold text-[var(--foreground)] transition-colors hover:text-[var(--accent)]"
+            >
+              View the full project list
+              <ArrowRightIcon aria-hidden="true" className="h-4 w-4" />
+            </a>
+          </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-12 lg:items-start">
