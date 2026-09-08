@@ -91,7 +91,7 @@ test("renders showcase telemetry that separates live links from the catalog size
 test("renders Studio, Client, and Product entry points into the filtered catalog", () => {
   render(<Home />);
 
-  const categoryNav = screen.getByLabelText("Browse projects by category");
+  const categoryNav = screen.getByRole("navigation", { name: "Browse projects by category" });
 
   for (const category of ["Studio", "Client", "Product"]) {
     const link = screen.getByRole("link", { name: category });

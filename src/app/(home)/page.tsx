@@ -139,7 +139,7 @@ export default function Home() {
             </p>
           </div>
           <div className="flex flex-col items-start gap-3 lg:items-end">
-            <div className="flex flex-wrap gap-2 lg:justify-end" aria-label="Browse projects by category">
+            <nav className="flex flex-wrap gap-2 lg:justify-end" aria-label="Browse projects by category">
               {projectCategories.map((category) => (
                 <a
                   key={category}
@@ -149,7 +149,7 @@ export default function Home() {
                   {category}
                 </a>
               ))}
-            </div>
+            </nav>
             <a
               href="/projects"
               className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 rounded-full px-2 text-sm font-bold text-[var(--foreground)] transition-colors hover:text-[var(--accent)]"
