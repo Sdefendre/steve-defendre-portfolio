@@ -48,8 +48,8 @@ Preconditions:
 - Filter buttons share names with category chips on each card. Use `getByRole("button", { name: "Client", exact: true })`, not `getByText("Client")`.
 - Count copy is singular for one match: `Showing 1 Studio project`. Do not assert `projects` on Studio.
 - `?category=` is case-sensitive. `client` or `CLIENT` parses as All.
-- `/projects` HTML from curl can miss the count string. The explorer sits behind `Suspense` for `useSearchParams`. Assert counts in a hydrated browser.
-- Case study summary visible text is `Challenge, approach, and impact`. The title is in an `.sr-only` span. The accessible name includes `for {title}`.
+- `/projects` renders per request, so curl HTML already contains `Showing 8 of 8 projects` and eight `<article>` tags. That proves the catalog, not the chips. Filter changes and `aria-pressed` still need a hydrated browser.
+- Case study summary visible text is `Challenge, approach, and impact`. The title is in an `.sr-only` span inside the same element, so the accessible name includes `for {title}` and `getByText` with `exact: true` on the visible phrase fails. Match by substring.
 - Project cards are whole-card links to other origins. Opening `Visit studio for Defendre Solutions (opens in new tab)` leaves this app. Stay on `/projects` for filter and case-study proof.
 - WebMCP `filter-projects` navigates to the same `?category=` URLs. Using the tool is not clicking the chip. Prove the chip or the typed URL.
-- Empty-state copy `Nothing in {category} right now` only appears if a category has zero rows. The current catalog has at least one in each chip. Do not invent a fourth category.
+- Empty-state copy `Nothing in {category} right now.` only appears if a category has zero rows. The current catalog has at least one in each chip. Do not invent a fourth category.

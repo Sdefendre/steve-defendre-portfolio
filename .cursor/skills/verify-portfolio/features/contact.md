@@ -27,14 +27,14 @@ Preconditions:
 - Clipboard read/write granted when proving copy. The contact spec does `context.grantPermissions(["clipboard-read", "clipboard-write"])`.
 - Mailto clicks are intercepted. Do not let a mail app send mail. Reuse the `HTMLAnchorElement.prototype.click` stub in `e2e/contact.spec.ts`.
 
-- **Open contact.** Go to `/contact`. Run `await page.goto("/contact")`. Title is `Contact Steve Defendre | Project inquiries`. Heading level 1 is `Tell me what you need built.` The address `steve@defendresolutions.com` is visible.
+- **Open contact.** Go to `/contact`. Run `await page.goto("/contact")`. Title is `Contact Steve Defendre | Project inquiries`. Heading level 1 is `Tell me what you need built.` The address `steve@defendresolutions.com` is visible. The form status reads `Opens a draft in your email app. You review and send it.` until the first submit.
 - **Empty submit.** Choose `Prepare email draft` with empty fields. Run `page.getByRole("button", { name: "Prepare email draft" }).click()`. Alert text is `Check the highlighted fields and try again.` Labels `Your name`, `Email address`, `Project type`, `Budget range`, and `Message` each have `aria-invalid=true`.
 - **Copy email.** Choose `Copy email`. Run `page.getByRole("button", { name: "Copy email" }).click()`. The button name becomes `Copied`. Status text is `steve@defendresolutions.com copied to clipboard.` `navigator.clipboard.readText()` returns that address.
 - **Fill draft.** Use the same fixture as `e2e/contact.spec.ts`. Run `page.getByLabel("Your name").fill("Ada Lovelace")`, `page.getByLabel("Email address").fill("ada@example.com")`, `page.getByLabel("Project type").selectOption("new-website")`, `page.getByLabel("Budget range").selectOption("5k-10k")`, `page.getByLabel("Message").fill("A proof-led site & launch plan? Yes.")`.
 - **Prepare draft.** Choose `Prepare email draft` again. The button name becomes `Preparing draft` and status text is `Preparing your email draft.` After that, status contains `Email draft requested.`, `Nothing was sent.`, and `If no mail app opened, use Email Steve or copy the address above.`
 - **Mailto body.** The intercepted href protocol is `mailto:`, pathname is `steve@defendresolutions.com`, `subject` is `Project inquiry: New website`, and `body` contains `Name: Ada Lovelace` plus `A proof-led site & launch plan? Yes.`
 - **Scripted path.** Run `npx playwright test e2e/contact.spec.ts --project=chromium`. That file covers validation, copy, metadata, and the intercepted draft.
-- **Secondary links.** Role `link` names include `GitHub (opens in a new tab)`, `LinkedIn (opens in a new tab)`, and `Defendre Solutions (opens in a new tab)`. Visible host text includes `github.com/Sdefendre` and `defendresolutions.com`.
+- **Secondary links.** Role `link` names include `GitHub (opens in a new tab)`, `LinkedIn (opens in a new tab)`, and `Defendre Solutions (opens in a new tab)`. Two links match the studio name exactly and three by substring, so pass `exact: true` and take `.first()` for the card, or assert the count instead of `.click()`. Visible host text includes `github.com/Sdefendre` and `defendresolutions.com`.
 - **Proof.** Save the Playwright log for `e2e/contact.spec.ts` into `evidence/contact/`. If you drive by hand, keep a screenshot of the validation alert and a text file with the intercepted mailto URL. Never keep a sent message, because nothing should have been sent.
 
 ## Gotchas
@@ -44,5 +44,5 @@ Preconditions:
 - `Preparing draft` lasts about 300ms. Assert that name immediately after click, then wait for the ready status. A fixed sleep is the wrong signal.
 - `Email Steve` is a bare mailto with no subject. Proving it without an intercept can open a real mail composer. Prefer the form path and the spec stub.
 - Copy needs a clipboard. Headless or permission-denied runs show `Try copy again` and an alert that starts with `Copy attempt`. That is a failed copy, not proof.
-- Support in the studio footer is named `Support Defendre Solutions`. It is optional and not required for a contact proof.
+- Support in the studio footer is named `Support Defendre Solutions (opens in a new tab)`. It is optional and not required for a contact proof.
 - `open-contact` WebMCP only opens `/contact` and returns the email. It does not fill or send the form. Do not treat a tool payload as a prepared draft.
