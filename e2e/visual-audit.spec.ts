@@ -24,7 +24,7 @@ for (const width of [320, 390, 768, 1024, 1440]) {
     await page.goto("/projects");
     await page.evaluate(() => document.fonts.ready);
     const articles = page.getByRole("article");
-    await expect(articles).toHaveCount(8);
+    await expect(articles).toHaveCount(9);
     for (const article of await articles.all()) {
       await expect(article.getByTestId("project-status")).toHaveCount(1);
       const description = article.locator("a p").first();

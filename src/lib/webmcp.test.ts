@@ -230,6 +230,7 @@ describe("portfolio tool execute", () => {
     });
     expect((result as { projects: Array<{ title: string }> }).projects.map((project) => project.title)).toEqual([
       "FreeVoiceTranscribe",
+      "Apple App Intents Skill",
       "Traces",
       "WealthWise",
       "Command.AI",
