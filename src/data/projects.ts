@@ -56,7 +56,7 @@ export const projects: Project[] = [
     outcome: "Published an MIT-licensed SKILL.md and focused references, free to use, modify, and redistribute.",
     category: "Product", year: 2026, status: "Live",
     caseStudy: { challenge: "Developers need to map app actions to Apple's supported Siri and App Schema contracts while keeping existing Shortcuts useful.", approach: "I researched Apple's documentation and WWDC26 sessions, then built a portable agent skill with schema guidance, entity queries, indexing, testing workflows, and a persistent FieldNotes SwiftUI example.", impact: "The public MIT-licensed skill gives teams reusable integration guidance. Siri availability depends on supported schemas, SDKs, and eligible devices; build checks alone do not verify a live Siri experience." },
-    tags: ["Swift", "App Intents", "SwiftUI", "Agent Skills"], gradient: "from-indigo-500 to-violet-700", url: "https://github.com/Sdefendre/apple-app-intents-skill", image: "/project-previews/apple-app-intents.jpg", ctaLabel: "View on GitHub",
+    tags: ["Swift", "App Intents", "SwiftUI", "Agent Skills"], gradient: "from-indigo-500 to-violet-700", url: "https://sdefendre.github.io/apple-app-intents-skill/", image: "/project-previews/apple-app-intents-site.jpg", ctaLabel: "Get the skill",
   },
   {
     initials: "BR", title: "BraidsbyRose",
