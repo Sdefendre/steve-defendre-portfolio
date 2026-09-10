@@ -154,7 +154,7 @@ describe('Projects Data', () => {
     expect(catalogText).not.toMatch(/Plaid connects|open source/i);
   });
 
-  it('leaves every other project URL and CTA unchanged', () => {
+  it('keeps public project destinations and CTA labels correct', () => {
     expect(
       Object.fromEntries(
         projects
@@ -171,8 +171,8 @@ describe('Projects Data', () => {
         ctaLabel: 'View on GitHub',
       },
       'Apple App Intents Skill': {
-        url: 'https://github.com/Sdefendre/apple-app-intents-skill',
-        ctaLabel: 'View on GitHub',
+        url: 'https://sdefendre.github.io/apple-app-intents-skill/',
+        ctaLabel: 'Get the skill',
       },
       BraidsbyRose: {
         url: 'https://braidsbyrose.com',

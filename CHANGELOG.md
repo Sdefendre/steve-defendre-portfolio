@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Changed
+- Apple App Intents Skill now opens its download and installation website, with a screenshot of the live hero as its project preview.
 - Refined the homepage showcase into a clearer public project entry point: it now states the catalog scope, distinguishes live links from prototypes, and offers direct Studio, Client, and Product routes before the selected work cards.
 
 ### Fixed
