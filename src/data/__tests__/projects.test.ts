@@ -23,6 +23,7 @@ describe('Projects Data', () => {
     expect(projects.map((project) => project.title)).toEqual([
       'Defendre Solutions',
       'FreeVoiceTranscribe',
+      'Apple App Intents Skill',
       'BraidsbyRose',
       'Traces',
       'WealthWise',
@@ -169,6 +170,10 @@ describe('Projects Data', () => {
         url: 'https://github.com/Sdefendre/freevoicetranscribe',
         ctaLabel: 'View on GitHub',
       },
+      'Apple App Intents Skill': {
+        url: 'https://github.com/Sdefendre/apple-app-intents-skill',
+        ctaLabel: 'View on GitHub',
+      },
       BraidsbyRose: {
         url: 'https://braidsbyrose.com',
         ctaLabel: 'View booking site',
@@ -210,15 +215,16 @@ describe('project catalog helpers', () => {
     const catalog = listPublicProjects();
 
     expect(catalog).toHaveLength(projects.length);
-    expect(catalog[4]).toEqual({
+    expect(catalog[5]).toEqual({
       title: 'WealthWise',
       category: 'Product',
       status: 'Prototype',
       url: 'https://sdefendre.github.io/Wealthwise/',
-      description: projects[4].description,
+      description: projects[5].description,
     });
     expect(filterProjectCatalog(projects, 'Product').map((project) => project.title)).toEqual([
       'FreeVoiceTranscribe',
+      'Apple App Intents Skill',
       'Traces',
       'WealthWise',
       'Command.AI',

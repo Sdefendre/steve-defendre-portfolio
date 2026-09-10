@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Case study arrows now rotate when a project’s deeper read is open.
 
 ### Added
+- Apple App Intents Skill in the homepage and project catalog, with an original thumbnail, GitHub link, and MIT-licensed Siri integration guidance.
 - Page-level WebMCP tools for browsers that expose `document.modelContext`:
   `list-projects`, `filter-projects`, `navigate`, `open-contact`, and
   `get-about`. Humans keep the existing UI. Tools read the same project

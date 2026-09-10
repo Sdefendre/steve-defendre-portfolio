@@ -46,8 +46,8 @@ test.describe("responsive home project titles", () => {
       for (const title of [
         "Defendre Solutions",
         "FreeVoiceTranscribe",
+        "Apple App Intents Skill",
         "BraidsbyRose",
-        "Traces",
       ]) {
         await expectWordsToStayIntact(
           selectedWork.getByRole("heading", { name: title, exact: true }),

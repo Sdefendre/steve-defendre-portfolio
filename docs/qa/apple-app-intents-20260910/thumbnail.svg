@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#151c34"/><stop offset="1" stop-color="#393258"/></linearGradient>
+    <linearGradient id="line"><stop stop-color="#a2d9e3"/><stop offset="1" stop-color="#b4a4ec"/></linearGradient>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#c1c7ed" stroke-opacity=".07"/></pattern>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+  <g font-family="Helvetica, Arial, sans-serif">
+    <text x="112" y="285" fill="#bbc3de" font-size="25" letter-spacing="6">OPEN SOURCE / MIT</text>
+    <text x="106" y="375" fill="#f8f4ef" font-size="82" font-weight="500">Apple App Intents</text>
+    <text x="111" y="440" fill="#c4c9e0" font-size="32">Practical Siri integration. A portable agent skill.</text>
+    <path d="M440 620H630M970 620H1160" stroke="url(#line)" stroke-width="4"/>
+    <g fill="#262e49" stroke="#7883a6" stroke-width="2">
+      <rect x="112" y="491" width="330" height="260" rx="32"/>
+      <rect x="635" y="491" width="330" height="260" rx="32"/>
+      <rect x="1158" y="491" width="330" height="260" rx="32"/>
+    </g>
+    <g fill="none" stroke="url(#line)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M252 548l-30 30 30 30m50-60 30 30-30 30m-19-69-13 78"/>
+      <rect x="758" y="541" width="84" height="75" rx="14"/><path d="M776 566h47m-47 24h30"/>
+      <path d="M1267 577h8m16-17v35m17-59v84m17-66v48m17-57v66m17-40v16m17-10h8"/>
+    </g>
+    <g fill="#f8f4ef" font-size="34" text-anchor="middle"><text x="277" y="682">SKILL.md</text><text x="800" y="682">App Intents</text><text x="1323" y="682">Siri + Shortcuts</text></g>
+    <text x="112" y="865" fill="#bfc8df" font-size="26" letter-spacing="2">SWIFT EXAMPLE INCLUDED</text>
+    <text x="1488" y="865" fill="#bfc8df" font-size="26" text-anchor="end">by Steve Defendre</text>
+  </g>
+</svg>
