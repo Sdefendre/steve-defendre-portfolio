@@ -56,7 +56,7 @@ Pass means:
 
 Fail means stop driving. Relaunch this `RUN_ID` after Cleanup, or pick a new `RUN_ID` and port. Do not point the browser at a listener doctor did not accept.
 
-`/projects` count text (`Showing 8 of 8 projects`) is rendered after hydration. Doctor uses curl, so it does not assert that string. Assert it in Drive after the page is interactive.
+`/projects` renders per request, so its curl HTML already carries `Showing 9 of 9 projects`. Doctor does not assert that string because it tracks the catalog, not launch health. Assert counts and filter changes in Drive.
 
 ## Drive
 
@@ -70,11 +70,12 @@ Stable handles from this repo:
 | Home / About / Projects / Contact | Role `link`, name `Home`, `About`, `Projects`, `Contact`. Desktop site-layout links also set `aria-label` to those names. |
 | Skip link | Role `link`, name `Skip to content`. First Tab (Alt+Tab on WebKit). Lands on `#main-content`. |
 | Home H1 | Role `heading` level 1, name `I build software you can keep.` |
-| Home CTAs | Role `link`, name `Start a project` → `/contact`. Name `View projects` → `/projects`. Name `View the full project list` → `/projects`. |
+| Home CTAs | Role `link`, name `Start a project` → `/contact`. Scope to `getByRole("main")`; from `md` up the dock has a second link with that name. Name `View projects` → `/projects`. Name `View the full project list` → `/projects`. |
+| Home category shortcuts | `nav[aria-label="Browse projects by category"]` on `/`. Role `link`, names `Studio`, `Client`, `Product` → `/projects?category={name}`. Full document load. |
 | About H1 | Role `heading` level 1, name `About me` |
 | Projects H1 | Role `heading` level 1, name `Projects` |
 | Project filters | Role `group`, name `Project category filters`. Buttons `All`, `Studio`, `Client`, `Product` with `aria-pressed`. |
-| Filter status | `aria-live="polite"` text. All: `Showing 8 of 8 projects`. Client: `Showing 3 Client projects`. |
+| Filter status | `aria-live="polite"` text. All: `Showing 9 of 9 projects`. Client: `Showing 3 Client projects`. Studio: `Showing 1 Studio project`. Product: `Showing 5 Product projects`. |
 | Filter URL | All: `/projects`. Client: `/projects?category=Client`. Studio and Product follow the same `?category=` shape. Unknown values parse as All. |
 | Project cards | Role `article`. Card links use `aria-label` `{ctaLabel} for {title} (opens in new tab)`. |
 | Case study | First `details` on the visible list. Summary accessible name includes `Challenge, approach, and impact for {title}`. Open state has `open`. Then exact text `Challenge`, `Approach`, `Impact`. |
