@@ -135,16 +135,16 @@ describe("layout metadata URL handling", () => {
     expect(firstImageUrl(metadata.twitter?.images)).toBe("/project-previews/defendre-solutions.jpg");
   });
 
-  it("uses localhost when every site URL source is unusable", async () => {
+  it("uses the public site when every site URL source is unusable", async () => {
     const metadata = await loadMetadata({
       NEXT_PUBLIC_SITE_URL: "https://[::1",
       VERCEL_PROJECT_PRODUCTION_URL: "://bad",
       VERCEL_URL: "http://[::1",
     });
 
-    expect(metadata.metadataBase?.toString()).toBe("http://localhost:3000/");
-    expect(metadata.alternates?.canonical?.toString()).toBe("http://localhost:3000/");
-    expect(metadata.openGraph?.url?.toString()).toBe("http://localhost:3000/");
+    expect(metadata.metadataBase?.toString()).toBe("https://steve-defendre-portfolio.vercel.app/");
+    expect(metadata.alternates?.canonical?.toString()).toBe("https://steve-defendre-portfolio.vercel.app/");
+    expect(metadata.openGraph?.url?.toString()).toBe("https://steve-defendre-portfolio.vercel.app/");
     expect(firstImageUrl(metadata.openGraph?.images)).toBe("/project-previews/defendre-solutions.jpg");
     expect(firstImageUrl(metadata.twitter?.images)).toBe("/project-previews/defendre-solutions.jpg");
   });

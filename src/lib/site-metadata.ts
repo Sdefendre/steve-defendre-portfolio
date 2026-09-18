@@ -1,29 +1,8 @@
 import type { Metadata, Viewport } from "next";
 
-const localSiteUrl = new URL("http://localhost:3000");
-const SCHEME_REGEX = /^[a-z][a-z\d+\-.]*:\/\//i;
-const PROTOCOL_RELATIVE_REGEX = /^\/\//;
+import { resolveSiteUrl } from "./site-url.mjs";
 
-function normalizeSiteUrl(value?: string): URL | null {
-  const trimmed = value?.trim();
-  if (!trimmed) return null;
-
-  const base = SCHEME_REGEX.test(trimmed)
-    ? trimmed
-    : `https://${trimmed.replace(PROTOCOL_RELATIVE_REGEX, "")}`;
-
-  try {
-    return new URL("/", base);
-  } catch {
-    return null;
-  }
-}
-
-const metadataBase =
-  normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) ??
-  normalizeSiteUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL) ??
-  normalizeSiteUrl(process.env.VERCEL_URL) ??
-  localSiteUrl;
+const metadataBase = resolveSiteUrl();
 const canonicalUrl = new URL("/", metadataBase);
 export const socialPreviewImage = {
   url: "/project-previews/defendre-solutions.jpg",

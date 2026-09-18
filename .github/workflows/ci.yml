@@ -47,6 +47,9 @@ jobs:
       - name: Build production application
         run: npm run build
 
+      - name: Verify static homepage regeneration
+        run: npm run test:static-home
+
   e2e:
     name: Browser regression tests
     needs: validate
