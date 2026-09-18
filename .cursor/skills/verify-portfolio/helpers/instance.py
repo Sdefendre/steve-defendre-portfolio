@@ -303,7 +303,11 @@ def launch(directory, run_id, port):
         raise Refused("RUN_ID already has state; use doctor/cleanup and a new RUN_ID (legacy state is never executed)")
     if listeners(port) or port_open(port):
         raise Refused("port already occupied; choose another port")
-    (directory / "evidence").mkdir(mode=0o700, exist_ok=True)
+    evidence = directory / "evidence"
+    evidence.mkdir(mode=0o700, exist_ok=True)
+    info = evidence.lstat()
+    if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
+        raise Refused("unsafe evidence directory (must be private, owned, and not a symlink)")
     with os.fdopen(safe_file(directory / "build.log", os.O_CREAT | os.O_EXCL | os.O_WRONLY), "w") as log:
         if not (REPO / "node_modules").is_dir():
             subprocess.run(["npm", "ci"], cwd=REPO, stdout=log, stderr=subprocess.STDOUT, check=True)

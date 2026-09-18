@@ -191,6 +191,14 @@ class Lifecycle(unittest.TestCase):
                 self.assertEqual(sentinel.read_text(), "untouched")
                 self.assertEqual(list(self.run_dir.iterdir()), [])
 
+    def test_symlink_evidence_directory_is_rejected_before_build(self):
+        self.run_dir.mkdir(mode=0o700)
+        (self.run_dir / "evidence").symlink_to(self.repo, target_is_directory=True)
+        self.cli("launch", self.run_id, str(self.port), success=False)
+        self.assertFalse((self.repo / "build-count").exists())
+        self.assertFalse((self.run_dir / "build.log").exists())
+        self.assertFalse(helper.port_open(self.port))
+
     def test_symlink_run_directory_and_legacy_state_are_never_followed(self):
         self.run_dir.symlink_to(self.repo, target_is_directory=True)
         try:
