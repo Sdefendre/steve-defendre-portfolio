@@ -36,7 +36,7 @@ Open `http://localhost:3000`.
 
 Static asset scripts load production `.env` files using the same loader as Next; existing process variables take precedence. Blank or malformed values, non-HTTP(S) schemes, and credentials are rejected; the next valid candidate is used. Surrounding whitespace is trimmed, scheme-less hosts use HTTPS, and paths, queries, and fragments are removed.
 
-The shared policy supplies the static homepage, dynamic route metadata, robots, and sitemap. The resolved canonical URL is also part of the static homepage input hash, so changing it triggers regeneration during `npm run build`. All application source under `src/` (except generated outputs) is hashed to cover transitive renderer dependencies. Run `npm run sync:static-home` to regenerate explicitly, `npm run check:static-home` to verify outputs, and `npm run test:static-home` for freshness/regeneration regressions. Commit generated assets with source changes.
+The shared policy supplies the static homepage, dynamic route metadata, robots, and sitemap. The resolved canonical URL is also part of the static homepage input hash, so changing it triggers regeneration during `npm run build`. All application source under `src/` (except generated outputs) is hashed to cover transitive renderer dependencies. Run `npm run sync:static-home` to regenerate explicitly, `npm run check:static-home` to verify outputs, and `npm run test:static-home` for freshness/regeneration regressions. Commit generated assets with source changes. Regeneration stages and validates the replacement before publishing it; failed compilation or rendering preserves the previous manifest and its assets.
 
 ## Routes
 - `/`. Home intro and selected project cards

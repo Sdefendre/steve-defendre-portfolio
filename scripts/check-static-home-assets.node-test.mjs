@@ -1,14 +1,16 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join, relative } from "node:path";
 import test from "node:test";
-import { staticHomeInputHash } from "./static-home-assets-lib.mjs";
 
 const repository = process.cwd();
 const checkScript = join(repository, "scripts/check-static-home-assets.mjs");
 const ensureScript = join(repository, "scripts/ensure-static-home-assets.mjs");
+const fixtureEnvironment = { ...process.env, NODE_ENV: "production" };
+for (const key of ["NEXT_PUBLIC_SITE_URL", "VERCEL_PROJECT_PRODUCTION_URL", "VERCEL_URL", "__NEXT_PROCESSED_ENV"]) delete fixtureEnvironment[key];
+
 
 function temporaryCopy() {
   const directory = mkdtempSync(join(tmpdir(), "static-home-check-"));
@@ -16,15 +18,23 @@ function temporaryCopy() {
     recursive: true,
     filter(source) {
       const path = relative(repository, source);
-      return !path.split("/").some((part) => [".git", ".next", "node_modules"].includes(part));
+      return !path.split("/").some((part) => [".git", ".next", "node_modules"].includes(part) || part === ".env" || part.startsWith(".env."));
     },
   });
   // The sync step compiles CSS, so the copy borrows the real dependencies.
   symlinkSync(join(repository, "node_modules"), join(directory, "node_modules"));
-  return directory;
+  // Normalize the baseline without copying real dotenv files or depending on
+  // the caller's canonical environment. Usually this is already fresh.
+  try {
+    run(ensureScript, directory);
+    return directory;
+  } catch (error) {
+    rmSync(directory, { recursive: true, force: true });
+    throw error;
+  }
 }
 
-function run(script, directory, environment = process.env) {
+function run(script, directory, environment = fixtureEnvironment) {
   return execFileSync(process.execPath, [join(directory, "scripts", basename(script))], {
     cwd: directory, env: environment, encoding: "utf8", stdio: "pipe",
   });
@@ -67,12 +77,11 @@ test("prebuild heals a stale lockfile input hash by re-syncing before re-checkin
     const lockfile = join(directory, "package-lock.json");
     writeFileSync(lockfile, `${readFileSync(lockfile, "utf8")}\n`);
     const staleManifest = readManifest(directory);
-    assert.notEqual(staleManifest.inputSha256, staticHomeInputHash(directory));
     assert.throws(() => check(directory), /Static homepage inputs changed/);
 
     assert.doesNotThrow(() => run(ensureScript, directory));
 
-    assert.equal(readManifest(directory).inputSha256, staticHomeInputHash(directory));
+    assert.notEqual(readManifest(directory).inputSha256, staleManifest.inputSha256);
     assert.doesNotThrow(() => check(directory));
   } finally {
     rmSync(directory, { recursive: true, force: true });
@@ -168,8 +177,7 @@ test("prebuild follows changes in newly introduced transitive renderer dependenc
 
 test("prebuild regenerates canonical and social URLs when the resolved environment changes", () => {
   const directory = temporaryCopy();
-  const cleanEnvironment = { ...process.env };
-  for (const key of ["NEXT_PUBLIC_SITE_URL", "VERCEL_PROJECT_PRODUCTION_URL", "VERCEL_URL"]) delete cleanEnvironment[key];
+  const cleanEnvironment = { ...fixtureEnvironment };
   const scenarios = [
     [{ NEXT_PUBLIC_SITE_URL: " https://custom.example/path?q=1#hash ", VERCEL_PROJECT_PRODUCTION_URL: "production.example", VERCEL_URL: "preview.example" }, "https://custom.example/"],
     [{ NEXT_PUBLIC_SITE_URL: " ", VERCEL_PROJECT_PRODUCTION_URL: " //production.example/path ", VERCEL_URL: "preview.example" }, "https://production.example/"],
@@ -181,7 +189,14 @@ test("prebuild regenerates canonical and social URLs when the resolved environme
     for (const [overrides, canonical] of scenarios) {
       const environment = { ...cleanEnvironment, ...overrides };
       assert.throws(() => run(checkScript, directory, environment), /Static homepage inputs changed/);
+      const previous = readManifest(directory);
       run(ensureScript, directory, environment);
+      const current = readManifest(directory);
+      for (const kind of ["css", "html"]) {
+        if (previous[kind].path !== current[kind].path) {
+          assert.equal(existsSync(join(directory, "public", previous[kind].path)), false, "retire superseded output after successful publication");
+        }
+      }
       const html = readHtml(directory);
       assert.ok(html.includes(`<link rel="canonical" href="${canonical}"`));
       assert.ok(html.includes(`<meta property="og:url" content="${canonical}"`));
@@ -203,8 +218,7 @@ test("prebuild regenerates canonical and social URLs when the resolved environme
 
 test("prebuild reads production dotenv canonical changes just like Next", () => {
   const directory = temporaryCopy();
-  const environment = { ...process.env, NODE_ENV: "production" };
-  for (const key of ["NEXT_PUBLIC_SITE_URL", "VERCEL_PROJECT_PRODUCTION_URL", "VERCEL_URL", "__NEXT_PROCESSED_ENV"]) delete environment[key];
+  const environment = { ...fixtureEnvironment };
   try {
     for (const host of ["dotenv-one.example", "dotenv-two.example"]) {
       writeFileSync(join(directory, ".env.production"), `NEXT_PUBLIC_SITE_URL=https://${host}\n`);
@@ -219,3 +233,50 @@ test("prebuild reads production dotenv canonical changes just like Next", () => 
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+for (const failure of [
+  {
+    name: "compilation",
+    path: "src/components/ExternalLink.tsx",
+    change(source) { return `import "./missing-render-fixture";\n${source}`; },
+    error: /Could not resolve/,
+  },
+  {
+    name: "rendering",
+    path: "src/components/ExternalLink.tsx",
+    change(source) { return source.replace('const textLabel =', 'throw new Error("intentional renderer failure");\n  const textLabel ='); },
+    error: /intentional renderer failure/,
+  },
+  {
+    name: "runtime validation",
+    path: "scripts/render-static-home.tsx",
+    change(source) { return source.replace('/_vercel/insights/script.js', '/unexpected-runtime.js'); },
+    error: /exactly one Insights script/,
+  },
+]) {
+  test(`preserves the usable manifest and assets when ${failure.name} fails`, () => {
+    const directory = temporaryCopy();
+    try {
+      const manifestPath = join(directory, "src/generated/static-home-assets.ts");
+      const manifest = readFileSync(manifestPath, "utf8");
+      const outputs = readManifest(directory);
+      const htmlPath = join(directory, "public", outputs.html.path);
+      const cssPath = join(directory, "public", outputs.css.path);
+      const originalHtml = readFileSync(htmlPath);
+      const originalCss = readFileSync(cssPath);
+      const path = join(directory, failure.path);
+      writeFileSync(path, failure.change(readFileSync(path, "utf8")));
+
+      const renderTemporary = mkdtempSync(join(directory, "render-temp-"));
+      assert.throws(() => run(ensureScript, directory, { ...fixtureEnvironment, TMPDIR: renderTemporary }), failure.error);
+      assert.deepEqual(readdirSync(renderTemporary), [], "remove temporary renderer output on failure");
+      assert.equal(readFileSync(manifestPath, "utf8"), manifest);
+      assert.deepEqual(readFileSync(htmlPath), originalHtml);
+      assert.deepEqual(readFileSync(cssPath), originalCss);
+      run("check-static-home-runtime.mjs", directory);
+      assert.deepEqual(readdirSync(join(directory, "src/generated")).filter((file) => file.startsWith(".static-home-stage-")), []);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+}

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { resolveSiteUrl } from "../src/lib/site-url.mjs";
-import { staticHomeFontCss, verifyStaticHomeFonts } from "./static-home-fonts.mjs";
+import { staticHomeFontClasses, staticHomeFontCss, verifyStaticHomeFonts } from "./static-home-fonts.mjs";
 
 const inputFiles = [
   "package.json",
@@ -72,4 +72,12 @@ export async function currentCss() {
   }).code;
   const hash = sha256(content);
   return { content, hash, publicPath: `/static-home.${hash.slice(0, 16)}.css` };
+}
+
+/** Validate a rendered document before publishing it or accepting checked-in output. */
+export function assertStaticHomeRuntime(html, cssPath) {
+  if (!html.includes(`href="${cssPath}"`)) throw new Error("Static homepage HTML references stale CSS");
+  if (!html.includes(staticHomeFontClasses)) throw new Error("Static homepage HTML is missing stable font classes");
+  if (!html.includes('rel="stylesheet"') || !html.includes(cssPath)) throw new Error("Static homepage HTML is missing its committed stylesheet");
+  if (html.includes("/_next/static/chunks") || (html.match(/<script/g) ?? []).length !== 1 || !html.includes('/_vercel/insights/script.js')) throw new Error("Static homepage must contain zero Next chunks and exactly one Insights script");
 }
