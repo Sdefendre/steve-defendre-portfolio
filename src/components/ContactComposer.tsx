@@ -5,13 +5,14 @@ import {
 } from "@heroicons/react/24/outline";
 import { flushSync } from "react-dom";
 import { useEffect, useId, useRef, useState } from "react";
-import type { ChangeEventHandler, FocusEventHandler, FormEvent, ReactNode } from "react";
+import type { ChangeEventHandler, FormEvent, ReactNode } from "react";
 import { primaryContactEmail } from "@/data/socials";
 import { trackAnalyticsEvent } from "@/utils/analytics";
 const NAME_MAX_LENGTH = 80;
 const EMAIL_MAX_LENGTH = 254;
 const MESSAGE_MAX_LENGTH = 1000;
 const MAILTO_URL_MAX_LENGTH = 2000;
+const MAILTO_OVERFLOW_ERROR = "Shorten your message or use fewer special characters so the email draft works across mail apps.";
 const PREPARING_STATUS_DURATION_MS = 300;
 
 const PROJECT_TYPE_OPTIONS = [
@@ -94,7 +95,6 @@ export function ContactComposer() {
   const projectTypeId = useId();
   const budgetRangeId = useId();
   const messageId = useId();
-  const submitButton = useRef<HTMLButtonElement>(null);
   const readyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [values, setValues] = useState<ContactComposerValues>(INITIAL_VALUES);
@@ -113,7 +113,14 @@ export function ContactComposer() {
     };
   }, []);
 
-  const showError = (field: ContactFieldName) => Boolean((submitAttempted || touched[field]) && errors[field]);
+  const showError = (field: ContactFieldName) => {
+    // First reveal the draft-wide limit on submit, so blur cannot move the
+    // submit button out from under the pointer. Keep revalidating it thereafter.
+    if (field === "message" && errors.message === MAILTO_OVERFLOW_ERROR) {
+      return submitAttempted;
+    }
+    return Boolean((submitAttempted || touched[field]) && errors[field]);
+  };
 
   function updateField(field: ContactFieldName, value: string) {
     const nextValues = { ...values, [field]: value };
@@ -122,12 +129,8 @@ export function ContactComposer() {
     applyDraftErrors(nextValues);
   }
 
-  function handleBlur(field: ContactFieldName, nextTarget: EventTarget | null) {
-    // Revealing an error on pointerdown can move the submit button before click.
-    // Let submission reveal untouched fields when focus moves to that button.
-    if (nextTarget !== submitButton.current) {
-      setTouched((current) => ({ ...current, [field]: true }));
-    }
+  function handleBlur(field: ContactFieldName) {
+    setTouched((current) => ({ ...current, [field]: true }));
     applyDraftErrors(values);
   }
 
@@ -234,7 +237,7 @@ export function ContactComposer() {
           value={values.name}
           error={showError("name") ? errors.name : undefined}
           hint="Use the name you want in the email draft body."
-          onBlur={(event) => handleBlur("name", event.relatedTarget)}
+          onBlur={() => handleBlur("name")}
           onChange={(value) => updateField("name", value)}
         >
           {(fieldProps) => (
@@ -249,7 +252,7 @@ export function ContactComposer() {
           value={values.email}
           error={showError("email") ? errors.email : undefined}
           hint="I use this to reply directly."
-          onBlur={(event) => handleBlur("email", event.relatedTarget)}
+          onBlur={() => handleBlur("email")}
           onChange={(value) => updateField("email", value)}
         >
           {(fieldProps) => (
@@ -270,7 +273,7 @@ export function ContactComposer() {
           value={values.projectType}
           error={showError("projectType") ? errors.projectType : undefined}
           hint="Choose the closest match."
-          onBlur={(event) => handleBlur("projectType", event.relatedTarget)}
+          onBlur={() => handleBlur("projectType")}
           onChange={(value) => updateField("projectType", value)}
         >
           {(fieldProps) => (
@@ -294,7 +297,7 @@ export function ContactComposer() {
           value={values.budgetRange}
           error={showError("budgetRange") ? errors.budgetRange : undefined}
           hint="A rough range is enough."
-          onBlur={(event) => handleBlur("budgetRange", event.relatedTarget)}
+          onBlur={() => handleBlur("budgetRange")}
           onChange={(value) => updateField("budgetRange", value)}
         >
           {(fieldProps) => (
@@ -318,7 +321,7 @@ export function ContactComposer() {
           value={values.message}
           error={showError("message") ? errors.message : undefined}
           hint={`A few sentences about the work is enough. ${values.message.length}/${MESSAGE_MAX_LENGTH}`}
-          onBlur={(event) => handleBlur("message", event.relatedTarget)}
+          onBlur={() => handleBlur("message")}
           onChange={(value) => updateField("message", value)}
           className="md:col-span-2"
         >
@@ -328,7 +331,6 @@ export function ContactComposer() {
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
         <button
-          ref={submitButton}
           type="submit"
           disabled={status === "preparing"}
           className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-6 text-sm font-bold text-[var(--accent-foreground)] shadow-[0_18px_45px_var(--shadow-warm)] transition-[transform,filter,opacity] duration-300 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 disabled:cursor-wait disabled:opacity-80"
@@ -367,14 +369,14 @@ interface FieldProps {
   value: string;
   error?: string;
   hint: string;
-  onBlur: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>;
+  onBlur: () => void;
   onChange: (value: string) => void;
   className?: string;
   children: (fieldProps: {
     id: string;
     name: string;
     value: string;
-    onBlur: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>;
+    onBlur: () => void;
     onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>;
     "aria-invalid": boolean;
     "aria-describedby"?: string;
@@ -453,7 +455,7 @@ function validateContactDraft(values: ContactComposerValues) {
   };
   const mailtoUrl = buildContactMailtoUrl(trimmedValues);
   if (!errors.message && mailtoUrl.length > MAILTO_URL_MAX_LENGTH) {
-    errors.message = "Shorten your message or use fewer special characters so the email draft works across mail apps.";
+    errors.message = MAILTO_OVERFLOW_ERROR;
   }
   return { errors, trimmedValues, mailtoUrl };
 }
