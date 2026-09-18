@@ -91,20 +91,17 @@ def identity(pid):
         proc = Path(f"/proc/{pid}")
         try:
             fields = (proc / "stat").read_text().rsplit(")", 1)[1].split()
-            if fields[0] == "Z":
-                return None
             start = Path("/proc/sys/kernel/random/boot_id").read_text().strip() + ":" + fields[19]
-            cwd = os.readlink(proc / "cwd")
-            executable = os.readlink(proc / "exe")
             uid = proc.stat().st_uid
+            cwd = os.readlink(proc / "cwd")
             cmd = (proc / "cmdline").read_bytes()
+            # Read exe last: an address space never comes back, so a readable exe
+            # proves cwd and cmdline above were read from a live process.
+            executable = os.readlink(proc / "exe")
         except FileNotFoundError:
-            # /proc/PID survives as a zombie after cwd/exe have disappeared.
-            # Re-read kernel state, rather than treating any missing file as exit.
-            try:
-                if (proc / "stat").read_text().rsplit(")", 1)[1].split()[0] == "Z":
-                    return None
-            except FileNotFoundError:
+            # Exit releases the address space (exe, cwd, cmdline) about a millisecond
+            # before stat reports Z. No exe link means the task has left userspace.
+            if not (proc / "exe").exists():
                 return None
             raise Refused("process identity unavailable")
     elif sys.platform == "darwin":
@@ -331,7 +328,13 @@ def launch(directory, run_id, port):
             raise Refused("server exited during startup; inspect server.log")
         # Popen retains the direct child: poll() guarantees its PID has not been
         # reaped/reused. Refresh after Next changes its process title at startup.
-        ident = identity(child.pid)
+        try:
+            ident = identity(child.pid)
+        except Refused:
+            # cmdline is empty while a node wrapper (nvm/volta shim) is still
+            # exec-ing the real binary; nothing is signaled, so poll again.
+            time.sleep(1)
+            continue
         if ident is None or ident["cwd"] != str(REPO):
             raise Refused("unable to establish launched process identity")
         state["identity"] = ident

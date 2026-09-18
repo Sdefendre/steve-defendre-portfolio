@@ -289,18 +289,17 @@ class SignalSafety(unittest.TestCase):
                     with self.assertRaises(helper.Refused):
                         helper.identity(123456)
 
-    def test_linux_zombie_during_discovery_requires_kernel_confirmation(self):
-        alive = "123456 (fixture) S " + "0 " * 18 + "12345"
-        zombie = alive.replace(") S ", ") Z ")
-        for after, gone in ((zombie, True), (FileNotFoundError(), True), (alive, False)):
-            with patch.object(helper.sys, "platform", "linux"), \
-                 patch.object(Path, "read_text", side_effect=[alive, "boot-id", after]), \
-                 patch.object(helper.os, "readlink", side_effect=FileNotFoundError()):
-                if gone:
-                    self.assertIsNone(helper.identity(123456))
-                else:
-                    with self.assertRaises(helper.Refused):
-                        helper.identity(123456)
+    @unittest.skipUnless(sys.platform == "linux", "/proc identity")
+    def test_linux_exited_task_is_gone_but_live_discovery_failure_refuses(self):
+        zombie = subprocess.Popen([sys.executable, "-c", "pass"])
+        try:
+            os.waitid(os.P_PID, zombie.pid, os.WEXITED | os.WNOWAIT)
+            self.assertIsNone(helper.identity(zombie.pid))
+        finally:
+            zombie.wait()
+        with patch.object(Path, "read_text", side_effect=FileNotFoundError("boot_id")):
+            with self.assertRaises(helper.Refused):
+                helper.identity(os.getpid())
 
     def test_unsafe_state_file_is_rejected_before_truncating_evidence(self):
         with tempfile.TemporaryDirectory() as temp:
