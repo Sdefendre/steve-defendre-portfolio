@@ -26,7 +26,7 @@ describe("canonical URL policy across public metadata", () => {
     vi.resetModules();
     const { siteMetadata, createPageMetadata } = await import("./site-metadata");
     expect(resolveSiteUrl(environment).href).toBe(canonical);
-    expect(siteMetadata.metadataBase?.href).toBe(canonical);
+    expect(siteMetadata.metadataBase?.toString()).toBe(canonical);
     expect(siteMetadata.alternates?.canonical?.toString()).toBe(canonical);
     expect(siteMetadata.openGraph?.url?.toString()).toBe(canonical);
     const page = createPageMetadata({ title: "Projects", description: "Work", canonical: "/projects" });
