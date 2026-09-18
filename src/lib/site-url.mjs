@@ -7,7 +7,14 @@ function normalizeSiteUrl(value) {
   const trimmed = value?.trim();
   if (!trimmed || /[\s\\]/.test(trimmed)) return null;
 
-  const base = /^[a-z][a-z\d+.-]*:\/\//i.test(trimmed)
+  const hasAuthorityScheme = /^[a-z][a-z\d+.-]*:\/\//i.test(trimmed);
+  const hasSchemePrefix = /^[a-z][a-z\d+.-]*:/i.test(trimmed);
+  const isBareHostWithPort = /^[^:/?#]+:\d+(?:[/?#]|$)/.test(trimmed);
+  // Do not reinterpret malformed explicit schemes (http:/host, ftp:host) as
+  // HTTPS hostnames. A numeric port on a bare host remains valid.
+  if (hasSchemePrefix && !hasAuthorityScheme && !isBareHostWithPort) return null;
+
+  const base = hasAuthorityScheme
     ? trimmed
     : `https://${trimmed.replace(/^\/\//, "")}`;
   try {

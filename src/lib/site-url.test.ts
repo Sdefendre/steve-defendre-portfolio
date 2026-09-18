@@ -12,6 +12,12 @@ const cases: { name: string; environment: Environment; canonical: string }[] = [
   { name: "invalid candidates before preview", environment: { NEXT_PUBLIC_SITE_URL: "https://[::1", VERCEL_PROJECT_PRODUCTION_URL: "ftp://production.example", VERCEL_URL: "preview.example/path" }, canonical: "https://preview.example/" },
   { name: "safe public fallback", environment: { NEXT_PUBLIC_SITE_URL: "https://user:secret@example.com", VERCEL_URL: "://bad" }, canonical: "https://steve-defendre-portfolio.vercel.app/" },
   { name: "absent environment", environment: {}, canonical: "https://steve-defendre-portfolio.vercel.app/" },
+  ...["http:/example.com", "ftp:/example.com", "javascript:/alert(1)"].map((candidate) => ({
+    name: `malformed scheme ${candidate}`,
+    environment: { NEXT_PUBLIC_SITE_URL: candidate, VERCEL_PROJECT_PRODUCTION_URL: "production.example" },
+    canonical: "https://production.example/",
+  })),
+  { name: "bare hostname and port", environment: { NEXT_PUBLIC_SITE_URL: "example.com:8080/path" }, canonical: "https://example.com:8080/" },
   { name: "explicit local development", environment: { NEXT_PUBLIC_SITE_URL: "http://localhost:4107/path" }, canonical: "http://localhost:4107/" },
 ];
 
@@ -36,7 +42,7 @@ describe("canonical URL policy across public metadata", () => {
     expect(sitemap().map(({ url }) => url)).toEqual([canonical, `${canonical}projects`, `${canonical}about`, `${canonical}contact`]);
   });
 
-  it.each(["ftp://example.com", "javascript://example.com", "file:///tmp/example", "https://user@example.com", "https://example.com\\\\other", "https://exa mple.com", "mailto:person@example.com"])("skips unsafe or malformed override %s", (candidate) => {
+  it.each(["ftp://example.com", "javascript://example.com", "file:///tmp/example", "https://user@example.com", "https://example.com\\\\other", "https://exa mple.com", "mailto:person@example.com", "https:example.com"])("skips unsafe or malformed override %s", (candidate) => {
     expect(resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: candidate, VERCEL_PROJECT_PRODUCTION_URL: "production.example" }).href).toBe("https://production.example/");
   });
 });

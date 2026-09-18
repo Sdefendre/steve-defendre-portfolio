@@ -173,6 +173,7 @@ test("prebuild regenerates canonical and social URLs when the resolved environme
   const scenarios = [
     [{ NEXT_PUBLIC_SITE_URL: " https://custom.example/path?q=1#hash ", VERCEL_PROJECT_PRODUCTION_URL: "production.example", VERCEL_URL: "preview.example" }, "https://custom.example/"],
     [{ NEXT_PUBLIC_SITE_URL: " ", VERCEL_PROJECT_PRODUCTION_URL: " //production.example/path ", VERCEL_URL: "preview.example" }, "https://production.example/"],
+    [{ NEXT_PUBLIC_SITE_URL: "http:/example.com", VERCEL_PROJECT_PRODUCTION_URL: "safe-production.example", VERCEL_URL: "preview.example" }, "https://safe-production.example/"],
     [{ NEXT_PUBLIC_SITE_URL: "https://[::1", VERCEL_PROJECT_PRODUCTION_URL: "ftp://production.example", VERCEL_URL: "preview.example/path" }, "https://preview.example/"],
     [{ NEXT_PUBLIC_SITE_URL: "https://user:secret@example.com", VERCEL_URL: "://bad" }, "https://steve-defendre-portfolio.vercel.app/"],
   ];
