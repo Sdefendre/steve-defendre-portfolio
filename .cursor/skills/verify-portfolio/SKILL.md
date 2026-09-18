@@ -23,14 +23,14 @@ Optional second argument sets the port. Default is `3100` on `127.0.0.1`, which 
 What launch does:
 
 1. Creates `/tmp/portfolio-verify-$RUN_ID/` and `evidence/` under it.
-2. Refuses if this `RUN_ID` already has a live pid, or if the chosen port is listening for anyone else.
-3. Runs `npm install` when `node_modules` is missing.
-4. Runs `npm run build` when `.next` is missing. Set `PORTFOLIO_VERIFY_REBUILD=1` after product-file changes so `next start` is not serving a stale bundle.
-5. Starts `npm run start -- --hostname 127.0.0.1 --port $PORT` and waits until `GET /` returns HTTP 200, up to 60s.
+2. Validates the run ID (1–64 letters/digits/underscores/hyphens, starting with a letter/digit), port (1024–65535), and literal loopback host `127.0.0.1` before creating paths. Refuses existing state or an occupied port.
+3. Runs `npm ci` when `node_modules` is missing.
+4. Always runs `npm run build` and requires a production `BUILD_ID`; existing or incomplete `.next` directories never bypass the build. Build output is retained in `build.log`.
+5. Starts the installed Next CLI directly with Node (`next start --hostname 127.0.0.1 --port $PORT`). Records its process identity in private `instance.json` data and waits up to 60 readiness attempts for its own listener to return HTTP 200. Discovery time adds to this timeout.
 
 Ready means launch printed `BASE_URL=` and `GET $BASE_URL/` is 200. The homepage title is `Steve Defendre | Full-stack developer`. Server stdout is `$RUN_DIR/server.log`.
 
-Two instances can share a machine. Give each its own `RUN_ID` and port. There is no shared writable data. The catalog is `src/data/projects.ts`. Contact does not persist.
+Two instances can share a machine. Give each its own worktree, `RUN_ID`, and port so builds do not overwrite a running instance. There is no shared writable data. The catalog is `src/data/projects.ts`. Contact does not persist.
 
 Do not start a second copy on a port you did not check. If `3100` is busy, use `3101` and set `PLAYWRIGHT_TEST_BASE_URL` to that origin before any Playwright command.
 
@@ -46,10 +46,9 @@ Run this first whenever the instance looks wrong, before you blame the feature.
 
 Pass means:
 
-- `instance.env` exists for this `RUN_ID`
-- `START_PID` is alive
-- `$HOST:$PORT` accepts a TCP connection
-- when a listen pid is visible under `/proc`, it is in the `START_PID` tree
+- private, strictly validated `instance.json` exists for this run and checkout
+- the direct server process matches its saved kernel start time (plus boot identity), executable, user, command hash, and working directory
+- the process is the sole discovered listener on the selected port (macOS and Linux use `lsof`; identity uses public `libproc`, `ps`/`lsof` on macOS and `/proc` on Linux)
 - `GET` `/`, `/about`, `/projects`, `/contact` each return 200
 - those four documents have the titles in `e2e/metadata.spec.ts`
 - home HTML includes `I build software you can keep.`
@@ -141,7 +140,9 @@ Proof standards:
 .cursor/skills/verify-portfolio/helpers/cleanup.sh "$RUN_ID"
 ```
 
-This kills `START_PID`, `LISTEN_PID`, and the descendant tree snapshotted before npm exits (`next-server` is a child of `npm run start`). Then it deletes `instance.env`. It does not `pkill next`, does not free other ports, and does not remove `/tmp/portfolio-verify-$RUN_ID/evidence/`.
+Cleanup validates the saved identity and sole listener ownership immediately before TERM and again before any KILL escalation. Next runs directly, so cleanup signals only that server process; it does not discover or kill a descendant tree. Linux uses a process descriptor when available to pin the signal target. macOS has no equivalent atomic check-and-signal API, so it rechecks kernel microsecond start time and boot identity, executable, command hash, user, cwd, and listener just before signaling.
+
+Missing, malformed, legacy shell state, unavailable discovery, an orphan/foreign listener, or a changed identity fails closed. No unverified process is signaled, and all state/logs/evidence remain for inspection. Successful cleanup marks JSON state `stopped` and keeps it too. Use a new run ID for another launch. A failed startup may require manual inspection if it never establishes identity/listener ownership; cleanup intentionally refuses to guess. Legacy `instance.env` files are never sourced or migrated automatically.
 
 After cleanup, `ls /tmp/portfolio-verify-$RUN_ID/evidence` must still list the artifacts. A cleanup that ate the proof failed.
 
@@ -149,7 +150,7 @@ If a launch or drive fails halfway, run this same cleanup for that `RUN_ID` befo
 
 ## Helpers
 
-All three scripts are executable. Invoke them from the repo root with a literal `RUN_ID`.
+Requires Python 3.9+, Node/npm, and `lsof` (macOS ships it; install it on Linux if missing). All three shell entrypoints are executable. Invoke them from the repo root with a literal `RUN_ID`.
 
 ```bash
 .cursor/skills/verify-portfolio/helpers/launch.sh skill-proof-1
@@ -159,9 +160,11 @@ All three scripts are executable. Invoke them from the repo root with a literal 
 
 | Script | What it does |
 | --- | --- |
-| `helpers/launch.sh RUN_ID [PORT]` | Isolated `next start`, writes `/tmp/portfolio-verify-$RUN_ID/instance.env` |
+| `helpers/launch.sh RUN_ID [PORT]` | Builds current source, starts Next, writes `/tmp/portfolio-verify-$RUN_ID/instance.json` |
 | `helpers/doctor.sh RUN_ID` | Read-only pid, port, and title check |
 | `helpers/cleanup.sh RUN_ID` | Stops those pids. Keeps evidence. |
-| `helpers/lib.sh` | Shared functions. Source only. |
+| `helpers/instance.py` | Shared validation, JSON state, discovery, and lifecycle implementation. |
 
 `launch.sh` prints `BASE_URL` and `EVIDENCE_DIR`. Export `PLAYWRIGHT_TEST_BASE_URL` from that `BASE_URL` before Playwright. Feature recipes live under `features/`.
+
+Helper regression coverage: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify-portfolio-helpers.test.py`. Tests run fixture servers on available loopback ports and mock negative signal paths. CI runs this suite on Linux and macOS independently of the existing required app checks.
