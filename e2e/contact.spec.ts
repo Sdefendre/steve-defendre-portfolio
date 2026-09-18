@@ -90,8 +90,7 @@ test.describe("contact form", () => {
     await page.getByLabel("Budget range").selectOption("under-5k");
     const message = page.getByRole("textbox", { name: "Message", exact: true });
     await message.fill("🙂".repeat(200));
-    // Keyboard submission remains stable when blur inserts an inline error above the button.
-    await page.getByRole("button", { name: "Prepare email draft" }).press("Enter");
+    await page.getByRole("button", { name: "Prepare email draft" }).click();
     await expect(message).toBeFocused();
     await expect(message).toHaveAttribute("aria-invalid", "true");
     await message.press("Tab");

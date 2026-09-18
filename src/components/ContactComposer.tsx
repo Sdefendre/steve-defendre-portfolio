@@ -5,7 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { flushSync } from "react-dom";
 import { useEffect, useId, useRef, useState } from "react";
-import type { ChangeEventHandler, FormEvent, ReactNode } from "react";
+import type { ChangeEventHandler, FocusEventHandler, FormEvent, ReactNode } from "react";
 import { primaryContactEmail } from "@/data/socials";
 import { trackAnalyticsEvent } from "@/utils/analytics";
 const NAME_MAX_LENGTH = 80;
@@ -80,6 +80,7 @@ export function ContactComposer() {
   const projectTypeId = useId();
   const budgetRangeId = useId();
   const messageId = useId();
+  const submitButton = useRef<HTMLButtonElement>(null);
   const readyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [values, setValues] = useState<ContactComposerValues>(INITIAL_VALUES);
@@ -107,8 +108,12 @@ export function ContactComposer() {
     applyDraftErrors(nextValues);
   }
 
-  function handleBlur(field: ContactFieldName) {
-    setTouched((current) => ({ ...current, [field]: true }));
+  function handleBlur(field: ContactFieldName, nextTarget: EventTarget | null) {
+    // Revealing an error on pointerdown can move the submit button before click.
+    // Let submission reveal untouched fields when focus moves to that button.
+    if (nextTarget !== submitButton.current) {
+      setTouched((current) => ({ ...current, [field]: true }));
+    }
     applyDraftErrors(values);
   }
 
@@ -215,7 +220,7 @@ export function ContactComposer() {
           value={values.name}
           error={showError("name") ? errors.name : undefined}
           hint="Use the name you want in the email draft body."
-          onBlur={() => handleBlur("name")}
+          onBlur={(event) => handleBlur("name", event.relatedTarget)}
           onChange={(value) => updateField("name", value)}
         >
           {(fieldProps) => (
@@ -230,7 +235,7 @@ export function ContactComposer() {
           value={values.email}
           error={showError("email") ? errors.email : undefined}
           hint="I use this to reply directly."
-          onBlur={() => handleBlur("email")}
+          onBlur={(event) => handleBlur("email", event.relatedTarget)}
           onChange={(value) => updateField("email", value)}
         >
           {(fieldProps) => (
@@ -251,7 +256,7 @@ export function ContactComposer() {
           value={values.projectType}
           error={showError("projectType") ? errors.projectType : undefined}
           hint="Choose the closest match."
-          onBlur={() => handleBlur("projectType")}
+          onBlur={(event) => handleBlur("projectType", event.relatedTarget)}
           onChange={(value) => updateField("projectType", value)}
         >
           {(fieldProps) => (
@@ -275,7 +280,7 @@ export function ContactComposer() {
           value={values.budgetRange}
           error={showError("budgetRange") ? errors.budgetRange : undefined}
           hint="A rough range is enough."
-          onBlur={() => handleBlur("budgetRange")}
+          onBlur={(event) => handleBlur("budgetRange", event.relatedTarget)}
           onChange={(value) => updateField("budgetRange", value)}
         >
           {(fieldProps) => (
@@ -299,7 +304,7 @@ export function ContactComposer() {
           value={values.message}
           error={showError("message") ? errors.message : undefined}
           hint={`A few sentences about the work is enough. ${values.message.length}/${MESSAGE_MAX_LENGTH}`}
-          onBlur={() => handleBlur("message")}
+          onBlur={(event) => handleBlur("message", event.relatedTarget)}
           onChange={(value) => updateField("message", value)}
           className="md:col-span-2"
         >
@@ -309,6 +314,7 @@ export function ContactComposer() {
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
         <button
+          ref={submitButton}
           type="submit"
           disabled={status === "preparing"}
           className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-6 text-sm font-bold text-[var(--accent-foreground)] shadow-[0_18px_45px_var(--shadow-warm)] transition-[transform,filter,opacity] duration-300 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 disabled:cursor-wait disabled:opacity-80"
@@ -347,14 +353,14 @@ interface FieldProps {
   value: string;
   error?: string;
   hint: string;
-  onBlur: () => void;
+  onBlur: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>;
   onChange: (value: string) => void;
   className?: string;
   children: (fieldProps: {
     id: string;
     name: string;
     value: string;
-    onBlur: () => void;
+    onBlur: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>;
     onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>;
     "aria-invalid": boolean;
     "aria-describedby"?: string;

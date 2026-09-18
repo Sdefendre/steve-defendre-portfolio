@@ -203,6 +203,25 @@ describe("ContactComposer", () => {
     expect(trackAnalyticsEvent).not.toHaveBeenCalled();
   });
 
+  it("defers first revealing an error until submit when blur moves to the submit button", () => {
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+    const { container } = render(<ContactComposer />);
+    fillValidForm();
+    const message = screen.getByRole("textbox", { name: /message/i });
+    fireEvent.change(message, { target: { value: "🙂".repeat(200) } });
+    const submitButton = screen.getByRole("button", { name: /prepare email draft/i });
+    fireEvent.blur(message, { relatedTarget: submitButton });
+    // Keep the clicked button in place until its click submits the form.
+    expect(screen.queryByText(/shorten your message or use fewer special characters/i)).not.toBeInTheDocument();
+    fireEvent.submit(container.querySelector("form")!);
+    expect(message).toHaveFocus();
+    expect(message).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByRole("alert")).toHaveTextContent(/check the highlighted fields/i);
+    expect(clickSpy).not.toHaveBeenCalled();
+    fireEvent.blur(message, { relatedTarget: submitButton });
+    expect(message).toHaveAttribute("aria-invalid", "true");
+  });
+
   it("keeps an oversized draft invalid through unchanged blur and still-too-long edits", () => {
     const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
     const { container } = render(<ContactComposer />);
