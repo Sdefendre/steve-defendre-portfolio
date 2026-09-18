@@ -51,3 +51,24 @@ export async function expectHeadingClearOfNavigation(page: Page, headingName: st
 
   expect(hasVerticalSeparation).toBe(true);
 }
+
+export async function interceptMailtoDrafts(page: Page) {
+  await page.addInitScript(() => {
+    const nativeClick = HTMLAnchorElement.prototype.click;
+    const interceptedMailtoHrefs: string[] = [];
+
+    Object.defineProperty(window, "__interceptedMailtoHrefs", {
+      configurable: true,
+      value: interceptedMailtoHrefs,
+    });
+
+    HTMLAnchorElement.prototype.click = function click() {
+      if (this.href.startsWith("mailto:")) {
+        interceptedMailtoHrefs.push(this.href);
+        return;
+      }
+
+      nativeClick.call(this);
+    };
+  });
+}
