@@ -312,6 +312,18 @@ class SignalSafety(unittest.TestCase):
                 helper.safe_file(state, os.O_WRONLY | os.O_TRUNC)
             self.assertEqual(outside.read_text(), "retain original evidence")
 
+    def test_save_keeps_previous_state_valid_until_replacement_is_complete(self):
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp)
+            helper.save(directory, {"status": "ready"})
+            with patch.object(helper.json, "dump", side_effect=OSError("disk full")):
+                with self.assertRaises(OSError):
+                    helper.save(directory, {"status": "stopped"})
+            self.assertEqual(json.loads((directory / "instance.json").read_text()), {"status": "ready"})
+            helper.save(directory, {"status": "stopped"})
+            self.assertEqual(json.loads((directory / "instance.json").read_text()), {"status": "stopped"})
+            self.assertEqual(sorted(p.name for p in directory.iterdir()), ["instance.json"])
+
     def test_cleanup_waits_for_confirmed_exit_after_transient_discovery_failure(self):
         with patch.object(helper.sys, "platform", "darwin"), patch.object(helper.os, "kill") as kill, \
              patch.object(helper, "identity", side_effect=[self.ident] * 3 + [helper.Refused("exiting"), None]), \
