@@ -99,7 +99,12 @@ def identity(pid):
             uid = proc.stat().st_uid
             cmd = (proc / "cmdline").read_bytes()
         except FileNotFoundError:
-            if not proc.exists():
+            # /proc/PID survives as a zombie after cwd/exe have disappeared.
+            # Re-read kernel state, rather than treating any missing file as exit.
+            try:
+                if (proc / "stat").read_text().rsplit(")", 1)[1].split()[0] == "Z":
+                    return None
+            except FileNotFoundError:
                 return None
             raise Refused("process identity unavailable")
     elif sys.platform == "darwin":

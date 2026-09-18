@@ -272,6 +272,19 @@ class SignalSafety(unittest.TestCase):
                     with self.assertRaises(helper.Refused):
                         helper.identity(123456)
 
+    def test_linux_zombie_during_discovery_requires_kernel_confirmation(self):
+        alive = "123456 (fixture) S " + "0 " * 18 + "12345"
+        zombie = alive.replace(") S ", ") Z ")
+        for after, gone in ((zombie, True), (FileNotFoundError(), True), (alive, False)):
+            with patch.object(helper.sys, "platform", "linux"), \
+                 patch.object(Path, "read_text", side_effect=[alive, "boot-id", after]), \
+                 patch.object(helper.os, "readlink", side_effect=FileNotFoundError()):
+                if gone:
+                    self.assertIsNone(helper.identity(123456))
+                else:
+                    with self.assertRaises(helper.Refused):
+                        helper.identity(123456)
+
     def test_missing_discovery_tool_fails_closed(self):
         with patch.object(helper.subprocess, "run", side_effect=FileNotFoundError("lsof")):
             with self.assertRaises(FileNotFoundError):
