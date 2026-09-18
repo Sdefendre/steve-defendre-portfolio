@@ -179,9 +179,14 @@ def run_lock(run_id, create=False):
 
 
 def save(directory, state):
-    with os.fdopen(safe_file(directory / "instance.json", os.O_CREAT | os.O_WRONLY | os.O_TRUNC), "w") as handle:
+    # The live instance.json stays valid until the replacement is fully on disk.
+    temp = directory / "instance.json.tmp"
+    with os.fdopen(safe_file(temp, os.O_CREAT | os.O_WRONLY | os.O_TRUNC), "w") as handle:
         json.dump(state, handle, indent=2)
         handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temp, directory / "instance.json")
 
 
 def load(directory, run_id):
