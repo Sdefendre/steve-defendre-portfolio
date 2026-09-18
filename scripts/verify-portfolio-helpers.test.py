@@ -296,6 +296,32 @@ class SignalSafety(unittest.TestCase):
                 helper.safe_file(state, os.O_WRONLY | os.O_TRUNC)
             self.assertEqual(outside.read_text(), "retain original evidence")
 
+    def test_cleanup_waits_for_confirmed_exit_after_transient_discovery_failure(self):
+        with patch.object(helper.sys, "platform", "darwin"), patch.object(helper.os, "kill") as kill, \
+             patch.object(helper, "identity", side_effect=[self.ident] * 3 + [helper.Refused("exiting"), None]), \
+             patch.object(helper, "listeners", side_effect=[{123456}, set()]), \
+             patch.object(helper, "port_open", return_value=False), patch.object(helper.time, "sleep"), \
+             patch.object(helper, "save") as save:
+            helper.cleanup(Path("/unused"), self.state)
+            kill.assert_called_once_with(123456, signal.SIGTERM)
+            self.assertEqual(save.call_args.args[1]["status"], "stopped")
+
+    def test_persistent_discovery_failure_after_term_never_escalates(self):
+        sent = []
+        def current_identity(pid):
+            if sent:
+                raise helper.Refused("identity unavailable")
+            return self.ident
+        with patch.object(helper.sys, "platform", "darwin"), \
+             patch.object(helper.os, "kill", side_effect=lambda pid, sig: sent.append((pid, sig))), \
+             patch.object(helper, "identity", side_effect=current_identity), \
+             patch.object(helper, "listeners", return_value={123456}), patch.object(helper.time, "sleep"), \
+             patch.object(helper, "save") as save:
+            with self.assertRaises(helper.Refused):
+                helper.cleanup(Path("/unused"), self.state)
+            self.assertEqual(sent, [(123456, signal.SIGTERM)])
+            save.assert_not_called()
+
     def test_missing_discovery_tool_fails_closed(self):
         with patch.object(helper.subprocess, "run", side_effect=FileNotFoundError("lsof")):
             with self.assertRaises(FileNotFoundError):

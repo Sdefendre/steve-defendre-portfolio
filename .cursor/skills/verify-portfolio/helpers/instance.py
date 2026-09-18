@@ -262,6 +262,23 @@ def doctor(state):
     print("doctor: OK; routes=/, /about, /projects, /contact")
 
 
+def wait_for_exit(state):
+    for _ in range(20):
+        try:
+            current = identity(state["identity"]["pid"])
+        except Refused:
+            # Exit can remove cwd/exe before the kernel reports a zombie. Wait
+            # for positive exit proof; never use this uncertainty to send a signal.
+            pass
+        else:
+            if current is None:
+                return True
+            if current != state["identity"]:
+                raise Refused("process identity changed while waiting for exit")
+        time.sleep(0.25)
+    return False
+
+
 def cleanup(directory, state):
     current = identity(state["identity"]["pid"])
     if current is None:
@@ -269,18 +286,10 @@ def cleanup(directory, state):
             raise Refused("original process exited but port is occupied; state retained")
     else:
         signal_owned(state, signal.SIGTERM)
-        for _ in range(20):
-            if identity(state["identity"]["pid"]) is None:
-                break
-            time.sleep(0.25)
-        else:
+        if not wait_for_exit(state):
             # Must still be the same process AND listener before escalation.
             signal_owned(state, signal.SIGKILL)
-            for _ in range(20):
-                if identity(state["identity"]["pid"]) is None:
-                    break
-                time.sleep(0.25)
-            else:
+            if not wait_for_exit(state):
                 raise Refused("process did not exit; state retained")
         if listeners(state["port"]) or port_open(state["port"]):
             raise Refused("port still occupied; state retained")
