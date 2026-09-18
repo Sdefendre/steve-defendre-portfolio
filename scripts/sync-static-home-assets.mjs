@@ -1,11 +1,16 @@
+import nextEnv from "@next/env";
 import { createHash } from "node:crypto";
 import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { resolveSiteUrl } from "../src/lib/site-url.mjs";
 import { build } from "esbuild";
 import { currentCss, staticHomeInputHash } from "./static-home-assets-lib.mjs";
 import { staticHomeFontClasses, staticHomeFontHashes } from "./static-home-fonts.mjs";
+
+// Match the production build when canonical configuration lives in .env files.
+nextEnv.loadEnvConfig(process.cwd());
 
 const inputHash = staticHomeInputHash();
 const asset = await currentCss();
@@ -14,8 +19,7 @@ for (const file of readdirSync("public")) {
   if (/^static-home\.[a-f0-9]{16}\.(?:css|html)$/.test(file)) rmSync(`public/${file}`);
 }
 writeFileSync(`public${asset.publicPath}`, asset.content);
-const canonicalCandidate = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "https://steve-defendre-portfolio.vercel.app";
-const canonical = new URL("/", /^[a-z][a-z\d+\-.]*:\/\//i.test(canonicalCandidate) ? canonicalCandidate : `https://${canonicalCandidate}`).toString();
+const canonical = resolveSiteUrl().href;
 const temp = mkdtempSync(join(tmpdir(), "static-home-render-"));
 const bundle = join(temp, "render.cjs");
 await build({ entryPoints: ["scripts/render-static-home.tsx"], outfile: bundle, bundle: true, platform: "node", format: "cjs", tsconfig: "tsconfig.json" });

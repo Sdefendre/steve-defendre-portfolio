@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { resolveSiteUrl } from "../src/lib/site-url.mjs";
 import { staticHomeFontCss, verifyStaticHomeFonts } from "./static-home-fonts.mjs";
 
 const inputFiles = [
@@ -9,19 +10,6 @@ const inputFiles = [
   "tsconfig.json",
   "next.config.ts",
   "postcss.config.mjs",
-  "src/app/globals.css",
-  "src/app/(home)/layout.tsx",
-  "src/app/(home)/page.tsx",
-  "src/components/AnimatedBackground.tsx",
-  "src/components/HomeNavigation.tsx",
-  "src/components/HomeShell.tsx",
-  "src/components/ProjectCard.tsx",
-  "src/components/ResponsiveImage.tsx",
-  "src/components/SocialIcons.tsx",
-  "src/data/navigation.ts",
-  "src/data/projects.ts",
-  "src/data/socials.ts",
-  "src/lib/site-metadata.ts",
   "scripts/check-static-home-assets.mjs",
   "scripts/check-static-home-runtime.mjs",
   "scripts/render-static-home.tsx",
@@ -44,15 +32,18 @@ function filesIn(root, directory) {
 }
 
 /**
- * Inputs are deliberately explicit so changes to a rendered source, compiler,
- * font, or image cannot be mistaken for fresh checked-in output.
+ * Hash all application source, rather than a manually maintained renderer
+ * dependency list, so new transitive imports cannot silently leave HTML stale.
+ * Generated outputs are excluded to avoid a circular hash.
  */
 export function staticHomeInputFiles(root = process.cwd()) {
-  return [...inputFiles, ...filesIn(root, "public/static-home/fonts"), ...filesIn(root, "public/project-previews"), "public/headshot.jpg"].sort();
+  const sources = filesIn(root, "src").filter((path) => !path.startsWith("src/generated/"));
+  return [...inputFiles, ...sources, ...filesIn(root, "public/static-home/fonts"), ...filesIn(root, "public/project-previews"), "public/headshot.jpg"].sort();
 }
 
-export function staticHomeInputHash(root = process.cwd()) {
+export function staticHomeInputHash(root = process.cwd(), environment = process.env) {
   const hash = createHash("sha256");
+  hash.update("canonical\0").update(resolveSiteUrl(environment).href).update("\0");
   for (const path of staticHomeInputFiles(root)) {
     const absolutePath = join(root, path);
     if (!existsSync(absolutePath)) throw new Error(`Static homepage input is missing: ${path}`);

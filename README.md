@@ -5,12 +5,12 @@ Personal site for Steve Defendre. Next.js App Router, with a desktop sidebar and
 **Live:** [steve-defendre-portfolio.vercel.app](https://steve-defendre-portfolio.vercel.app)
 
 ## Stack
-- Next.js `16.2.9` (App Router) + React `19.2.7` + TypeScript
-- Tailwind CSS `v4` (via `@import "tailwindcss"` in `src/app/globals.css`)
+- Next.js (App Router) + React + TypeScript (versions in `package.json` and `package-lock.json`)
+- Tailwind CSS (via `@import "tailwindcss"` in `src/app/globals.css`)
 - Heroicons (`@heroicons/react`) for UI icons
 - CSS for the animated background
 - Vitest + Testing Library + jsdom for tests
-- ESLint 9 + `eslint-config-next`
+- ESLint + `eslint-config-next`
 
 ## Getting started
 ```bash
@@ -28,12 +28,15 @@ Open `http://localhost:3000`.
 - `npm run test`. Run Vitest once (`vitest run`)
 
 ## Environment variables
-`src/app/layout.tsx` computes `siteUrl` in this order:
-1. `NEXT_PUBLIC_SITE_URL` (if set)
-2. `https://${VERCEL_URL}` (if `NEXT_PUBLIC_SITE_URL` is unset and `VERCEL_URL` exists)
-3. `http://localhost:3000` fallback
+[`src/lib/site-url.mjs`](src/lib/site-url.mjs) resolves the canonical origin in this order:
+1. `NEXT_PUBLIC_SITE_URL`
+2. `VERCEL_PROJECT_PRODUCTION_URL` (preferred over preview deployments)
+3. `VERCEL_URL`
+4. `https://steve-defendre-portfolio.vercel.app/` fallback
 
-This value is used for `metadataBase`, social metadata, robots, and sitemap.
+Static asset scripts load production `.env` files using the same loader as Next; existing process variables take precedence. Blank or malformed values, non-HTTP(S) schemes, and credentials are rejected; the next valid candidate is used. Surrounding whitespace is trimmed, scheme-less hosts use HTTPS, and paths, queries, and fragments are removed.
+
+The shared policy supplies the static homepage, dynamic route metadata, robots, and sitemap. The resolved canonical URL is also part of the static homepage input hash, so changing it triggers regeneration during `npm run build`. All application source under `src/` (except generated outputs) is hashed to cover transitive renderer dependencies. Run `npm run sync:static-home` to regenerate explicitly, `npm run check:static-home` to verify outputs, and `npm run test:static-home` for freshness/regeneration regressions. Commit generated assets with source changes.
 
 ## Routes
 - `/`. Home intro and selected project cards
@@ -50,9 +53,9 @@ This value is used for `metadataBase`, social metadata, robots, and sitemap.
 
 ## WebMCP
 Browsers that implement [WebMCP](https://webmachinelearning.github.io/webmcp/)
-can call page-level tools registered from the root layout. There is no extra
-UI. The tools wrap the same catalog, filters, routes, and contact page the
-site already uses.
+can call page-level tools registered on `/about`, `/projects`, and `/contact`. There is no extra UI. The tools wrap the same catalog, filters, routes, and contact page the site already uses.
+
+The homepage intentionally serves static HTML with only Vercel Insights and no Next framework scripts or WebMCP registrar. Navigating home unloads the tools; navigate to a supported route to register them again.
 
 | Tool | What it does |
 | --- | --- |

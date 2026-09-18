@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, relative } from "node:path";
+import { basename, join, relative } from "node:path";
 import test from "node:test";
 import { staticHomeInputHash } from "./static-home-assets-lib.mjs";
 
@@ -24,8 +24,10 @@ function temporaryCopy() {
   return directory;
 }
 
-function run(script, directory) {
-  return execFileSync(process.execPath, [script], { cwd: directory, encoding: "utf8", stdio: "pipe" });
+function run(script, directory, environment = process.env) {
+  return execFileSync(process.execPath, [join(directory, "scripts", basename(script))], {
+    cwd: directory, env: environment, encoding: "utf8", stdio: "pipe",
+  });
 }
 
 function check(directory) {
@@ -103,4 +105,116 @@ test("keeps hidden navigation and below-fold project images out of the eager pre
     html,
     /<img[^>]+alt="Preview of the Defendre Solutions project"[^>]+loading="lazy"/,
   );
+});
+
+function readHtml(directory) {
+  return readFileSync(join(directory, "public", readManifest(directory).html.path), "utf8");
+}
+
+for (const mutation of [
+  {
+    path: "src/components/ExternalLink.tsx",
+    before: "opens in a new tab",
+    after: "opens in a separate browser tab",
+    assertHtml(html) { assert.match(html, /opens in a separate browser tab/); },
+  },
+  {
+    path: "src/utils/url.ts",
+    before: "if (!href) return false;",
+    after: 'if (!href || href.includes("braidsbyrose.com")) return false;',
+    assertHtml(html) { assert.doesNotMatch(html, /href="https:\/\/braidsbyrose.com\/?"/); },
+  },
+]) {
+  test(`prebuild regenerates rendered behavior after changing ${mutation.path}`, () => {
+    const directory = temporaryCopy();
+    try {
+      const originalHtml = readHtml(directory);
+      if (mutation.path.endsWith("url.ts")) assert.match(originalHtml, /href="https:\/\/braidsbyrose.com\/?"/);
+      const path = join(directory, mutation.path);
+      writeFileSync(path, readFileSync(path, "utf8").replace(mutation.before, mutation.after));
+      assert.throws(() => check(directory), /Static homepage inputs changed/);
+      run(ensureScript, directory);
+      const html = readHtml(directory);
+      assert.notEqual(html, originalHtml);
+      mutation.assertHtml(html);
+      assert.doesNotMatch(html, /<script[^>]+_next\//);
+      check(directory);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+}
+
+test("prebuild follows changes in newly introduced transitive renderer dependencies", () => {
+  const directory = temporaryCopy();
+  try {
+    const component = join(directory, "src/components/ExternalLink.tsx");
+    const dependency = join(directory, "src/utils/disclosure.ts");
+    writeFileSync(dependency, 'export const disclosure = "original test disclosure";');
+    writeFileSync(component, 'import { disclosure } from "../utils/disclosure";\n' +
+      readFileSync(component, "utf8").replace('const newTabDisclosure = "opens in a new tab";', 'const newTabDisclosure = disclosure;'));
+    run(ensureScript, directory);
+    assert.match(readHtml(directory), /original test disclosure/);
+    writeFileSync(dependency, 'export const disclosure = "updated test disclosure";');
+    assert.throws(() => check(directory), /Static homepage inputs changed/);
+    run(ensureScript, directory);
+    assert.match(readHtml(directory), /updated test disclosure/);
+    assert.doesNotMatch(readHtml(directory), /original test disclosure/);
+    check(directory);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("prebuild regenerates canonical and social URLs when the resolved environment changes", () => {
+  const directory = temporaryCopy();
+  const cleanEnvironment = { ...process.env };
+  for (const key of ["NEXT_PUBLIC_SITE_URL", "VERCEL_PROJECT_PRODUCTION_URL", "VERCEL_URL"]) delete cleanEnvironment[key];
+  const scenarios = [
+    [{ NEXT_PUBLIC_SITE_URL: " https://custom.example/path?q=1#hash ", VERCEL_PROJECT_PRODUCTION_URL: "production.example", VERCEL_URL: "preview.example" }, "https://custom.example/"],
+    [{ NEXT_PUBLIC_SITE_URL: " ", VERCEL_PROJECT_PRODUCTION_URL: " //production.example/path ", VERCEL_URL: "preview.example" }, "https://production.example/"],
+    [{ NEXT_PUBLIC_SITE_URL: "https://[::1", VERCEL_PROJECT_PRODUCTION_URL: "ftp://production.example", VERCEL_URL: "preview.example/path" }, "https://preview.example/"],
+    [{ NEXT_PUBLIC_SITE_URL: "https://user:secret@example.com", VERCEL_URL: "://bad" }, "https://steve-defendre-portfolio.vercel.app/"],
+  ];
+  try {
+    for (const [overrides, canonical] of scenarios) {
+      const environment = { ...cleanEnvironment, ...overrides };
+      assert.throws(() => run(checkScript, directory, environment), /Static homepage inputs changed/);
+      run(ensureScript, directory, environment);
+      const html = readHtml(directory);
+      assert.ok(html.includes(`<link rel="canonical" href="${canonical}"`));
+      assert.ok(html.includes(`<meta property="og:url" content="${canonical}"`));
+      for (const attribute of ['property="og:image"', 'name="twitter:image"']) {
+        assert.ok(html.includes(`<meta ${attribute} content="${canonical}project-previews/defendre-solutions.jpg"`));
+      }
+      run(checkScript, directory, environment);
+    }
+    const environment = { ...cleanEnvironment, NEXT_PUBLIC_SITE_URL: "https://stable.example", VERCEL_URL: "preview-one.example" };
+    run(ensureScript, directory, environment);
+    const manifest = readManifest(directory);
+    run(ensureScript, directory, { ...environment, NEXT_PUBLIC_SITE_URL: " stable.example/path ", VERCEL_URL: "preview-two.example" });
+    assert.deepEqual(readManifest(directory), manifest, "equivalent resolved origins must remain fresh");
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+
+test("prebuild reads production dotenv canonical changes just like Next", () => {
+  const directory = temporaryCopy();
+  const environment = { ...process.env, NODE_ENV: "production" };
+  for (const key of ["NEXT_PUBLIC_SITE_URL", "VERCEL_PROJECT_PRODUCTION_URL", "VERCEL_URL", "__NEXT_PROCESSED_ENV"]) delete environment[key];
+  try {
+    for (const host of ["dotenv-one.example", "dotenv-two.example"]) {
+      writeFileSync(join(directory, ".env.production"), `NEXT_PUBLIC_SITE_URL=https://${host}\n`);
+      assert.throws(() => run(checkScript, directory, environment), /Static homepage inputs changed/);
+      run(ensureScript, directory, environment);
+      assert.ok(readHtml(directory).includes(`<link rel="canonical" href="https://${host}/"`));
+      run(checkScript, directory, environment);
+    }
+    run(ensureScript, directory, { ...environment, NEXT_PUBLIC_SITE_URL: "https://shell.example" });
+    assert.ok(readHtml(directory).includes('<link rel="canonical" href="https://shell.example/"'));
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });
