@@ -15,6 +15,7 @@ import socket
 import stat
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
 
@@ -181,10 +182,31 @@ def run_lock(run_id, create=False):
         yield directory
 
 
+def validate_state_destination(path):
+    try:
+        fd = safe_file(path, os.O_RDONLY)
+    except FileNotFoundError:
+        return
+    os.close(fd)
+
+
 def save(directory, state):
-    with os.fdopen(safe_file(directory / "instance.json", os.O_CREAT | os.O_WRONLY | os.O_TRUNC), "w") as handle:
-        json.dump(state, handle, indent=2)
-        handle.write("\n")
+    # Caller holds run_lock. Keep the last complete state until replacement;
+    # replacing a pathname must not bypass the normal unsafe-file refusals.
+    destination = directory / "instance.json"
+    validate_state_destination(destination)
+    fd, name = tempfile.mkstemp(prefix=".instance-", suffix=".tmp", dir=directory)
+    temporary = Path(name)
+    try:
+        with os.fdopen(fd, "w") as handle:
+            json.dump(state, handle, indent=2)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        validate_state_destination(destination)
+        os.replace(temporary, destination)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def load(directory, run_id):
@@ -331,7 +353,13 @@ def launch(directory, run_id, port):
             raise Refused("server exited during startup; inspect server.log")
         # Popen retains the direct child: poll() guarantees its PID has not been
         # reaped/reused. Refresh after Next changes its process title at startup.
-        ident = identity(child.pid)
+        try:
+            ident = identity(child.pid)
+        except Refused:
+            # A retained direct child can be between wrapper exec and readiness.
+            # Retry within the existing bound; no signal or readiness claim is made.
+            time.sleep(1)
+            continue
         if ident is None or ident["cwd"] != str(REPO):
             raise Refused("unable to establish launched process identity")
         state["identity"] = ident
