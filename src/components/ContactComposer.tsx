@@ -69,7 +69,8 @@ export function buildContactMailtoUrl(values: ContactComposerValues): string {
     "This draft was prepared from the Steve Defendre portfolio contact form.",
   ].join("\r\n");
 
-  return `mailto:${primaryContactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  // A pasted or truncated surrogate must not throw during live validation.
+  return `mailto:${primaryContactEmail}?subject=${encodeURIComponent(subject.toWellFormed())}&body=${encodeURIComponent(body.toWellFormed())}`;
 }
 
 export function ContactComposer() {
@@ -103,28 +104,20 @@ export function ContactComposer() {
     const nextValues = { ...values, [field]: value };
     setValues(nextValues);
 
-    if (submitAttempted || touched[field]) {
-      applyFieldError(field, value, nextValues);
-    }
+    applyDraftErrors(nextValues);
   }
 
   function handleBlur(field: ContactFieldName) {
     setTouched((current) => ({ ...current, [field]: true }));
-    applyFieldError(field, values[field], values);
+    applyDraftErrors(values);
   }
 
-  function applyFieldError(
-    field: ContactFieldName,
-    value: string,
-    nextValues: ContactComposerValues,
-  ) {
-    setErrors((current) => ({
-      ...current,
-      [field]: validateField(field, value) ?? undefined,
-    }));
+  function applyDraftErrors(nextValues: ContactComposerValues) {
+    const { errors: nextErrors } = validateContactDraft(nextValues);
+    setErrors(nextErrors);
 
-    // Drop the stale "check the highlighted fields" banner once the form is valid again.
-    if (status === "validation-error" && !hasFormErrors(validateContactForm(nextValues))) {
+    // A draft-wide error can only clear once every field and the encoded URL fit.
+    if (status === "validation-error" && !hasFormErrors(nextErrors)) {
       setStatus("idle");
     }
   }
@@ -143,15 +136,7 @@ export function ContactComposer() {
 
     setSubmitAttempted(true);
 
-    const trimmedValues: ContactComposerValues = {
-      name: values.name.trim(),
-      email: values.email.trim(),
-      projectType: values.projectType,
-      budgetRange: values.budgetRange,
-      message: values.message.trim(),
-    };
-
-    const nextErrors = validateContactForm(trimmedValues);
+    const { errors: nextErrors, trimmedValues, mailtoUrl } = validateContactDraft(values);
     setErrors(nextErrors);
 
     const firstInvalidField = (Object.keys(INITIAL_VALUES) as ContactFieldName[]).find(
@@ -168,25 +153,6 @@ export function ContactComposer() {
         message: true,
       });
       focusField(firstInvalidField, {
-        nameId,
-        emailId,
-        projectTypeId,
-        budgetRangeId,
-        messageId,
-      });
-      return;
-    }
-
-    const mailtoUrl = buildContactMailtoUrl(trimmedValues);
-
-    if (mailtoUrl.length > MAILTO_URL_MAX_LENGTH) {
-      setErrors((current) => ({
-        ...current,
-        message: "Shorten your message or use fewer special characters so the email draft works across mail apps.",
-      }));
-      setTouched((current) => ({ ...current, message: true }));
-      setStatus("validation-error");
-      focusField("message", {
         nameId,
         emailId,
         projectTypeId,
@@ -248,7 +214,7 @@ export function ContactComposer() {
           id={nameId}
           value={values.name}
           error={showError("name") ? errors.name : undefined}
-          hint="Use the name you want in the subject line."
+          hint="Use the name you want in the email draft body."
           onBlur={() => handleBlur("name")}
           onChange={(value) => updateField("name", value)}
         >
@@ -450,14 +416,26 @@ function Field({
   );
 }
 
-function validateContactForm(values: ContactComposerValues): ContactComposerErrors {
-  return {
+function validateContactDraft(values: ContactComposerValues) {
+  const trimmedValues: ContactComposerValues = {
+    name: values.name.trim(),
+    email: values.email.trim(),
+    projectType: values.projectType,
+    budgetRange: values.budgetRange,
+    message: values.message.trim(),
+  };
+  const errors: ContactComposerErrors = {
     name: validateField("name", values.name) ?? undefined,
     email: validateField("email", values.email) ?? undefined,
     projectType: validateField("projectType", values.projectType) ?? undefined,
     budgetRange: validateField("budgetRange", values.budgetRange) ?? undefined,
     message: validateField("message", values.message) ?? undefined,
   };
+  const mailtoUrl = buildContactMailtoUrl(trimmedValues);
+  if (!errors.message && mailtoUrl.length > MAILTO_URL_MAX_LENGTH) {
+    errors.message = "Shorten your message or use fewer special characters so the email draft works across mail apps.";
+  }
+  return { errors, trimmedValues, mailtoUrl };
 }
 
 function validateField(
