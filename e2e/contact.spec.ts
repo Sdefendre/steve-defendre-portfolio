@@ -1,29 +1,12 @@
 import { expect, test } from "@playwright/test";
-import { expectNoHorizontalOverflow } from "./helpers";
+import { expectNoHorizontalOverflow, interceptMailtoDrafts } from "./helpers";
 
 const EMAIL = "steve@defendresolutions.com";
 
 test.describe("contact form", () => {
   test.beforeEach(async ({ context, page }) => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await page.addInitScript(() => {
-      const nativeClick = HTMLAnchorElement.prototype.click;
-      const interceptedMailtoHrefs: string[] = [];
-
-      Object.defineProperty(window, "__interceptedMailtoHrefs", {
-        configurable: true,
-        value: interceptedMailtoHrefs,
-      });
-
-      HTMLAnchorElement.prototype.click = function click() {
-        if (this.href.startsWith("mailto:")) {
-          interceptedMailtoHrefs.push(this.href);
-          return;
-        }
-
-        nativeClick.call(this);
-      };
-    });
+    await interceptMailtoDrafts(page);
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/contact");
   });

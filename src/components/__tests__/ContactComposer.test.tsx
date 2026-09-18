@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ContactComposer, buildContactMailtoUrl } from "../ContactComposer";
+import { ContactComposer, buildContactMailtoUrl, toWellFormedString } from "../ContactComposer";
 
 const trackAnalyticsEvent = vi.hoisted(() => vi.fn());
 
@@ -107,6 +107,49 @@ describe("ContactComposer", () => {
     clickSpy.mockRestore();
   });
 
+  it("keeps surrogate-safe encoding when String.prototype.toWellFormed is missing", () => {
+    const loneSurrogateMessage = "Emoji pair 🙂 then a lone half \uD83D and trailing text.";
+    const nativeDescriptor = Object.getOwnPropertyDescriptor(String.prototype, "toWellFormed");
+    const expectedWithNative = toWellFormedString(loneSurrogateMessage);
+
+    expect(expectedWithNative).toBe("Emoji pair 🙂 then a lone half \uFFFD and trailing text.");
+
+    // Simulate Firefox <= 118 / Safari <= 16.3, which lack the method entirely.
+    Object.defineProperty(String.prototype, "toWellFormed", {
+      configurable: true,
+      writable: true,
+      value: undefined,
+    });
+
+    try {
+      expect(typeof "".toWellFormed).toBe("undefined");
+      expect(toWellFormedString(loneSurrogateMessage)).toBe(expectedWithNative);
+      expect(() => encodeURIComponent(loneSurrogateMessage)).toThrow(URIError);
+
+      const mailtoUrl = buildContactMailtoUrl({
+        name: "Ada",
+        email: "ada@example.com",
+        projectType: "new-website",
+        budgetRange: "5k-10k",
+        message: loneSurrogateMessage,
+      });
+      expect(mailtoUrl).toContain(encodeURIComponent("🙂"));
+      expect(mailtoUrl).toContain(encodeURIComponent("\uFFFD"));
+
+      // Every field edit runs draft validation; it must not throw without the method.
+      render(<ContactComposer />);
+      const messageField = screen.getByRole("textbox", { name: /message/i });
+      expect(() => fireEvent.change(messageField, { target: { value: loneSurrogateMessage } })).not.toThrow();
+      expect(messageField).toHaveValue(loneSurrogateMessage);
+    } finally {
+      if (nativeDescriptor) {
+        Object.defineProperty(String.prototype, "toWellFormed", nativeDescriptor);
+      } else {
+        delete (String.prototype as { toWellFormed?: unknown }).toWellFormed;
+      }
+    }
+  });
+
   it("renders a perceivable busy state before handoff, then makes no delivery claim", () => {
     vi.useFakeTimers();
     const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {
@@ -201,6 +244,131 @@ describe("ContactComposer", () => {
     expect(screen.getByRole("textbox", { name: /message/i })).toHaveFocus();
     expect(clickSpy).not.toHaveBeenCalled();
     expect(trackAnalyticsEvent).not.toHaveBeenCalled();
+  });
+
+  it("first reveals draft overflow on submit so blur cannot move the clicked button", () => {
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+    const { container } = render(<ContactComposer />);
+    fillValidForm();
+    const message = screen.getByRole("textbox", { name: /message/i });
+    fireEvent.change(message, { target: { value: "🙂".repeat(200) } });
+    const submitButton = screen.getByRole("button", { name: /prepare email draft/i });
+    fireEvent.blur(message);
+    expect(message).toHaveAttribute("aria-invalid", "false");
+    fireEvent.blur(message, { relatedTarget: submitButton });
+    // Keep the clicked button in place until its click submits the form.
+    expect(screen.queryByText(/shorten your message or use fewer special characters/i)).not.toBeInTheDocument();
+    fireEvent.submit(container.querySelector("form")!);
+    expect(message).toHaveFocus();
+    expect(message).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByRole("alert")).toHaveTextContent(/check the highlighted fields/i);
+    expect(clickSpy).not.toHaveBeenCalled();
+    fireEvent.blur(message, { relatedTarget: submitButton });
+    expect(message).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("keeps an oversized draft invalid through unchanged blur and still-too-long edits", () => {
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+    const { container } = render(<ContactComposer />);
+    fillValidForm();
+    const message = screen.getByRole("textbox", { name: /message/i });
+    fireEvent.change(message, { target: { value: "🙂".repeat(200) } });
+    fireEvent.submit(container.querySelector("form")!);
+
+    const expectOverflow = () => {
+      expect(message).toHaveAttribute("aria-invalid", "true");
+      expect(message).toHaveAccessibleDescription(/shorten your message or use fewer special characters/i);
+      expect(screen.getByRole("alert")).toHaveTextContent(/check the highlighted fields/i);
+    };
+    expectOverflow();
+    fireEvent.blur(message);
+    expectOverflow();
+    fireEvent.change(message, { target: { value: "🙂".repeat(190) } });
+    expectOverflow();
+    fireEvent.change(screen.getByLabelText(/your name/i), { target: { value: "Ada" } });
+    expectOverflow();
+    fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: "" } });
+    expectOverflow();
+    expect(screen.getByLabelText(/email address/i)).toHaveAttribute("aria-invalid", "true");
+    expect(clickSpy).not.toHaveBeenCalled();
+    expect(trackAnalyticsEvent).not.toHaveBeenCalled();
+
+    fireEvent.change(message, { target: { value: "A short project inquiry." } });
+    expect(message).toHaveAttribute("aria-invalid", "false");
+    expect(screen.getByRole("alert")).toHaveTextContent(/check the highlighted fields/i);
+    fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: "ada@example.com" } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(clickSpy).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { label: /your name/i, long: "🙂".repeat(40), short: "Ada", emojiCount: 100 },
+    { label: /email address/i, long: `${"a".repeat(100)}@example.com`, short: "ada@example.com", emojiCount: 131 },
+    { label: /project type/i, long: "portfolio-refresh", short: "new-website", emojiCount: 138 },
+    { label: /budget range/i, long: "10k-25k", short: "under-5k", emojiCount: 138 },
+    { label: /^message/i, long: "🙂".repeat(200), short: "A short project inquiry.", emojiCount: 100 },
+  ])("revalidates the complete draft when $label changes", ({ label, long, short, emojiCount }) => {
+    const drafts: string[] = [];
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (this: HTMLAnchorElement) {
+      drafts.push(this.href);
+    });
+    const { container } = render(<ContactComposer />);
+    fireEvent.change(screen.getByLabelText(/your name/i), { target: { value: "Ada" } });
+    fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: "ada@example.com" } });
+    fireEvent.change(screen.getByLabelText(/project type/i), { target: { value: "new-website" } });
+    fireEvent.change(screen.getByLabelText(/budget range/i), { target: { value: "under-5k" } });
+    const message = screen.getByRole("textbox", { name: /message/i });
+    fireEvent.change(message, { target: { value: "🙂".repeat(emojiCount) } });
+    fireEvent.change(screen.getByLabelText(label), { target: { value: long } });
+    fireEvent.submit(container.querySelector("form")!);
+    expect(message).toHaveAttribute("aria-invalid", "true");
+    expect(drafts).toEqual([]);
+
+    fireEvent.change(screen.getByLabelText(label), { target: { value: short } });
+    expect(message).toHaveAttribute("aria-invalid", "false");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(drafts).toEqual([]);
+
+    // Growing any contributing field must also restore the error without a submit.
+    fireEvent.change(screen.getByLabelText(label), { target: { value: long } });
+    expect(message).toHaveAttribute("aria-invalid", "true");
+    fireEvent.change(screen.getByLabelText(label), { target: { value: short } });
+    fireEvent.submit(container.querySelector("form")!);
+    expect(drafts).toHaveLength(1);
+    expect(drafts[0].length).toBeLessThanOrEqual(2000);
+    expect(new URL(drafts[0]).searchParams.get("body")).toContain("Name: Ada");
+  });
+
+  it("describes name use in the draft body and validates the same trimmed draft on blur and submit", () => {
+    const drafts: string[] = [];
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (this: HTMLAnchorElement) {
+      drafts.push(this.href);
+    });
+    const { container } = render(<ContactComposer />);
+    fillValidForm();
+    expect(screen.getByLabelText(/your name/i)).toHaveAccessibleDescription(/draft body/i);
+    const message = screen.getByRole("textbox", { name: /message/i });
+    fireEvent.change(message, { target: { value: `${" ".repeat(600)}A short project inquiry.` } });
+    fireEvent.blur(message);
+    expect(message).toHaveAttribute("aria-invalid", "false");
+    fireEvent.submit(container.querySelector("form")!);
+    expect(drafts).toHaveLength(1);
+    expect(new URL(drafts[0]).searchParams.get("body")).toContain("Message:\r\nA short project inquiry.");
+  });
+
+  it("handles a truncated surrogate while validating and preparing the draft", () => {
+    const drafts: string[] = [];
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (this: HTMLAnchorElement) {
+      drafts.push(this.href);
+    });
+    const { container } = render(<ContactComposer />);
+    fillValidForm();
+    const message = screen.getByRole("textbox", { name: /message/i });
+    fireEvent.change(message, { target: { value: "A project inquiry with a truncated emoji: \uD83D" } });
+    fireEvent.blur(message);
+    fireEvent.submit(container.querySelector("form")!);
+    expect(drafts).toHaveLength(1);
+    expect(new URL(drafts[0]).searchParams.get("body")).toContain("A project inquiry with a truncated emoji: �");
   });
 
   it("reports a failed mail-app handoff without implying that anything was sent", () => {

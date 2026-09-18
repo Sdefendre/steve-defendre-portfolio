@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { expectNoHorizontalOverflow, interceptMailtoDrafts } from "./helpers";
 
 test("new-tab links disclose the context change without changing visible copy", async ({
   page,
@@ -70,4 +71,48 @@ test("noncritical navigation and project images stay lazy and low priority", asy
   const sidebarAvatar = page.locator('img[alt="Steve Defendre"]');
   await expect(sidebarAvatar).toHaveAttribute("loading", "lazy");
   await expect(sidebarAvatar).not.toHaveAttribute("fetchpriority", "high");
+});
+
+test("keeps an oversized draft invalid until a contributing field makes it fit", async ({ page }, testInfo) => {
+  await interceptMailtoDrafts(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/contact");
+  await page.getByLabel("Your name").fill("Ada");
+  await page.getByLabel("Email address").fill("ada@example.com");
+  await page.getByLabel("Project type").selectOption("portfolio-refresh");
+  await page.getByLabel("Budget range").selectOption("under-5k");
+  const message = page.getByRole("textbox", { name: "Message", exact: true });
+  await message.fill("🙂".repeat(200));
+  await page.getByRole("button", { name: "Prepare email draft" }).click();
+  await expect(message).toBeFocused();
+  await expect(message).toHaveAttribute("aria-invalid", "true");
+  await message.press("Tab");
+  await testInfo.attach("overflow-after-unchanged-blur", {
+    body: await page.screenshot({ fullPage: true }),
+    contentType: "image/png",
+  });
+  await expect(message).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("form").getByRole("alert")).toHaveText("Check the highlighted fields and try again.");
+  await message.fill("🙂".repeat(138));
+  await expect(message).toHaveAttribute("aria-invalid", "true");
+  await page.getByLabel("Your name").fill("Amy");
+  await expect(message).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("form").getByRole("alert")).toBeVisible();
+  expect(await page.evaluate(() =>
+    (window as Window & { __interceptedMailtoHrefs?: string[] }).__interceptedMailtoHrefs,
+  )).toEqual([]);
+
+  await page.getByLabel("Project type").selectOption("new-website");
+  await expect(message).toHaveAttribute("aria-invalid", "false");
+  await expect(page.locator("form").getByRole("alert")).toHaveCount(0);
+  await expect(page.getByLabel("Your name")).toHaveAccessibleDescription(/draft body/i);
+  await page.getByRole("button", { name: "Prepare email draft" }).click();
+  await expect(page.locator("form").getByRole("status")).toContainText("Nothing was sent.");
+  const drafts = await page.evaluate(() =>
+    (window as Window & { __interceptedMailtoHrefs?: string[] }).__interceptedMailtoHrefs,
+  );
+  expect(drafts).toHaveLength(1);
+  expect(drafts![0].length).toBeLessThanOrEqual(2000);
+  expect(new URL(drafts![0]).searchParams.get("body")).toContain("Name: Amy");
+  await expectNoHorizontalOverflow(page);
 });
