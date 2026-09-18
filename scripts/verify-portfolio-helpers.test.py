@@ -73,6 +73,7 @@ class Lifecycle(unittest.TestCase):
             sock.bind(("127.0.0.1", 0))
             self.port = sock.getsockname()[1]
         self.original = None
+        self.retained_children = []
 
     def cli(self, action, *args, success=True, env=None):
         result = subprocess.run([str(self.helpers / (action + ".sh")), *(args or (self.run_id,))],
@@ -100,6 +101,8 @@ class Lifecycle(unittest.TestCase):
             (self.run_dir / "instance.json").write_text(json.dumps(self.original))
             result = self.cli("cleanup")
             self.assertIn("evidence retained", result.stdout)
+        for child in self.retained_children:
+            child.wait(timeout=5)
         shutil.rmtree(self.run_dir, ignore_errors=True)
         self.temp.cleanup()
 
@@ -115,6 +118,33 @@ class Lifecycle(unittest.TestCase):
         self.assertEqual(json.loads((self.run_dir / "instance.json").read_text())["status"], "stopped")
         self.assertFalse(helper.port_open(self.port))
         self.cli("doctor", success=False)
+
+    def test_launch_recovers_from_transient_identity_refusal_before_readiness(self):
+        self.run_dir.mkdir(mode=0o700)
+        real_identity = helper.identity
+        real_popen = subprocess.Popen
+        def retain_server(*args, **kwargs):
+            child = real_popen(*args, **kwargs)
+            if kwargs.get("start_new_session"):
+                self.retained_children.append(child)
+            return child
+        refused = []
+        def transient_identity(pid):
+            if not refused:
+                refused.append(pid)
+                raise helper.Refused("wrapper is exec-ing")
+            return real_identity(pid)
+        try:
+            with patch.object(helper, "REPO", self.repo), patch.dict(os.environ, self.env), \
+                 patch.object(helper.subprocess, "Popen", side_effect=retain_server), \
+                 patch.object(helper, "identity", side_effect=transient_identity):
+                helper.launch(self.run_dir, self.run_id, self.port)
+        finally:
+            state_file = self.run_dir / "instance.json"
+            if state_file.exists():
+                self.original = json.loads(state_file.read_text())
+        self.assertEqual(self.original["status"], "ready")
+        self.assertIn("doctor: OK", self.cli("doctor").stdout)
 
     def test_existing_stale_or_incomplete_build_is_always_rebuilt(self):
         for old_build in ("stale-source", None):
@@ -290,16 +320,40 @@ class SignalSafety(unittest.TestCase):
                         helper.identity(123456)
 
     @unittest.skipUnless(sys.platform == "linux", "/proc identity")
-    def test_linux_exited_task_is_gone_but_live_discovery_failure_refuses(self):
-        zombie = subprocess.Popen([sys.executable, "-c", "pass"])
-        try:
-            os.waitid(os.P_PID, zombie.pid, os.WEXITED | os.WNOWAIT)
-            self.assertIsNone(helper.identity(zombie.pid))
-        finally:
-            zombie.wait()
+    def test_linux_live_process_with_missing_discovery_file_refuses(self):
         with patch.object(Path, "read_text", side_effect=FileNotFoundError("boot_id")):
             with self.assertRaises(helper.Refused):
                 helper.identity(os.getpid())
+
+    @unittest.skipUnless(sys.platform == "linux", "requires Linux procfs")
+    def test_linux_deleted_executable_is_still_a_live_process(self):
+        with tempfile.TemporaryDirectory() as temp:
+            executable = Path(temp) / "fixture-sleep"
+            shutil.copy2("/bin/sleep", executable)
+            child = subprocess.Popen([str(executable), "60"])
+            try:
+                executable.unlink()
+                # /proc/PID/exe is a kernel magic link: unlinking the pathname
+                # does not make its target inode unavailable to a running task.
+                self.assertTrue(Path(f"/proc/{child.pid}/exe").exists())
+                current = helper.identity(child.pid)
+                self.assertIsNotNone(current)
+                self.assertEqual(current["executable"], str(executable) + " (deleted)")
+                self.assertIsNone(child.poll())
+            finally:
+                # A retained, unreaped fixture child cannot have a reused PID.
+                if child.poll() is None:
+                    child.terminate()
+                child.wait(timeout=5)
+
+    @unittest.skipUnless(sys.platform == "linux", "requires Linux procfs")
+    def test_linux_real_unreaped_zombie_is_reported_gone(self):
+        child = subprocess.Popen([sys.executable, "-c", "pass"])
+        try:
+            os.waitid(os.P_PID, child.pid, os.WEXITED | os.WNOWAIT)
+            self.assertIsNone(helper.identity(child.pid))
+        finally:
+            child.wait(timeout=5)
 
     def test_unsafe_state_file_is_rejected_before_truncating_evidence(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -311,18 +365,6 @@ class SignalSafety(unittest.TestCase):
             with self.assertRaises(helper.Refused):
                 helper.safe_file(state, os.O_WRONLY | os.O_TRUNC)
             self.assertEqual(outside.read_text(), "retain original evidence")
-
-    def test_save_keeps_previous_state_valid_until_replacement_is_complete(self):
-        with tempfile.TemporaryDirectory() as temp:
-            directory = Path(temp)
-            helper.save(directory, {"status": "ready"})
-            with patch.object(helper.json, "dump", side_effect=OSError("disk full")):
-                with self.assertRaises(OSError):
-                    helper.save(directory, {"status": "stopped"})
-            self.assertEqual(json.loads((directory / "instance.json").read_text()), {"status": "ready"})
-            helper.save(directory, {"status": "stopped"})
-            self.assertEqual(json.loads((directory / "instance.json").read_text()), {"status": "stopped"})
-            self.assertEqual(sorted(p.name for p in directory.iterdir()), ["instance.json"])
 
     def test_cleanup_waits_for_confirmed_exit_after_transient_discovery_failure(self):
         with patch.object(helper.sys, "platform", "darwin"), patch.object(helper.os, "kill") as kill, \
@@ -354,6 +396,106 @@ class SignalSafety(unittest.TestCase):
         with patch.object(helper.subprocess, "run", side_effect=FileNotFoundError("lsof")):
             with self.assertRaises(FileNotFoundError):
                 helper.listeners(32000)
+
+
+class AtomicState(unittest.TestCase):
+    def test_write_sync_or_replace_failure_preserves_previous_bytes(self):
+        for initial in (False, True):
+            for failure in ("write", "sync", "replace"):
+                with self.subTest(initial=initial, failure=failure), tempfile.TemporaryDirectory() as temp:
+                    directory = Path(temp)
+                    destination = directory / "instance.json"
+                    if initial:
+                        helper.save(directory, {"status": "ready", "pid": 123456})
+                    previous = destination.read_bytes() if initial else None
+                    def partial_write(state, handle, **kwargs):
+                        handle.write('{"status":')
+                        raise OSError("injected interrupted write")
+                    target, attribute, effect = {
+                        "write": (helper.json, "dump", partial_write),
+                        "sync": (helper.os, "fsync", OSError("injected disk error")),
+                        "replace": (helper.os, "replace", OSError("injected rename failure")),
+                    }[failure]
+                    with patch.object(target, attribute, side_effect=effect):
+                        with self.assertRaises(OSError):
+                            helper.save(directory, {"status": "stopped"})
+                    self.assertEqual(destination.read_bytes() if initial else None, previous)
+                    self.assertEqual(sorted(p.name for p in directory.iterdir()), ["instance.json"] if initial else [])
+
+    def test_reader_sees_old_complete_state_until_new_complete_state_is_published(self):
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp)
+            destination = directory / "instance.json"
+            helper.save(directory, {"status": "ready"})
+            original_replace = os.replace
+            def observe_replace(source, target):
+                self.assertEqual(json.loads(destination.read_text()), {"status": "ready"})
+                self.assertEqual(json.loads(Path(source).read_text()), {"status": "stopped"})
+                self.assertEqual(Path(source).stat().st_mode & 0o777, 0o600)
+                original_replace(source, target)
+            with patch.object(helper.os, "replace", side_effect=observe_replace):
+                helper.save(directory, {"status": "stopped"})
+            self.assertEqual(json.loads(destination.read_text()), {"status": "stopped"})
+            self.assertEqual(sorted(p.name for p in directory.iterdir()), ["instance.json"])
+
+    def test_atomic_save_refuses_unsafe_existing_destinations_without_changing_them(self):
+        for kind in ("symlink", "dangling-symlink", "hardlink", "fifo", "directory", "public-file"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as temp:
+                directory = Path(temp)
+                proof = directory / "external-proof"
+                proof.write_text("original evidence")
+                proof.chmod(0o600)
+                destination = directory / "instance.json"
+                if kind == "symlink":
+                    destination.symlink_to(proof)
+                elif kind == "dangling-symlink":
+                    destination.symlink_to(directory / "missing-target")
+                elif kind == "hardlink":
+                    os.link(proof, destination)
+                elif kind == "fifo":
+                    os.mkfifo(destination, 0o600)
+                elif kind == "directory":
+                    destination.mkdir(mode=0o700)
+                else:
+                    destination.write_text("private state must not be public")
+                    destination.chmod(0o644)
+                original = destination.lstat()
+                with self.assertRaises((helper.Refused, OSError)):
+                    helper.save(directory, {"status": "stopped"})
+                self.assertEqual(destination.lstat().st_ino, original.st_ino)
+                self.assertEqual(destination.lstat().st_mode, original.st_mode)
+                self.assertEqual(proof.read_text(), "original evidence")
+                self.assertEqual(sorted(p.name for p in directory.iterdir()), ["external-proof", "instance.json"])
+
+    def test_destination_is_revalidated_after_writing_temporary_state(self):
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp)
+            helper.save(directory, {"status": "ready"})
+            destination = directory / "instance.json"
+            proof = directory / "external-proof"
+            proof.write_text("preserve")
+            proof.chmod(0o600)
+            original_dump = json.dump
+            def replace_destination(state, handle, **kwargs):
+                original_dump(state, handle, **kwargs)
+                destination.unlink()
+                destination.symlink_to(proof)
+            with patch.object(helper.json, "dump", side_effect=replace_destination):
+                with self.assertRaises((helper.Refused, OSError)):
+                    helper.save(directory, {"status": "stopped"})
+            self.assertTrue(destination.is_symlink())
+            self.assertEqual(proof.read_text(), "preserve")
+            self.assertEqual(sorted(p.name for p in directory.iterdir()), ["external-proof", "instance.json"])
+
+    def test_stale_temporary_files_are_preserved_and_never_reused(self):
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp)
+            old_temp = directory / "instance.json.tmp"
+            old_temp.write_text("previous interruption evidence")
+            old_temp.chmod(0o600)
+            helper.save(directory, {"status": "ready"})
+            self.assertEqual(old_temp.read_text(), "previous interruption evidence")
+            self.assertEqual(json.loads((directory / "instance.json").read_text()), {"status": "ready"})
 
 
 if __name__ == "__main__":
