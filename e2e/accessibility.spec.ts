@@ -92,19 +92,19 @@ test("keeps an oversized draft invalid until a contributing field makes it fit",
     contentType: "image/png",
   });
   await expect(message).toHaveAttribute("aria-invalid", "true");
-  await expect(page.getByRole("alert")).toHaveText("Check the highlighted fields and try again.");
+  await expect(page.locator("form").getByRole("alert")).toHaveText("Check the highlighted fields and try again.");
   await message.fill("🙂".repeat(138));
   await expect(message).toHaveAttribute("aria-invalid", "true");
   await page.getByLabel("Your name").fill("Amy");
   await expect(message).toHaveAttribute("aria-invalid", "true");
-  await expect(page.getByRole("alert")).toBeVisible();
+  await expect(page.locator("form").getByRole("alert")).toBeVisible();
   expect(await page.evaluate(() =>
     (window as Window & { __interceptedMailtoHrefs?: string[] }).__interceptedMailtoHrefs,
   )).toEqual([]);
 
   await page.getByLabel("Project type").selectOption("new-website");
   await expect(message).toHaveAttribute("aria-invalid", "false");
-  await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(page.locator("form").getByRole("alert")).toHaveCount(0);
   await expect(page.getByLabel("Your name")).toHaveAccessibleDescription(/draft body/i);
   await page.getByRole("button", { name: "Prepare email draft" }).click();
   await expect(page.locator("form").getByRole("status")).toContainText("Nothing was sent.");
