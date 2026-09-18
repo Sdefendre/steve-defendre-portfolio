@@ -285,6 +285,17 @@ class SignalSafety(unittest.TestCase):
                     with self.assertRaises(helper.Refused):
                         helper.identity(123456)
 
+    def test_unsafe_state_file_is_rejected_before_truncating_evidence(self):
+        with tempfile.TemporaryDirectory() as temp:
+            outside = Path(temp) / "outside-proof"
+            outside.write_text("retain original evidence")
+            outside.chmod(0o600)
+            state = Path(temp) / "instance.json"
+            os.link(outside, state)
+            with self.assertRaises(helper.Refused):
+                helper.safe_file(state, os.O_WRONLY | os.O_TRUNC)
+            self.assertEqual(outside.read_text(), "retain original evidence")
+
     def test_missing_discovery_tool_fails_closed(self):
         with patch.object(helper.subprocess, "run", side_effect=FileNotFoundError("lsof")):
             with self.assertRaises(FileNotFoundError):
