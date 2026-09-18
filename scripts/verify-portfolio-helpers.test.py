@@ -191,6 +191,15 @@ class Lifecycle(unittest.TestCase):
                 self.assertEqual(sentinel.read_text(), "untouched")
                 self.assertEqual(list(self.run_dir.iterdir()), [])
 
+    def test_fifo_state_is_rejected_without_blocking(self):
+        self.run_dir.mkdir(mode=0o700)
+        os.mkfifo(self.run_dir / "instance.json", 0o600)
+        result = subprocess.run([str(self.helpers / "doctor.sh"), self.run_id],
+                                text=True, capture_output=True, env=self.env, timeout=5)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unsafe file permissions/type", result.stderr)
+        self.assertTrue((self.run_dir / "instance.json").exists())
+
     def test_symlink_evidence_directory_is_rejected_before_build(self):
         self.run_dir.mkdir(mode=0o700)
         (self.run_dir / "evidence").symlink_to(self.repo, target_is_directory=True)

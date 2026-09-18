@@ -151,7 +151,7 @@ def port_open(port):
 
 
 def safe_file(path, flags):
-    fd = os.open(path, (flags & ~os.O_TRUNC) | os.O_NOFOLLOW, 0o600)
+    fd = os.open(path, (flags & ~os.O_TRUNC) | os.O_NOFOLLOW | os.O_NONBLOCK, 0o600)
     info = os.fstat(fd)
     if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or info.st_nlink != 1 or info.st_mode & 0o077:
         os.close(fd)
