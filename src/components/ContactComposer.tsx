@@ -70,7 +70,21 @@ export function buildContactMailtoUrl(values: ContactComposerValues): string {
   ].join("\r\n");
 
   // A pasted or truncated surrogate must not throw during live validation.
-  return `mailto:${primaryContactEmail}?subject=${encodeURIComponent(subject.toWellFormed())}&body=${encodeURIComponent(body.toWellFormed())}`;
+  return `mailto:${primaryContactEmail}?subject=${encodeURIComponent(toWellFormedString(subject))}&body=${encodeURIComponent(toWellFormedString(body))}`;
+}
+
+// Matches a valid surrogate pair first so only lone halves fall through to the
+// replacement branch. No `u` flag: this must operate on UTF-16 code units.
+const SURROGATE_PATTERN = /[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDFFF]/g;
+
+// `String.prototype.toWellFormed` is missing in Firefox <= 118 and Safari <= 16.3.
+// Encoding a lone surrogate there would throw URIError on every field edit.
+export function toWellFormedString(value: string): string {
+  if (typeof value.toWellFormed === "function") {
+    return value.toWellFormed();
+  }
+
+  return value.replace(SURROGATE_PATTERN, (match) => (match.length === 2 ? match : "\uFFFD"));
 }
 
 export function ContactComposer() {
