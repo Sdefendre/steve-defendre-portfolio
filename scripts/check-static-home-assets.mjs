@@ -1,6 +1,10 @@
+import nextEnv from "@next/env";
 import { readFileSync } from "node:fs";
 import { fileSha256, staticHomeInputHash } from "./static-home-assets-lib.mjs";
 import { staticHomeFontHashes } from "./static-home-fonts.mjs";
+
+// Match the production build when canonical configuration lives in .env files.
+nextEnv.loadEnvConfig(process.cwd());
 
 const manifest = readFileSync("src/generated/static-home-assets.ts", "utf8");
 const outputManifest = JSON.parse(manifest.match(/staticHomeOutputManifest = (.+) as const;/)?.[1] ?? "");
