@@ -134,13 +134,59 @@ def identity(pid):
             "command_sha256": hashlib.sha256(cmd).hexdigest(), "executable": executable}
 
 
+def proc_listeners(port):
+    """Linux listener discovery straight from procfs.
+
+    lsof 4.95 (Ubuntu 24.04) silently drops any task whose 15-byte comm holds an
+    unbalanced "(" (balanced "(v1)" is fine). `next start` names itself
+    `next-server (v16.3.5)`, which truncates to `next-server (v1`, so lsof alone
+    never sees the server this skill launches. An unowned LISTEN socket fails closed.
+    """
+    inodes = set()
+    for table in ("/proc/net/tcp", "/proc/net/tcp6"):
+        try:
+            rows = Path(table).read_text().splitlines()[1:]
+        except FileNotFoundError:
+            continue
+        for row in rows:
+            fields = row.split()
+            if len(fields) < 10 or fields[3] != "0A":
+                continue
+            if int(fields[1].rsplit(":", 1)[1], 16) == port:
+                inodes.add(fields[9])
+    if not inodes:
+        return set()
+    found, matched = set(), set()
+    for entry in os.listdir("/proc"):
+        if not entry.isdigit():
+            continue
+        try:
+            descriptors = os.listdir(f"/proc/{entry}/fd")
+        except OSError:
+            continue
+        for descriptor in descriptors:
+            try:
+                target = os.readlink(f"/proc/{entry}/fd/{descriptor}")
+            except OSError:
+                continue
+            if target.startswith("socket:[") and target[8:-1] in inodes:
+                found.add(int(entry))
+                matched.add(target[8:-1])
+    if inodes - matched:
+        raise Refused("a listener on the port belongs to a process this user cannot inspect")
+    return found
+
+
 def listeners(port):
     # lsof supports both macOS and Linux. An unavailable tool is an error.
     output = command(["lsof", "-nP", "-a", f"-iTCP:{port}", "-sTCP:LISTEN", "-t"], True)
     rows = output.splitlines()
     if any(not re.fullmatch(r"[0-9]+", row) for row in rows):
         raise Refused("unrecognized listener discovery output")
-    return {int(row) for row in rows}
+    found = {int(row) for row in rows}
+    if sys.platform == "linux":
+        found |= proc_listeners(port)
+    return found
 
 
 def port_open(port):
