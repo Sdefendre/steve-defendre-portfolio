@@ -48,7 +48,7 @@ Pass means:
 
 - private, strictly validated `instance.json` exists for this run and checkout
 - the direct server process matches its saved kernel start time (plus boot identity), executable, user, command hash, and working directory
-- the process is the sole discovered listener on the selected port (macOS and Linux use `lsof`; identity uses public `libproc`, `ps`/`lsof` on macOS and `/proc` on Linux)
+- the process is the sole discovered listener on the selected port (macOS and Linux use `lsof`; Linux also unions in `/proc/net/tcp*` LISTEN sockets mapped through `/proc/*/fd`, because `lsof` 4.95 on Ubuntu 24.04 drops any task whose kernel name holds an unbalanced `(` and `next start` names itself `next-server (v16.3.5)`, which truncates to `next-server (v1`; a LISTEN socket on the port that maps to no inspectable process fails closed. Identity uses public `libproc`, `ps`/`lsof` on macOS and `/proc` on Linux)
 - `GET` `/`, `/about`, `/projects`, `/contact` each return 200
 - those four documents have the titles in `e2e/metadata.spec.ts`
 - home HTML includes `I build software you can keep.`
@@ -101,7 +101,7 @@ Home `/` is a hashed static HTML rewrite (`/` → `/static-home-internal`). Nav 
 
 Project cards and studio links open other origins in a new tab. Stay on this origin for proof, except when a feature file says to read an attribute.
 
-Never submit a real email. The contact form only opens a `mailto:` draft. Intercept that click the way `e2e/contact.spec.ts` does, or stop after the on-page status `Email draft requested. Nothing was sent.`
+Never submit a real email. The contact form only opens a `mailto:` draft. Intercept that click with `interceptMailtoDrafts(page)` from `e2e/helpers.ts`, the way `e2e/contact.spec.ts` does, or stop after the on-page status `Email draft requested. Nothing was sent.`
 
 ## Evidence
 
