@@ -8,6 +8,7 @@ Contact is the inquiry page at `/contact`. A visitor copies the studio email, se
 - `contact-validate` marks every required field invalid when Prepare email draft is used on an empty form.
 - `contact-copy` copies `steve@defendresolutions.com` and announces Copied.
 - `contact-draft` fills the form, prepares a draft, and builds a mailto URL without sending.
+- `contact-overflow` keeps a draft whose encoded `mailto:` URL would exceed 2000 characters invalid on the Message field until it fits, and opens nothing.
 - `contact-secondary` exposes GitHub, LinkedIn, and Defendre Solutions as new-tab links.
 
 ## How to get to it (user POV)
@@ -25,7 +26,7 @@ Preconditions:
 - `PLAYWRIGHT_TEST_BASE_URL` equals this run's `BASE_URL`.
 - Viewport `390×844` for the scripted form specs. Desktop is fine for reading the page.
 - Clipboard read/write granted when proving copy. The contact spec does `context.grantPermissions(["clipboard-read", "clipboard-write"])`.
-- Mailto clicks are intercepted. Do not let a mail app send mail. Reuse the `HTMLAnchorElement.prototype.click` stub in `e2e/contact.spec.ts`.
+- Mailto clicks are intercepted. Do not let a mail app send mail. Reuse `interceptMailtoDrafts(page)` from `e2e/helpers.ts`, the `HTMLAnchorElement.prototype.click` stub that `e2e/contact.spec.ts` and `e2e/accessibility.spec.ts` call. It records each intercepted href in `window.__interceptedMailtoHrefs`.
 
 - **Open contact.** Go to `/contact`. Run `await page.goto("/contact")`. Title is `Contact Steve Defendre | Project inquiries`. Heading level 1 is `Tell me what you need built.` The address `steve@defendresolutions.com` is visible. The form status reads `Opens a draft in your email app. You review and send it.` until the first submit.
 - **Empty submit.** Choose `Prepare email draft` with empty fields. Run `page.getByRole("button", { name: "Prepare email draft" }).click()`. Alert text is `Check the highlighted fields and try again.` Labels `Your name`, `Email address`, `Project type`, `Budget range`, and `Message` each have `aria-invalid=true`.
@@ -34,13 +35,15 @@ Preconditions:
 - **Prepare draft.** Choose `Prepare email draft` again. The button name becomes `Preparing draft` and status text is `Preparing your email draft.` After that, status contains `Email draft requested.`, `Nothing was sent.`, and `If no mail app opened, use Email Steve or copy the address above.`
 - **Mailto body.** The intercepted href protocol is `mailto:`, pathname is `steve@defendresolutions.com`, `subject` is `Project inquiry: New website`, and `body` contains `Name: Ada Lovelace` plus `A proof-led site & launch plan? Yes.`
 - **Scripted path.** Run `npx playwright test e2e/contact.spec.ts --project=chromium`. That file covers validation, copy, metadata, and the intercepted draft.
+- **Overflow.** On a fresh `/contact`, fill `Your name` with `Ada`, `Email address` with `ada@example.com`, `Project type` with `portfolio-refresh`, `Budget range` with `under-5k`, and `Message` with `"🙂".repeat(200)`. The Message hint ends `400/1000`. Choose `Prepare email draft`. Focus moves to the Message textbox, it has `aria-invalid=true`, its error reads `Shorten your message or use fewer special characters so the email draft works across mail apps.`, the alert is `Check the highlighted fields and try again.`, and `window.__interceptedMailtoHrefs` stays empty. The scripted version is `npx playwright test e2e/accessibility.spec.ts --project=chromium -g "oversized draft"`. Exactly one test runs; it also proves that shortening the message and changing `Project type` to `new-website` clears the error and opens one draft of at most 2000 characters.
 - **Secondary links.** Role `link` names include `GitHub (opens in a new tab)`, `LinkedIn (opens in a new tab)`, and `Defendre Solutions (opens in a new tab)`. Two links match the studio name exactly at `390×844` and `1440×1000` (the card and the site footer), three from `2xl`, so pass `exact: true` and take `.first()` for the card, or assert the count instead of `.click()`. Visible host text includes `github.com/Sdefendre` and `defendresolutions.com`.
 - **Proof.** Save the Playwright log for `e2e/contact.spec.ts` into `evidence/contact/`. If you drive by hand, keep a screenshot of the validation alert and a text file with the intercepted mailto URL. Never keep a sent message, because nothing should have been sent.
 
 ## Gotchas
 
 - The form is `noValidate`. Browser native bubbles are not the proof. Wait for the on-page alert and `aria-invalid`.
-- Message must be at least 10 characters after trim. A shorter string stays on the validation path with `Add a bit more detail so I can prepare the draft.`
+- Message must be at least 10 characters after trim. A shorter string stays on the validation path with `Add a bit more detail so I can prepare the draft.` An empty Message says `Add a short message so I can prepare the draft.` instead.
+- Fields cap input: name 80, email 254, message 1000 characters, and the Message hint shows `{length}/1000`. The overflow error is separate from those caps. It triggers on the encoded `mailto:` URL length (2000), so 200 emoji (400 characters) trip it even though the field cap allows 1000. It is revealed on submit, not on blur, and it stays until a contributing field edit makes the URL fit.
 - `Preparing draft` lasts about 300ms. Assert that name immediately after click, then wait for the ready status. A fixed sleep is the wrong signal.
 - `Email Steve` is a bare mailto with no subject. Proving it without an intercept can open a real mail composer. Prefer the form path and the spec stub.
 - Copy needs a clipboard. Headless or permission-denied runs show `Try copy again` and an alert that starts with `Copy attempt`. That is a failed copy, not proof.

@@ -49,4 +49,4 @@ Keep implementation details out of the map. Name only user paths, stable handles
 - [Home](./home.md) covers the static intro, selected work, the category shortcuts, and the two home CTAs.
 - [About](./about.md) covers bio, how-I-build phases, skills, and skip-link focus.
 - [Projects](./projects.md) covers category filters, the filtered URL, and an inline case study.
-- [Contact](./contact.md) covers validation, copy-email, and the mailto draft that does not send.
+- [Contact](./contact.md) covers validation, the draft-size limit, copy-email, and the mailto draft that does not send.

@@ -101,7 +101,7 @@ Home `/` is a hashed static HTML rewrite (`/` → `/static-home-internal`). Nav 
 
 Project cards and studio links open other origins in a new tab. Stay on this origin for proof, except when a feature file says to read an attribute.
 
-Never submit a real email. The contact form only opens a `mailto:` draft. Intercept that click the way `e2e/contact.spec.ts` does, or stop after the on-page status `Email draft requested. Nothing was sent.`
+Never submit a real email. The contact form only opens a `mailto:` draft. Intercept that click with `interceptMailtoDrafts(page)` from `e2e/helpers.ts`, the way `e2e/contact.spec.ts` does, or stop after the on-page status `Email draft requested. Nothing was sent.`
 
 ## Evidence
 
