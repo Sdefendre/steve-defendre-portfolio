@@ -5,11 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-### Changed
-- Apple App Intents Skill now opens its download and installation website, with a screenshot of the live hero as its project preview.
-- Refined the homepage showcase into a clearer public project entry point: it now states the catalog scope, distinguishes live links from prototypes, and offers direct Studio, Client, and Product routes before the selected work cards.
-
 ### Fixed
+
+- Contact draft overflow stays visible until the complete encoded draft fits, including after edits to other fields. The first submit remains stable for pointer users, and malformed Unicode no longer breaks draft encoding in browsers without `String.prototype.toWellFormed`.
+- Static homepage freshness now covers transitive source changes and the resolved canonical origin. Regeneration validates replacement assets before publishing them and preserves existing outputs on failure.
+- Homepage, route metadata, robots, and sitemap now share canonical URL resolution, rejecting malformed environment values and preferring the production origin over preview URLs.
 - 404 pages now use their own Open Graph and Twitter titles instead of the
   homepage, stay out of the search index, and no longer canonicalize a missing
   URL.
@@ -33,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Case study arrows now rotate when a project’s deeper read is open.
 
 ### Added
+
 - Apple App Intents Skill in the homepage and project catalog, with an original thumbnail, GitHub link, and MIT-licensed Siri integration guidance.
 - Page-level WebMCP tools for browsers that expose `document.modelContext`:
   `list-projects`, `filter-projects`, `navigate`, `open-contact`, and
@@ -47,6 +48,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   previews under `public/project-previews/`.
 
 ### Changed
+
+- Apple App Intents Skill now opens its download and installation website, with a screenshot of the live hero as its project preview.
+- Refined the homepage showcase into a clearer public project entry point: it now states the catalog scope, distinguishes live links from prototypes, and offers direct Studio, Client, and Product routes before the selected work cards.
 - Traces project card and homepage CTA now open the live GitHub Pages
   marketing site (`https://sdefendre.github.io/traces-app/`) instead of the
   source repo.
@@ -70,6 +74,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   and agent work alongside client delivery.
 
 ### Removed
+
 - Deleted leftover assets from previously removed portfolio projects
   (`nayka-portfolio.png`, `project-previews/krystin-sylvia.svg`).
 - Removed obsolete root project PNGs and SVG mock previews superseded by
@@ -79,6 +84,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [2026-07-15]
 
 ### Added
+
 - VisionOS-inspired spatial redesign (PR #73): layered translucent surfaces,
   atmospheric depth and lighting, floating desktop navigation and a mobile dock,
   cinematic page composition, richer project cards, a branded spatial 404,
@@ -90,6 +96,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   tablet, and mobile.
 
 ### Fixed
+
 - Three.js lifecycle cleanup now captures the initialized scene before returning
   effect cleanup and cleans partial initialization against that scene; added a
   regression test for a replaced ref. Removed a remaining lint warning and applied
@@ -98,10 +105,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ## [2026-07-14]
 
 ### Changed
+
 - Removed two portfolio projects to keep the showcased work current (PR #72).
 
 ## [2026-06-02]
 
 ### Security
+
 - Hardened the Content Security Policy with per-request nonces (PR #71), replacing
   the previously insecure CSP configuration.
