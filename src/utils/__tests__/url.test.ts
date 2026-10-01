@@ -23,6 +23,15 @@ describe('isSafeHref', () => {
     expect(isSafeHref('//evil.example')).toBe(false);
   });
 
+  it.each([
+    '/\\evil.example',
+    '/\t/evil.example',
+    '/\n/evil.example',
+    '/\r/evil.example',
+  ])('blocks paths browsers normalize into external URLs: %j', (href) => {
+    expect(isSafeHref(href)).toBe(false);
+  });
+
   it('handles empty or null inputs', () => {
     expect(isSafeHref('')).toBe(false);
     expect(isSafeHref(undefined)).toBe(false);
