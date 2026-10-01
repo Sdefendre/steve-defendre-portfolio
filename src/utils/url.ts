@@ -14,6 +14,10 @@ export function isSafeHref(href: string | undefined | null): boolean {
 
   const trimmed = href.trim();
 
+  // Browsers treat backslashes as slashes and remove tabs/newlines when parsing
+  // URLs. Reject these before a seemingly local path becomes an external one.
+  if (trimmed.includes('\\') || /[\t\r\n]/.test(trimmed)) return false;
+
   // Allow relative paths and anchors
   if ((trimmed.startsWith("/") && !trimmed.startsWith("//")) || trimmed.startsWith("#")) {
     return true;

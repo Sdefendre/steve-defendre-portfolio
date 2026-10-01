@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- Link validation now rejects backslashes and embedded tabs or newlines that browsers can normalize into external URLs.
 - Contact draft overflow stays visible until the complete encoded draft fits, including after edits to other fields. The first submit remains stable for pointer users, and malformed Unicode no longer breaks draft encoding in browsers without `String.prototype.toWellFormed`.
 - Static homepage freshness now covers transitive source changes and the resolved canonical origin. Regeneration validates replacement assets before publishing them and preserves existing outputs on failure.
 - Homepage, route metadata, robots, and sitemap now share canonical URL resolution, rejecting malformed environment values and preferring the production origin over preview URLs.
