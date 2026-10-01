@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- Apple App Intents Skill now has a fresh preview captured from its redesigned live GitHub Pages site, with a distinct blue-and-ink capability map.
+
 - Link validation now rejects backslashes and embedded tabs or newlines that browsers can normalize into external URLs.
 - Updated Next.js and its ESLint configuration to 16.3.8, plus patched brace-expansion and undici dependencies, to clear the dependency security advisories reported on September 30, 2026.
 - Contact draft overflow stays visible until the complete encoded draft fits, including after edits to other fields. The first submit remains stable for pointer users, and malformed Unicode no longer breaks draft encoding in browsers without `String.prototype.toWellFormed`.
