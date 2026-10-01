@@ -1,18 +1,12 @@
-# PR #132 UI proof — Apple App Intents catalog preview
+# PR #132 — Apple App Intents catalog Before/After proof
 
-Labeled Before/After for the Product catalog Apple card (preview refresh from redesigned live skill page).
+Labeled Product catalog screenshots for the Apple App Intents preview refresh.
 
-## Desktop pair (primary proof) — `1280×720` PNG
+| File | Viewport | State |
+|------|----------|-------|
+| `before-catalog-desktop.jpg` | desktop `/projects` | production — "Build for Siri. Start with a skill." |
+| `after-catalog-desktop.jpg` | desktop `/projects` | this branch — "Your app. Beyond the app." |
+| `before-catalog-mobile.jpg` | mobile ~390px | production |
+| `after-catalog-mobile.jpg` | mobile ~390px | this branch |
 
-| Shot | Source | Notes |
-|------|--------|-------|
-| `before-catalog-desktop.png` | Production `https://steve-defendre-portfolio.vercel.app/projects?category=Product` | Old preview (`apple-app-intents-site.jpg`) — "Build for Siri. Start with a skill." |
-| `after-catalog-desktop.png` | Local `next start` on this PR branch (Vercel preview SSO-gated) | New dated asset `apple-app-intents-site-20261001.jpg` — "Your app. Beyond the app." |
-
-## Additional JPG captures
-
-- `before-catalog-desktop.jpg` / `after-catalog-desktop.jpg` — catalog pair
-- `before-home-desktop.jpg` — production homepage showing old Apple card preview
-- `after-catalog-mobile.jpg` — mobile After catalog
-
-Change: Apple App Intents catalog preview refreshed from the redesigned live skill page.
+Additional desktop PNGs / homepage Before may also be present from earlier capture passes.
