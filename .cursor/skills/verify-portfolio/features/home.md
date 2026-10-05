@@ -40,7 +40,7 @@ Preconditions:
 ## Gotchas
 
 - `/` is rewritten to static HTML. Choosing Home from another page does a full document load. `page.goto("/")` is the reliable return, not a client back-transition.
-- Desktop Home nav labels are `aria-label` values. The visible word Home in the desktop dock is `aria-hidden` at every width the dock shows. Use the role name `Home`, not a CSS query on the span.
+- Desktop primary-nav labels are `aria-label` values. Every visible word in the desktop dock (Home, About, Projects, Contact) is `aria-hidden` at every width the dock shows. Use the role name, not a CSS query on the span.
 - The studio name on home is an external link. Its accessible name is `Defendre Solutions (opens in a new tab)`. The footer carries a second link with that name, and the dock adds a third from `2xl`, so use `.first()` or scope to `main` before reading the `href`. Following it leaves this origin. Reading the `href` `https://defendresolutions.com` is enough.
 - Selected work stacks vertically below the `lg` breakpoint. There is no horizontal snap row. Assert titles, not position.
 - The category shortcut links share their names with the filter buttons on `/projects` and with the category chips on each card. Scope to the `Browse projects by category` nav on home and to role `button` on `/projects`.
