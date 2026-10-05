@@ -41,7 +41,7 @@ Preconditions:
 
 ## Gotchas
 
-- The form is `noValidate`. Browser native bubbles are not the proof. Wait for the on-page alert and `aria-invalid`.
+- The form is `noValidate`. Browser native bubbles are not the proof. Wait for the on-page alert and `aria-invalid`. Scope that alert to `page.locator("form").getByRole("alert")`; Next.js also mounts a route announcer with `role="alert"`, so a bare `getByRole("alert")` fails strict mode.
 - Message must be at least 10 characters after trim. A shorter string stays on the validation path with `Add a bit more detail so I can prepare the draft.` An empty Message says `Add a short message so I can prepare the draft.` instead.
 - Fields cap input: name 80, email 254, message 1000 characters, and the Message hint shows `{length}/1000`. The overflow error is separate from those caps. It triggers on the encoded `mailto:` URL length (2000), so 200 emoji (400 characters) trip it even though the field cap allows 1000. It is revealed on submit, not on blur, and it stays until a contributing field edit makes the URL fit.
 - `Preparing draft` lasts about 300ms. Assert that name immediately after click, then wait for the ready status. A fixed sleep is the wrong signal.
