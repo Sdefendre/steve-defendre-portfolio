@@ -55,7 +55,7 @@ Pass means:
 
 Fail means stop driving. Relaunch this `RUN_ID` after Cleanup, or pick a new `RUN_ID` and port. Do not point the browser at a listener doctor did not accept.
 
-`/projects` renders per request, so its curl HTML already carries `Showing 9 of 9 projects`. Doctor does not assert that string because it tracks the catalog, not launch health. Assert counts and filter changes in Drive.
+`/projects` renders per request, so its curl HTML already carries `Showing 8 of 8 projects`. Doctor does not assert that string because it tracks the catalog, not launch health. Assert counts and filter changes in Drive.
 
 ## Drive
 

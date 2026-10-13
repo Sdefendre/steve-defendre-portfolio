@@ -4,11 +4,11 @@ Projects is the catalog at `/projects`. A visitor filters by Studio, Client, or 
 
 ## Sub-features
 
-- `projects-load` shows all nine project articles and `Showing 9 of 9 projects`.
+- `projects-load` shows all eight project articles and `Showing 8 of 8 projects`.
 - `projects-filter-client` presses Client, shows two articles, and writes `/projects?category=Client`.
 - `projects-filter-studio` presses Studio and shows one article, Defendre Solutions.
 - `projects-filter-product` presses Product and shows five articles.
-- `projects-filter-all` returns to `/projects` and nine articles.
+- `projects-filter-all` returns to `/projects` and eight articles.
 - `projects-url-entry` opens `/projects?category=Client` and lands on the Client chip already pressed.
 - `projects-case-study` opens the first visible case study and reveals Challenge, Approach, and Impact.
 - `projects-prototype-label` keeps Traces and WealthWise marked Prototype without live-deployment alt text.
@@ -29,7 +29,7 @@ Preconditions:
 - Doctor reports `doctor: OK` for this `RUN_ID`.
 - `PLAYWRIGHT_TEST_BASE_URL` equals this run's `BASE_URL`.
 - Viewport `1440×1000`.
-- Catalog still has the nine titles listed in `features/README.md`. If `src/data/projects.ts` changed, update the counts in this file before asserting them.
+- Catalog still has the eight titles listed in `features/README.md`. If `src/data/projects.ts` changed, update the counts in this file before asserting them.
 
 - **Open projects.** Go to `/projects`. Run `await page.setViewportSize({ width: 1440, height: 1000 })` then `await page.goto("/projects")`. Heading level 1 is `Projects`. Title is `Projects | Steve Defendre`.
 - **All state.** Text `Showing 8 of 8 projects` is visible. Role `article` count is `8`. Button `All` has `aria-pressed=true`. The other three filter buttons are `false`. URL has no `category` query.
@@ -49,7 +49,7 @@ Preconditions:
 - Filter buttons share names with category chips on each card. Use `getByRole("button", { name: "Client", exact: true })`, not `getByText("Client")`.
 - Count copy is singular for one match: `Showing 1 Studio project`. Do not assert `projects` on Studio.
 - `?category=` is case-sensitive. `client` or `CLIENT` parses as All.
-- `/projects` renders per request, so curl HTML already contains `Showing 9 of 9 projects` and nine `<article>` tags. That proves the catalog, not the chips. Filter changes and `aria-pressed` still need a hydrated browser.
+- `/projects` renders per request, so curl HTML already contains `Showing 8 of 8 projects` and eight `<article>` tags. That proves the catalog, not the chips. Filter changes and `aria-pressed` still need a hydrated browser.
 - Case study summary visible text is `Challenge, approach, and impact`. The title is in an `.sr-only` span inside the same element, so the accessible name includes `for {title}` and `getByText` with `exact: true` on the visible phrase fails. Match by substring.
 - Project cards are whole-card links to other origins. Opening `Visit studio for Defendre Solutions (opens in new tab)` leaves this app. Stay on `/projects` for filter and case-study proof.
 - WebMCP `filter-projects` navigates to the same `?category=` URLs. Using the tool is not clicking the chip. Prove the chip or the typed URL.
