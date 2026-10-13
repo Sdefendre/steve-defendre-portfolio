@@ -74,7 +74,7 @@ Stable handles from this repo:
 | About H1 | Role `heading` level 1, name `About me` |
 | Projects H1 | Role `heading` level 1, name `Projects` |
 | Project filters | Role `group`, name `Project category filters`. Buttons `All`, `Studio`, `Client`, `Product` with `aria-pressed`. |
-| Filter status | `aria-live="polite"` text. All: `Showing 9 of 9 projects`. Client: `Showing 3 Client projects`. Studio: `Showing 1 Studio project`. Product: `Showing 5 Product projects`. |
+| Filter status | `aria-live="polite"` text. All: `Showing 8 of 8 projects`. Client: `Showing 2 Client projects`. Studio: `Showing 1 Studio project`. Product: `Showing 5 Product projects`. |
 | Filter URL | All: `/projects`. Client: `/projects?category=Client`. Studio and Product follow the same `?category=` shape. Unknown values parse as All. |
 | Project cards | Role `article`. Card links use `aria-label` `{ctaLabel} for {title} (opens in new tab)`. |
 | Case study | First `details` on the visible list. Summary accessible name includes `Challenge, approach, and impact for {title}`. Open state has `open`. Then exact text `Challenge`, `Approach`, `Impact`. |

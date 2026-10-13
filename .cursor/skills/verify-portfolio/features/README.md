@@ -7,8 +7,8 @@ This directory is the maintained source for verifying visitor-facing behavior of
 - Launch with `.cursor/skills/verify-portfolio/helpers/launch.sh $RUN_ID`.
 - Default origin is `http://127.0.0.1:3100`. A different port is fine when launch chose it.
 - Run `.cursor/skills/verify-portfolio/helpers/doctor.sh $RUN_ID` and require `doctor: OK` plus the four route titles.
-- Catalog source is `src/data/projects.ts`. Current titles in order: Defendre Solutions, FreeVoiceTranscribe, Apple App Intents Skill, BraidsbyRose, Traces, WealthWise, Krystin Sylvia, Velocity Care LLC, Command.AI.
-- Counts: All 9, Studio 1, Client 3, Product 5. Status `Live` on 7 rows; Traces and WealthWise are `Prototype`.
+- Catalog source is `src/data/projects.ts`. Current titles in order: Defendre Solutions, FreeVoiceTranscribe, Apple App Intents Skill, BraidsbyRose, Traces, WealthWise, Velocity Care LLC, Command.AI.
+- Counts: All 8, Studio 1, Client 2, Product 5. Status `Live` on 6 rows; Traces and WealthWise are `Prototype`.
 - Public email is `steve@defendresolutions.com`.
 - Never drive an instance this run did not start.
 - Never use the live Vercel host as proof of unpublished local work.

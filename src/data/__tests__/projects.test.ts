@@ -27,7 +27,6 @@ describe('Projects Data', () => {
       'BraidsbyRose',
       'Traces',
       'WealthWise',
-      'Krystin Sylvia',
       'Velocity Care LLC',
       'Command.AI',
     ]);
@@ -177,10 +176,6 @@ describe('Projects Data', () => {
       BraidsbyRose: {
         url: 'https://braidsbyrose.com',
         ctaLabel: 'View booking site',
-      },
-      'Krystin Sylvia': {
-        url: 'https://krystinsylvia.com',
-        ctaLabel: 'View portfolio',
       },
       'Velocity Care LLC': {
         url: 'https://velocitycarellc.com',
