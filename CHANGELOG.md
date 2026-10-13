@@ -67,7 +67,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 - Tightened project copy after a public readiness audit (accurate roles,
   outcomes, and stack tags; Social Media Manager Agent held back until the
   live demo is not key-gated).
-- Refreshed BraidsbyRose, Krystin Sylvia, Velocity Care, and Command.AI blurbs
+- Refreshed BraidsbyRose, Velocity Care, and Command.AI blurbs
   so they match what the public sites actually show.
 - Updated the public contact email from the personal Gmail address to
   `steve@defendresolutions.com` across the contact page, copy-email button,
@@ -80,7 +80,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ### Removed
 
 - Deleted leftover assets from previously removed portfolio projects
-  (`nayka-portfolio.png`, `project-previews/krystin-sylvia.svg`).
+  (`nayka-portfolio.png` and an old SVG preview).
 - Removed obsolete root project PNGs and SVG mock previews superseded by
   live JPEG captures.
 - Deleted the merged `codex/visionos-portfolio-redesign` remote branch.

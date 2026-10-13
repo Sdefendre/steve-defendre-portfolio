@@ -86,15 +86,6 @@ export const projects: Project[] = [
     tags: ["Next.js", "TypeScript", "Supabase", "Recharts"], gradient: "from-slate-800 to-emerald-600", url: "https://sdefendre.github.io/Wealthwise/", image: "/project-previews/wealthwise.jpg", ctaLabel: "View product site",
   },
   {
-    initials: "KS", title: "Krystin Sylvia",
-    description: "Professional portfolio for an RN / BSN case manager. Experience timeline, credentials, resume download, and contact paths.",
-    role: "Frontend developer",
-    outcome: "A live site for her clinical experience, credentials, resume, and contact paths.",
-    category: "Client", year: 2026, status: "Live",
-    caseStudy: { challenge: "She needed clinical experience, credentials, and leadership goals in one readable site.", approach: "I built the page around her timeline, qualifications, resume download, and contact links.", impact: "She has a live site for healthcare experience and next-step conversations." },
-    tags: ["Next.js", "React", "TypeScript"], gradient: "from-teal-500 to-cyan-600", url: "https://krystinsylvia.com", image: "/project-previews/krystin-sylvia.jpg", ctaLabel: "View portfolio",
-  },
-  {
     initials: "VC", title: "Velocity Care LLC",
     description: "Healthcare practice web presence with services overview, provider bio, and contact paths for patients evaluating care.",
     role: "Website architecture and frontend delivery",
