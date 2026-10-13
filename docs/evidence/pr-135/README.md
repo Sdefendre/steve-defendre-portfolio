@@ -1,4 +1,4 @@
-# PR #135 visual evidence: homepage desktop after removing Krystin Sylvia
+# PR #135 visual evidence: homepage desktop after removing one client project
 
 The PR description already shows Before/After for `/projects?category=Client`.
 This folder adds the homepage, because the committed static homepage
