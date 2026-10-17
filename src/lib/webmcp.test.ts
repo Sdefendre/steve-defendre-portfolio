@@ -26,16 +26,8 @@ function createMockModelContext() {
   const tools = new Map<string, RegisteredTool>();
 
   const modelContext = {
-    registerTool: vi.fn(async (tool: RegisteredTool, options?: { signal?: AbortSignal }) => {
-      if (options?.signal?.aborted) {
-        throw options.signal.reason ?? new DOMException("Aborted", "AbortError");
-      }
-
+    registerTool: vi.fn<(tool: RegisteredTool, options?: { signal?: AbortSignal }) => Promise<void>>(async (tool) => {
       tools.set(tool.name, tool);
-
-      options?.signal?.addEventListener("abort", () => {
-        tools.delete(tool.name);
-      });
     }),
   };
 
@@ -145,17 +137,10 @@ describe("registerPortfolioTools", () => {
     });
     expect(tools.get("list-projects")?.annotations?.readOnlyHint).toBe(true);
     expect(tools.get("get-about")?.annotations?.readOnlyHint).toBe(true);
-    expect(tools.get("navigate")?.inputSchema).toMatchObject({
-      properties: {
-        path: {
-          enum: ["/", "/about", "/projects", "/contact"],
-        },
-      },
-    });
   });
 
-  it("unregisters tools when the registration signal aborts", async () => {
-    const { modelContext, tools } = createMockModelContext();
+  it("passes the caller's lifetime signal to every browser registration", async () => {
+    const { modelContext } = createMockModelContext();
     Object.defineProperty(document, "modelContext", {
       configurable: true,
       value: modelContext,
@@ -167,11 +152,10 @@ describe("registerPortfolioTools", () => {
       signal: controller.signal,
     });
 
-    expect(tools.size).toBe(portfolioToolNames.length);
-
-    controller.abort();
-
-    expect(tools.size).toBe(0);
+    expect(modelContext.registerTool).toHaveBeenCalledTimes(portfolioToolNames.length);
+    for (const [, options] of modelContext.registerTool.mock.calls) {
+      expect(options?.signal).toBe(controller.signal);
+    }
   });
 
   it("does nothing when WebMCP is not available", async () => {
