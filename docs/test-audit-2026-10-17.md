@@ -62,3 +62,15 @@ The before image is `/contact` on production deployment `dpl_9gDFq9YTj3B9uGvkDHV
 | Before | After |
 | --- | --- |
 | ![Before contact footer](evidence/test-audit-2026-10-17/screenshots/before-contact.png) | ![After contact footer](evidence/test-audit-2026-10-17/screenshots/after-contact.png) |
+
+
+## Production verification follow-up
+
+PR #139 merged as `0dbd26d2398375ae530e8feadbcd86df90949cea`; its PR CI was green and Vercel assigned READY production deployment `dpl_2YjsjGvJYzqaYLE5BogDVADEHVx8` to the public domain. All six public route checks passed. Running all 43 browser tests against that domain produced 41 passes and two failures in `e2e/image-optimization.spec.ts`.
+
+Evidence before editing: the two optimizer rejection tests, introduced in `ff2dfc4` (#124), received the expected HTTP 400 and `text/plain` but asserted local Next diagnostic prose. Vercel returned `x-vercel-error: INVALID_IMAGE_OPTIMIZE_REQUEST` and its corresponding generic error page. The platform documents this response at [INVALID_IMAGE_OPTIMIZE_REQUEST](https://vercel.com/docs/errors/invalid_image_optimize_request). Neither failed assertion demonstrates an accepted image request or a product regression.
+
+Correction plan: retain both requests and HTTP 400 assertions, require a non-image response, and accept the explicit platform error code when present; otherwise retain each precise Next diagnostic so unrelated local 400s still fail. Keep the successful resized-WebP decode as the positive control. No skipped tests, environment flags, production changes or exported test hooks are needed. The generic hosted code proves request rejection, while the precise local diagnostics and deliberate config mutations establish the particular guards. A reviewer independently checked this distinction before edits. No external fixture dependency will be added to the normal CI lane.
+
+
+Follow-up proof: all three optimizer cases pass both locally and against production after the assertion repair. In an isolated control run only, the disallowed URL was replaced with the site's known-valid public JPEG; all three cases still passed. Temporarily permitting that host and width 13 in `next.config.ts` caused exactly the two negative cases to fail with expected HTTP 400 / received HTTP 200, while the positive WebP decode still passed. The test and config were restored byte for byte, the production build regenerated back to the existing input hash, and both local/hosted optimizer suites passed again. ESLint, TypeScript and diff checks pass. This proves the hosted diagnostic correction did not remove rejection coverage; the normal CI tests do not depend on the external control fixture.

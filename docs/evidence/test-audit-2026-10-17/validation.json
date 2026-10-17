@@ -434,5 +434,21 @@
     "CI Node 22 not run locally",
     "two real Linux procfs-only helper tests skipped on macOS",
     "no claim of actual historic browser binary testing"
-  ]
+  ],
+  "production_verification_followup": {
+    "initial_merged_sha": "0dbd26d2398375ae530e8feadbcd86df90949cea",
+    "initial_live_browser_results": {
+      "passed": 41,
+      "failed": 2,
+      "flaky": 0
+    },
+    "failures": "Two image optimizer tests pinned Next local diagnostic text; Vercel returned the expected HTTP 400 with x-vercel-error INVALID_IMAGE_OPTIMIZE_REQUEST.",
+    "correction": "Retain both negative requests, HTTP400, exact local diagnostics, and positive WebP decode. Recognize explicit Vercel image error code and reject image MIME responses.",
+    "local_focused_passed": 3,
+    "hosted_focused_passed": 3,
+    "mutation_control": "Optional valid remote JPEG substituted only during proof; all3pass before mutation.",
+    "mutation_result": "Allowlisted that host and enabled width13: exactly2negative failures, each expected400/received200; positive decode passes.",
+    "restored": true,
+    "production_code_changed": false
+  }
 }
