@@ -1,0 +1,438 @@
+{
+  "baseline_sha": "7524b75e5704fc1f8c69432ae33706f2d06d2d63",
+  "branch": "audit/portfolio-tests-20261017",
+  "runtime": {
+    "node": "26.11.1",
+    "npm": "11.20.0",
+    "platform": "macOS"
+  },
+  "results": {
+    "baseline": {
+      "unit": {
+        "files": 33,
+        "passed": 188,
+        "failed": 0,
+        "inventory": [
+          {
+            "path": "playwright.config.test.ts",
+            "status": "passed",
+            "tests": 5
+          },
+          {
+            "path": "src/proxy.test.ts",
+            "status": "passed",
+            "tests": 3
+          },
+          {
+            "path": "src/app/globals.test.ts",
+            "status": "passed",
+            "tests": 4
+          },
+          {
+            "path": "src/app/layout.test.tsx",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/app/not-found.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/app/robots.test.ts",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/app/sitemap.test.ts",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/lib/site-metadata.test.ts",
+            "status": "passed",
+            "tests": 6
+          },
+          {
+            "path": "src/lib/site-url.test.ts",
+            "status": "passed",
+            "tests": 18
+          },
+          {
+            "path": "src/lib/webmcp.test.ts",
+            "status": "passed",
+            "tests": 15
+          },
+          {
+            "path": "src/app/(home)/layout.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/app/(home)/page.test.tsx",
+            "status": "passed",
+            "tests": 5
+          },
+          {
+            "path": "src/app/(site)/layout.test.tsx",
+            "status": "passed",
+            "tests": 6
+          },
+          {
+            "path": "src/app/(site)/layout_extended.test.tsx",
+            "status": "passed",
+            "tests": 5
+          },
+          {
+            "path": "src/utils/__tests__/url.test.ts",
+            "status": "passed",
+            "tests": 8
+          },
+          {
+            "path": "src/data/__tests__/navigation.test.ts",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/data/__tests__/projects.test.ts",
+            "status": "passed",
+            "tests": 11
+          },
+          {
+            "path": "src/data/__tests__/socials.test.ts",
+            "status": "passed",
+            "tests": 10
+          },
+          {
+            "path": "src/components/__tests__/AnimatedBackground.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/components/__tests__/ContactComposer.test.tsx",
+            "status": "passed",
+            "tests": 18
+          },
+          {
+            "path": "src/components/__tests__/CopyEmailButton.test.tsx",
+            "status": "passed",
+            "tests": 3
+          },
+          {
+            "path": "src/components/__tests__/ExternalLink.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/components/__tests__/HomeNavigation.test.tsx",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/components/__tests__/MobileNav.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/components/__tests__/NavLink.test.tsx",
+            "status": "passed",
+            "tests": 8
+          },
+          {
+            "path": "src/components/__tests__/ProjectCard.test.tsx",
+            "status": "passed",
+            "tests": 15
+          },
+          {
+            "path": "src/components/__tests__/ProjectExplorer.test.tsx",
+            "status": "passed",
+            "tests": 6
+          },
+          {
+            "path": "src/components/__tests__/Sidebar.test.tsx",
+            "status": "passed",
+            "tests": 7
+          },
+          {
+            "path": "src/components/__tests__/SocialIcons.test.tsx",
+            "status": "passed",
+            "tests": 6
+          },
+          {
+            "path": "src/components/__tests__/WebMcpRegistrar.test.tsx",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/app/(site)/about/page.test.tsx",
+            "status": "passed",
+            "tests": 5
+          },
+          {
+            "path": "src/app/(site)/contact/page.test.tsx",
+            "status": "passed",
+            "tests": 5
+          },
+          {
+            "path": "src/app/(site)/projects/page.test.tsx",
+            "status": "passed",
+            "tests": 2
+          }
+        ]
+      },
+      "browser": {
+        "startTime": "2026-10-17T20:19:30.412Z",
+        "duration": 36408.455,
+        "expected": 41,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "static_home": {
+        "passed": 12,
+        "failed": 0
+      }
+    },
+    "final": {
+      "unit": {
+        "files": 32,
+        "passed": 174,
+        "failed": 0,
+        "inventory": [
+          {
+            "path": "playwright.config.test.ts",
+            "status": "passed",
+            "tests": 5
+          },
+          {
+            "path": "src/proxy.test.ts",
+            "status": "passed",
+            "tests": 3
+          },
+          {
+            "path": "src/app/globals.test.ts",
+            "status": "passed",
+            "tests": 4
+          },
+          {
+            "path": "src/app/layout.test.tsx",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/app/not-found.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/app/robots.test.ts",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/app/sitemap.test.ts",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/lib/site-metadata.test.ts",
+            "status": "passed",
+            "tests": 6
+          },
+          {
+            "path": "src/lib/site-url.test.ts",
+            "status": "passed",
+            "tests": 18
+          },
+          {
+            "path": "src/lib/webmcp.test.ts",
+            "status": "passed",
+            "tests": 15
+          },
+          {
+            "path": "src/data/__tests__/navigation.test.ts",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/data/__tests__/projects.test.ts",
+            "status": "passed",
+            "tests": 10
+          },
+          {
+            "path": "src/data/__tests__/socials.test.ts",
+            "status": "passed",
+            "tests": 10
+          },
+          {
+            "path": "src/app/(home)/layout.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/app/(home)/page.test.tsx",
+            "status": "passed",
+            "tests": 5
+          },
+          {
+            "path": "src/app/(site)/layout.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/utils/__tests__/url.test.ts",
+            "status": "passed",
+            "tests": 8
+          },
+          {
+            "path": "src/components/__tests__/AnimatedBackground.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/components/__tests__/ContactComposer.test.tsx",
+            "status": "passed",
+            "tests": 17
+          },
+          {
+            "path": "src/components/__tests__/CopyEmailButton.test.tsx",
+            "status": "passed",
+            "tests": 3
+          },
+          {
+            "path": "src/components/__tests__/ExternalLink.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/components/__tests__/HomeNavigation.test.tsx",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/components/__tests__/MobileNav.test.tsx",
+            "status": "passed",
+            "tests": 2
+          },
+          {
+            "path": "src/components/__tests__/NavLink.test.tsx",
+            "status": "passed",
+            "tests": 8
+          },
+          {
+            "path": "src/components/__tests__/ProjectCard.test.tsx",
+            "status": "passed",
+            "tests": 15
+          },
+          {
+            "path": "src/components/__tests__/ProjectExplorer.test.tsx",
+            "status": "passed",
+            "tests": 6
+          },
+          {
+            "path": "src/components/__tests__/Sidebar.test.tsx",
+            "status": "passed",
+            "tests": 6
+          },
+          {
+            "path": "src/components/__tests__/SocialIcons.test.tsx",
+            "status": "passed",
+            "tests": 4
+          },
+          {
+            "path": "src/components/__tests__/WebMcpRegistrar.test.tsx",
+            "status": "passed",
+            "tests": 1
+          },
+          {
+            "path": "src/app/(site)/contact/page.test.tsx",
+            "status": "passed",
+            "tests": 5
+          },
+          {
+            "path": "src/app/(site)/about/page.test.tsx",
+            "status": "passed",
+            "tests": 5
+          },
+          {
+            "path": "src/app/(site)/projects/page.test.tsx",
+            "status": "passed",
+            "tests": 2
+          }
+        ]
+      },
+      "browser": {
+        "startTime": "2026-10-17T20:24:00.945Z",
+        "duration": 55409.253000000004,
+        "expected": 43,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "static_home": {
+        "passed": 12,
+        "failed": 0
+      }
+    }
+  },
+  "verification_helpers": {
+    "phase": "baseline; unchanged helper source/tests",
+    "passed": 26,
+    "skipped_linux_only": 2,
+    "failed": 0
+  },
+  "final_gates": {
+    "lint": "pass; one existing standalone-renderer head warning",
+    "typecheck": "pass",
+    "production_build": "pass",
+    "static_home_freshness_runtime": "pass",
+    "diff_check": "pass"
+  },
+  "mutation_proof": [
+    {
+      "mutation": "omit registration signal",
+      "keeper": "src/lib/webmcp.test.ts: passes caller lifetime signal",
+      "outcome": "failed as expected: undefined instead of caller AbortSignal"
+    },
+    {
+      "mutation": "wrong clicked mailto",
+      "keeper": "src/components/__tests__/ContactComposer.test.tsx: encoded draft",
+      "outcome": "failed as expected: actual href mailto:wrong@example.com"
+    },
+    {
+      "mutation": "return raw input instead of surrogate repair",
+      "keeper": "e2e/accessibility.spec.ts: surrogate-safe draft",
+      "outcome": "failed all 3 engines; URIError in browser traces; no draft handoff"
+    },
+    {
+      "mutation": "wrong Open Graph site name",
+      "keeper": "e2e/metadata.spec.ts: /contact social metadata",
+      "outcome": "failed as expected: Broken site name instead of Steve Defendre Portfolio"
+    }
+  ],
+  "mutations_restored": true,
+  "diff_lines": {
+    "production": {
+      "added": 8,
+      "removed": 18,
+      "net": -10
+    },
+    "tests": {
+      "added": 70,
+      "removed": 394,
+      "net": -324
+    },
+    "generated_manifest": {
+      "added": 2,
+      "removed": 2,
+      "net": 0
+    }
+  },
+  "homepage_output": "baseline HTML/CSS/font paths and hashes unchanged; only source input hash refreshed",
+  "publication": "uncommitted local worktree; no push/PR/merge/deployment",
+  "limits": [
+    "CI Node 22 not run locally",
+    "two real Linux procfs-only helper tests skipped on macOS",
+    "no claim of actual historic browser binary testing"
+  ]
+}

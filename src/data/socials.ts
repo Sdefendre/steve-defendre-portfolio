@@ -1,5 +1,5 @@
-import { BuildingOffice2Icon, EnvelopeIcon } from "@heroicons/react/24/outline";
-import { GitHubIcon, LinkedInIcon, SupportIcon } from "@/components/SocialIcons";
+import { BuildingOffice2Icon } from "@heroicons/react/24/outline";
+import { GitHubIcon, LinkedInIcon } from "@/components/SocialIcons";
 
 export const socialLinks = [
   {
@@ -25,7 +25,6 @@ export const supportLink = {
   name: "Support",
   value: "buymeacoffee.com/defendresolutions",
   href: "https://buymeacoffee.com/defendresolutions",
-  icon: SupportIcon,
   description: "Optional support link",
   priority: "footer",
 } as const;
@@ -35,7 +34,6 @@ export const contactLinks = [
     name: "Email",
     value: primaryContactEmail,
     href: `mailto:${primaryContactEmail}`,
-    icon: EnvelopeIcon,
     description: "Best for new work and scheduling",
     priority: "primary",
   },
@@ -65,4 +63,4 @@ export const contactLinks = [
     priority: "secondary",
   },
   supportLink,
-];
+] as const;

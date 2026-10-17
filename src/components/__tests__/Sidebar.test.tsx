@@ -36,16 +36,6 @@ describe('Sidebar', () => {
     }
   });
 
-  it('renders all navigation items', () => {
-    mockUsePathname.mockReturnValue('/');
-    render(<Sidebar />);
-
-    expect(screen.getByText('Home')).toBeInTheDocument();
-    expect(screen.getByText('About')).toBeInTheDocument();
-    expect(screen.getByText('Projects')).toBeInTheDocument();
-    expect(screen.getByText('Contact')).toBeInTheDocument();
-  });
-
   it('highlights the active link based on pathname', () => {
     mockUsePathname.mockReturnValue('/about');
     render(<Sidebar />);

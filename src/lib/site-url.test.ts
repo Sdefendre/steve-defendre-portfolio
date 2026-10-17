@@ -17,7 +17,7 @@ const cases: { name: string; environment: Environment; canonical: string }[] = [
     environment: { NEXT_PUBLIC_SITE_URL: candidate, VERCEL_PROJECT_PRODUCTION_URL: "production.example" },
     canonical: "https://production.example/",
   })),
-  { name: "bare hostname and port", environment: { NEXT_PUBLIC_SITE_URL: "example.com:8080/path" }, canonical: "https://example.com:8080/" },
+  { name: "bare hostname with multiple subdomains and port", environment: { NEXT_PUBLIC_SITE_URL: "sub.sub2.example.com:8080/path" }, canonical: "https://sub.sub2.example.com:8080/" },
   { name: "explicit local development", environment: { NEXT_PUBLIC_SITE_URL: "http://localhost:4107/path" }, canonical: "http://localhost:4107/" },
 ];
 

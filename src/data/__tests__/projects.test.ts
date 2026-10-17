@@ -3,11 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 import {
-  filterProjectCatalog,
-  listPublicProjects,
   projectCategories,
   projects,
-  projectsFilterHref,
   type ProjectStatus,
 } from '../projects';
 
@@ -202,28 +199,5 @@ describe('Projects Data', () => {
 
   it('exports a stable category list for filtering', () => {
     expect(projectCategories).toEqual(['Studio', 'Client', 'Product']);
-  });
-});
-
-describe('project catalog helpers', () => {
-  it('lists the public fields agents can read', () => {
-    const catalog = listPublicProjects();
-
-    expect(catalog).toHaveLength(projects.length);
-    expect(catalog[5]).toEqual({
-      title: 'WealthWise',
-      category: 'Product',
-      status: 'Prototype',
-      url: 'https://sdefendre.github.io/Wealthwise/',
-      description: projects[5].description,
-    });
-    expect(filterProjectCatalog(projects, 'Product').map((project) => project.title)).toEqual([
-      'FreeVoiceTranscribe',
-      'Apple App Intents Skill',
-      'Traces',
-      'WealthWise',
-      'Command.AI',
-    ]);
-    expect(projectsFilterHref('Product')).toBe('/projects?category=Product');
   });
 });

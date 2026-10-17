@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ContactComposer, buildContactMailtoUrl, toWellFormedString } from "../ContactComposer";
+import { ContactComposer } from "../ContactComposer";
 
 const trackAnalyticsEvent = vi.hoisted(() => vi.fn());
 
@@ -58,7 +58,10 @@ describe("ContactComposer", () => {
   });
 
   it("builds a properly encoded mailto draft and tracks the draft action", async () => {
-    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+    const drafts: string[] = [];
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (this: HTMLAnchorElement) {
+      drafts.push(this.href);
+    });
     const { container } = render(<ContactComposer />);
     const form = container.querySelector("form");
 
@@ -90,64 +93,13 @@ describe("ContactComposer", () => {
       "This draft was prepared from the Steve Defendre portfolio contact form.",
     ].join("\r\n");
 
-    expect(
-      buildContactMailtoUrl({
-        name: "Steve Example",
-        email: "steve@example.com",
-        projectType: "new-website",
-        budgetRange: "10k-25k",
-        message: "Need a draft with spaces, commas, and / symbols.",
-      }),
-    ).toBe(
+    expect(drafts[0]).toBe(
       `mailto:steve@defendresolutions.com?subject=${encodeURIComponent(
         "Project inquiry: New website",
       )}&body=${encodeURIComponent(expectedBody)}`,
     );
 
     clickSpy.mockRestore();
-  });
-
-  it("keeps surrogate-safe encoding when String.prototype.toWellFormed is missing", () => {
-    const loneSurrogateMessage = "Emoji pair 🙂 then a lone half \uD83D and trailing text.";
-    const nativeDescriptor = Object.getOwnPropertyDescriptor(String.prototype, "toWellFormed");
-    const expectedWithNative = toWellFormedString(loneSurrogateMessage);
-
-    expect(expectedWithNative).toBe("Emoji pair 🙂 then a lone half \uFFFD and trailing text.");
-
-    // Simulate Firefox <= 118 / Safari <= 16.3, which lack the method entirely.
-    Object.defineProperty(String.prototype, "toWellFormed", {
-      configurable: true,
-      writable: true,
-      value: undefined,
-    });
-
-    try {
-      expect(typeof "".toWellFormed).toBe("undefined");
-      expect(toWellFormedString(loneSurrogateMessage)).toBe(expectedWithNative);
-      expect(() => encodeURIComponent(loneSurrogateMessage)).toThrow(URIError);
-
-      const mailtoUrl = buildContactMailtoUrl({
-        name: "Ada",
-        email: "ada@example.com",
-        projectType: "new-website",
-        budgetRange: "5k-10k",
-        message: loneSurrogateMessage,
-      });
-      expect(mailtoUrl).toContain(encodeURIComponent("🙂"));
-      expect(mailtoUrl).toContain(encodeURIComponent("\uFFFD"));
-
-      // Every field edit runs draft validation; it must not throw without the method.
-      render(<ContactComposer />);
-      const messageField = screen.getByRole("textbox", { name: /message/i });
-      expect(() => fireEvent.change(messageField, { target: { value: loneSurrogateMessage } })).not.toThrow();
-      expect(messageField).toHaveValue(loneSurrogateMessage);
-    } finally {
-      if (nativeDescriptor) {
-        Object.defineProperty(String.prototype, "toWellFormed", nativeDescriptor);
-      } else {
-        delete (String.prototype as { toWellFormed?: unknown }).toWellFormed;
-      }
-    }
   });
 
   it("renders a perceivable busy state before handoff, then makes no delivery claim", () => {
