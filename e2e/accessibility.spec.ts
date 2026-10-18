@@ -116,3 +116,42 @@ test("keeps an oversized draft invalid until a contributing field makes it fit",
   expect(new URL(drafts![0]).searchParams.get("body")).toContain("Name: Amy");
   await expectNoHorizontalOverflow(page);
 });
+
+test("prepares a surrogate-safe draft when the browser lacks String.toWellFormed", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(String.prototype, "toWellFormed", {
+      configurable: true,
+      writable: true,
+      value: undefined,
+    });
+  });
+  await interceptMailtoDrafts(page);
+  await page.goto("/contact");
+  expect(await page.evaluate(() => typeof "".toWellFormed)).toBe("undefined");
+  await page.getByLabel("Your name").fill("Ada");
+  await page.getByLabel("Email address").fill("ada@example.com");
+  await page.getByLabel("Project type").selectOption("new-website");
+  await page.getByLabel("Budget range").selectOption("5k-10k");
+  const message = page.getByRole("textbox", { name: "Message", exact: true });
+  // Construct the lone UTF-16 half inside the browser: automation transports
+  // may normalize malformed Unicode before it reaches the input.
+  const loneHalfCodeUnit = await message.evaluate((element) => {
+    const input = element as HTMLTextAreaElement;
+    const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value")!.set!;
+    setter.call(input, "Emoji pair 🙂 then a lone half \uD83D and trailing text.");
+    const codeUnit = input.value.charCodeAt(input.value.indexOf("half ") + 5);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    return codeUnit;
+  });
+  expect(loneHalfCodeUnit).toBe(0xD83D);
+  await message.blur();
+  await page.getByRole("button", { name: "Prepare email draft" }).click();
+  await expect(page.locator("form").getByRole("status")).toContainText("Nothing was sent.");
+  const drafts = await page.evaluate(() =>
+    (window as Window & { __interceptedMailtoHrefs?: string[] }).__interceptedMailtoHrefs,
+  );
+  expect(drafts).toHaveLength(1);
+  expect(new URL(drafts![0]).searchParams.get("body")).toContain(
+    "Emoji pair 🙂 then a lone half \uFFFD and trailing text.",
+  );
+});
