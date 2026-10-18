@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ProjectCard from "@/components/ProjectCard";
@@ -45,10 +45,16 @@ export default function ProjectExplorer({
   const searchParams = useSearchParams();
   const urlCategory = parseProjectFilter(searchParams.get("category"));
   const [activeCategory, setActiveCategory] = useState<ProjectFilter>(urlCategory);
+  const [syncedUrlCategory, setSyncedUrlCategory] = useState<ProjectFilter>(urlCategory);
 
-  useEffect(() => {
+  // Keep the chips in sync when the URL changes (browser back/forward, or a
+  // link to /projects?category=...). Copying that during render avoids the
+  // react-hooks/set-state-in-effect error that eslint-config-next 16.4 added.
+  // Chip clicks still update local state first so the list feels instant.
+  if (urlCategory !== syncedUrlCategory) {
+    setSyncedUrlCategory(urlCategory);
     setActiveCategory(urlCategory);
-  }, [urlCategory]);
+  }
 
   function selectCategory(category: ProjectFilter) {
     setActiveCategory(category);
