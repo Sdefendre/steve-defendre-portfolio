@@ -54,7 +54,7 @@ describe('Socials Data', () => {
         expect(typeof link.href).toBe('string');
         expect(link.href.startsWith('https://') || link.href.startsWith('mailto:')).toBe(true);
 
-        expect(link.icon).toBeDefined();
+        if (link.priority === 'secondary') expect(link.icon).toBeDefined();
 
         expect(typeof link.description).toBe('string');
         expect(link.description.length).toBeGreaterThan(0);

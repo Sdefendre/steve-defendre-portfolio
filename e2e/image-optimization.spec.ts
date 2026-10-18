@@ -27,20 +27,32 @@ test("the optimizer returns a resized WebP that the browser can decode", async (
   }))).toEqual({ complete: true, width: 640, height: 400 });
 });
 
-test("the optimizer rejects a source outside the remote image allowlist", async ({ request }) => {
-  const response = await request.get("/_next/image", {
+for (const invalidRequest of [
+  {
+    name: "a source outside the remote image allowlist",
     params: { url: "https://example.com/untrusted.jpg", w: "640", q: "75" },
-  });
-
-  expect(response.status()).toBe(400);
-  expect(await response.text()).toContain('"url" parameter is not allowed');
-});
-
-test("the optimizer rejects an unsupported resize width", async ({ request }) => {
-  const response = await request.get("/_next/image", {
+    nextDiagnostic: '"url" parameter is not allowed',
+  },
+  {
+    name: "an unsupported resize width",
     params: { url: preview, w: "13", q: "75" },
-  });
+    nextDiagnostic: '"w" parameter (width) of 13 is not allowed',
+  },
+]) {
+  test(`the optimizer rejects ${invalidRequest.name}`, async ({ request }) => {
+    const response = await request.get("/_next/image", {
+      params: invalidRequest.params,
+    });
 
-  expect(response.status()).toBe(400);
-  expect(await response.text()).toContain('"w" parameter (width) of 13 is not allowed');
-});
+    expect(response.status()).toBe(400);
+    expect(response.headers()["content-type"] ?? "").not.toMatch(/^image\//);
+    // Vercel handles image optimization before Next and returns a typed error
+    // instead of Next's detailed diagnostic. An unrelated platform error fails.
+    const platformError = response.headers()["x-vercel-error"];
+    if (platformError !== undefined) {
+      expect(platformError).toBe("INVALID_IMAGE_OPTIMIZE_REQUEST");
+    } else {
+      expect(await response.text()).toContain(invalidRequest.nextDiagnostic);
+    }
+  });
+}

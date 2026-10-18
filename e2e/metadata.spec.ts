@@ -62,6 +62,18 @@ test.describe("social metadata", () => {
         route.description,
       );
 
+      if (route.path === "/contact") {
+        await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/contact$/);
+        for (const [property, content] of [
+          ["og:url", /\/contact$/],
+          ["og:type", "website"],
+          ["og:locale", "en_US"],
+          ["og:site_name", "Steve Defendre Portfolio"],
+        ] as const) {
+          await expect(page.locator(`meta[property="${property}"]`)).toHaveAttribute("content", content);
+        }
+      }
+
       const expectedTags = [
         ['meta[property="og:image"]', previewImagePath],
         ['meta[property="og:image:width"]', "1440"],

@@ -135,7 +135,7 @@ export function filterProjectCatalog<T extends { category: ProjectCategory }>(
   }
 }
 
-export function toPublicProjectSummary(project: Project): PublicProjectSummary {
+function toPublicProjectSummary(project: Project): PublicProjectSummary {
   return {
     title: project.title,
     category: project.category,
@@ -146,7 +146,7 @@ export function toPublicProjectSummary(project: Project): PublicProjectSummary {
 }
 
 export function listPublicProjects(
-  catalog: readonly Project[] = projects,
+  catalog: readonly Project[],
 ): PublicProjectSummary[] {
   return catalog.map(toPublicProjectSummary);
 }

@@ -33,7 +33,7 @@ const BUDGET_RANGE_OPTIONS = [
 
 type ContactFieldName = "name" | "email" | "projectType" | "budgetRange" | "message";
 
-export interface ContactComposerValues {
+interface ContactComposerValues {
   name: string;
   email: string;
   projectType: string;
@@ -54,7 +54,7 @@ const INITIAL_VALUES: ContactComposerValues = {
   message: "",
 };
 
-export function buildContactMailtoUrl(values: ContactComposerValues): string {
+function buildContactMailtoUrl(values: ContactComposerValues): string {
   const projectTypeLabel = getOptionLabel(PROJECT_TYPE_OPTIONS, values.projectType) ?? values.projectType;
   const budgetRangeLabel = getOptionLabel(BUDGET_RANGE_OPTIONS, values.budgetRange) ?? values.budgetRange;
   const subject = `Project inquiry: ${values.projectType ? projectTypeLabel : "New conversation"}`;
@@ -80,7 +80,7 @@ const SURROGATE_PATTERN = /[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDFFF]/g;
 
 // `String.prototype.toWellFormed` is missing in Firefox <= 118 and Safari <= 16.3.
 // Encoding a lone surrogate there would throw URIError on every field edit.
-export function toWellFormedString(value: string): string {
+function toWellFormedString(value: string): string {
   if (typeof value.toWellFormed === "function") {
     return value.toWellFormed();
   }

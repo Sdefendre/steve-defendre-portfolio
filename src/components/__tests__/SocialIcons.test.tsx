@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { GitHubIcon, LinkedInIcon, SupportIcon } from '../SocialIcons';
+import { GitHubIcon, LinkedInIcon } from '../SocialIcons';
 
 describe('SocialIcons', () => {
   describe('GitHubIcon', () => {
@@ -33,18 +33,4 @@ describe('SocialIcons', () => {
     });
   });
 
-  describe('SupportIcon', () => {
-    it('renders correctly', () => {
-      const { container } = render(<SupportIcon />);
-      const svg = container.querySelector('svg');
-      expect(svg).toBeInTheDocument();
-      expect(svg).toHaveAttribute('viewBox', '0 0 24 24');
-    });
-
-    it('applies custom className', () => {
-      const { container } = render(<SupportIcon className="test-class" />);
-      const svg = container.querySelector('svg');
-      expect(svg).toHaveClass('test-class');
-    });
-  });
 });
