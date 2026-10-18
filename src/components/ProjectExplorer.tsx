@@ -59,7 +59,8 @@ export default function ProjectExplorer({
   function selectCategory(category: ProjectFilter) {
     setActiveCategory(category);
     const href = category === "All" ? "/projects" : projectsFilterHref(category);
-    router.replace(href, { scroll: false });
+    // Push so browser back/forward can restore the previous chip and list.
+    router.push(href, { scroll: false });
   }
 
   const visibleProjects = useMemo(

@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
-- Updated Next.js and eslint-config-next to 16.4.2 so this site picks up the October 14, 2026 Next.js security patches (including two unauthenticated RCE fixes that were not in 16.3.8). Pinned patched transitive versions of undici, js-yaml, and browserslist. vitest stays on 4.1.11.
+- Updated Next.js and eslint-config-next to 16.4.2 so this site picks up the October 14, 2026 Next.js security patches (including two unauthenticated RCE fixes that were not in 16.3.8). Pinned patched transitive versions of undici, js-yaml, and browserslist. vitest stays on 4.1.11. Project category chips now leave a history entry, so browser back and forward restore the previous filter.
 - Apple App Intents Skill now has a fresh preview captured from its redesigned live GitHub Pages site, with a distinct blue-and-ink capability map.
 
 - Link validation now rejects backslashes and embedded tabs or newlines that browsers can normalize into external URLs.

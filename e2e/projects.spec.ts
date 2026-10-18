@@ -9,9 +9,41 @@ test("filters projects and reveals an inline case study", async ({ page }) => {
   await expect(page.getByRole("article")).toHaveCount(8);
 
   await page.getByRole("button", { name: "Client", exact: true }).click();
+  await page.waitForURL("**/projects?category=Client");
 
   await expect(page.getByText("Showing 2 Client projects")).toBeVisible();
   await expect(page.getByRole("article")).toHaveCount(2);
+  await expect(page.getByRole("button", { name: "Client", exact: true })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+
+  await page.getByRole("button", { name: "Product", exact: true }).click();
+  await page.waitForURL("**/projects?category=Product");
+  await expect(page.getByText("Showing 5 Product projects")).toBeVisible();
+  await expect(page.getByRole("article")).toHaveCount(5);
+
+  await page.goBack();
+  await page.waitForURL("**/projects?category=Client");
+  await expect(page.getByText("Showing 2 Client projects")).toBeVisible();
+  await expect(page.getByRole("article")).toHaveCount(2);
+  await expect(page.getByRole("button", { name: "Client", exact: true })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+
+  await page.goForward();
+  await page.waitForURL("**/projects?category=Product");
+  await expect(page.getByText("Showing 5 Product projects")).toBeVisible();
+  await expect(page.getByRole("article")).toHaveCount(5);
+  await expect(page.getByRole("button", { name: "Product", exact: true })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+
+  await page.getByRole("button", { name: "Client", exact: true }).click();
+  await page.waitForURL("**/projects?category=Client");
+  await expect(page.getByText("Showing 2 Client projects")).toBeVisible();
 
   const firstCaseStudy = page.locator("details").first();
   await firstCaseStudy.locator("summary").click();

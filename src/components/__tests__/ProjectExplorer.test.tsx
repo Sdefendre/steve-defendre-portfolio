@@ -4,12 +4,12 @@ import ProjectExplorer from "../ProjectExplorer";
 import type { Project, ProjectCategory } from "@/data/projects";
 
 const navigation = vi.hoisted(() => ({
-  replace: vi.fn(),
+  push: vi.fn(),
   params: new URLSearchParams(),
 }));
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ replace: navigation.replace }),
+  useRouter: () => ({ push: navigation.push }),
   useSearchParams: () => navigation.params,
 }));
 
@@ -77,7 +77,7 @@ const projects: Project[] = [
 
 describe("ProjectExplorer", () => {
   beforeEach(() => {
-    navigation.replace.mockReset();
+    navigation.push.mockReset();
     navigation.params = new URLSearchParams();
   });
 
@@ -113,7 +113,7 @@ describe("ProjectExplorer", () => {
     expect(screen.getByText("Showing 1 Client project")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /visit site for beta care/i })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /visit studio for alpha launch/i })).not.toBeInTheDocument();
-    expect(navigation.replace).toHaveBeenCalledWith("/projects?category=Client", { scroll: false });
+    expect(navigation.push).toHaveBeenCalledWith("/projects?category=Client", { scroll: false });
   });
 
   it("shows an empty state when a filter has no matches and allows reset", () => {
