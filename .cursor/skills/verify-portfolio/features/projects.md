@@ -10,6 +10,7 @@ Projects is the catalog at `/projects`. A visitor filters by Studio, Client, or 
 - `projects-filter-product` presses Product and shows five articles.
 - `projects-filter-all` returns to `/projects` and eight articles.
 - `projects-url-entry` opens `/projects?category=Client` and lands on the Client chip already pressed.
+- `projects-history` restores the previous chip, count, and `?category=` URL on browser Back and Forward.
 - `projects-case-study` opens the first visible case study and reveals Challenge, Approach, and Impact.
 - `projects-prototype-label` keeps Traces and WealthWise marked Prototype without live-deployment alt text.
 
@@ -21,6 +22,7 @@ Projects is the catalog at `/projects`. A visitor filters by Studio, Client, or 
 - From home, choose `Studio`, `Client`, or `Product` in the nav named `Browse projects by category`. That lands on the filtered URL with the matching chip already pressed.
 - Open a filtered URL `/projects?category=Studio`, `/projects?category=Client`, or `/projects?category=Product`.
 - Choose a category button in the group named `Project category filters`.
+- After choosing a different chip, use the browser Back and Forward buttons. Back restores the previous chip, count, and URL.
 
 ## Driving it with Playwright
 
@@ -38,14 +40,16 @@ Preconditions:
 - **Studio filter.** Choose `Studio`. Run `page.getByRole("button", { name: "Studio", exact: true }).click()`. Text `Showing 1 Studio project` is visible. One article remains, titled Defendre Solutions. URL is `/projects?category=Studio`.
 - **Product filter.** Choose `Product`. Run `page.getByRole("button", { name: "Product", exact: true }).click()`. Text `Showing 5 Product projects` is visible. Titles in order are FreeVoiceTranscribe, Apple App Intents Skill, Traces, WealthWise, and Command.AI. URL is `/projects?category=Product`. The Apple card link is named `Get the skill for Apple App Intents Skill (opens in new tab)` and its `project-status` is `Live`.
 - **Reset.** Choose `All`. Run `page.getByRole("button", { name: "All", exact: true }).click()`. Count text, article count, and URL return to the All state.
+- **History.** From All, choose `Client`, then `Product`. Run `page.goBack()` and wait for `page.waitForURL("**/projects?category=Client")`. Text `Showing 2 Client projects` is visible, article count is `2`, and button `Client` is `aria-pressed=true`. `page.goForward()` restores Product the same way.
 - **Case study.** With Client pressed, open the first `details`. Run `page.locator("details").first().locator("summary").click()`. That `details` has attribute `open`. Text `Challenge`, `Approach`, and `Impact` is visible inside it. The first Client case study belongs to BraidsbyRose.
-- **Scripted path.** Run `npx playwright test e2e/projects.spec.ts --project=chromium`. That spec asserts `Showing 8 of 8 projects`, clicks Client, asserts the two-article count, and opens the first case study. It does not assert the `?category=` URL. If you use only this spec, also read `page.url()` after the click and record `/projects?category=Client`.
+- **Scripted path.** Run `npx playwright test e2e/projects.spec.ts --project=chromium`. That spec asserts `Showing 8 of 8 projects`, clicks Client, waits for `/projects?category=Client`, asserts the two-article count and pressed chip, then Product with its URL, Back and Forward between those two URLs, and the first case study. It does not click Studio or All, and it does not load a filtered URL cold. Cover those with the bullets above.
 - **Prototype honesty.** Run `npx playwright test e2e/accessibility.spec.ts --project=chromium -g "prototype preview"`. Traces and WealthWise show `project-status` text `Prototype`. Image alts are `Preview of the Traces project` and `Preview of the WealthWise project`. Those alts do not contain `live`.
 - **Proof.** Capture the Client filtered view. Save `evidence/projects/client.aria.txt` or the Playwright output, plus a screenshot that shows `Showing 2 Client projects`, two articles, and an open case study. Record the URL in the same folder.
 
 ## Gotchas
 
-- The live region and article count update before `router.replace` writes `?category=`. Wait for the URL. Reading `page.url()` on the next line still sees `/projects`.
+- Chip clicks push the `?category=` URL (All goes to `/projects` with no query). The live region and article count can update before the address bar does. Wait for the URL before reading `page.url()`.
+- On `/projects`, status sits in an `uppercase` row. DOM and Playwright `toHaveText` are `Live` or `Prototype`. `innerText()` returns `LIVE` or `PROTOTYPE`. Prefer `toHaveText`.
 - Filter buttons share names with category chips on each card. Use `getByRole("button", { name: "Client", exact: true })`, not `getByText("Client")`.
 - Count copy is singular for one match: `Showing 1 Studio project`. Do not assert `projects` on Studio.
 - `?category=` is case-sensitive. `client` or `CLIENT` parses as All.
