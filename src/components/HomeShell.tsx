@@ -1,5 +1,7 @@
 import HomeNavigation from "@/components/HomeNavigation";
 import { ExternalLink } from "@/components/ExternalLink";
+import { PostHogConsentBar } from "@/components/PostHogConsentBar";
+import { POSTHOG_HOST_PLACEHOLDER, POSTHOG_KEY_PLACEHOLDER } from "@/lib/posthog-consent";
 
 export default function HomeShell({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -15,6 +17,10 @@ export default function HomeShell({ children }: Readonly<{ children: React.React
           </footer>
         </main>
       </div>
+      <PostHogConsentBar
+        posthogKey={POSTHOG_KEY_PLACEHOLDER}
+        posthogHost={POSTHOG_HOST_PLACEHOLDER}
+      />
     </>
   );
 }

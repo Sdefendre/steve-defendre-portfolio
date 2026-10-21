@@ -1,6 +1,10 @@
 import { NextRequest } from "next/server";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { proxy } from "./proxy";
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 describe("proxy CSP", () => {
   it("keeps generated homepage implementation files out of the crawlable URL space", () => {
@@ -31,5 +35,19 @@ describe("proxy CSP", () => {
     const csp = response.headers.get("Content-Security-Policy") ?? "";
 
     expect(csp).not.toContain("upgrade-insecure-requests");
+  });
+
+  it("allows PostHog connections only when the public host is configured", () => {
+    vi.stubEnv("NEXT_PUBLIC_POSTHOG_HOST", "");
+    const withoutPosthog = proxy(new NextRequest("https://portfolio.defendresolutions.com/about"));
+    expect(withoutPosthog.headers.get("Content-Security-Policy") ?? "").not.toContain(
+      "posthog.com",
+    );
+
+    vi.stubEnv("NEXT_PUBLIC_POSTHOG_HOST", "https://us.i.posthog.com");
+    const withPosthog = proxy(new NextRequest("https://portfolio.defendresolutions.com/about"));
+    expect(withPosthog.headers.get("Content-Security-Policy") ?? "").toContain(
+      "connect-src 'self' https://us.i.posthog.com https://us-assets.i.posthog.com",
+    );
   });
 });

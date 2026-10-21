@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getPostHogCspOrigins } from "@/lib/posthog-consent";
 
 function createNonce() {
   return btoa(crypto.randomUUID());
@@ -18,6 +19,11 @@ export function proxy(request: NextRequest) {
   const nonce = createNonce();
   const upgradeInsecureRequests =
     request.nextUrl.protocol === "https:" ? "upgrade-insecure-requests;" : "";
+  const posthogOrigins = getPostHogCspOrigins();
+  const posthogConnect =
+    posthogOrigins.length > 0
+      ? `connect-src 'self' ${posthogOrigins.join(" ")};`
+      : "";
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${
@@ -30,6 +36,7 @@ export function proxy(request: NextRequest) {
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
+    ${posthogConnect}
     ${upgradeInsecureRequests}
   `
     .replace(/\s{2,}/g, " ")
