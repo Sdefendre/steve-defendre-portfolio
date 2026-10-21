@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { BriefcaseIcon, EnvelopeIcon, HomeIcon } from "@heroicons/react/24/outline";
 import HomeNavigation from "@/components/HomeNavigation";
 import { ExternalLink } from "@/components/ExternalLink";
+import { PostHogConsent } from "@/components/PostHogConsent";
 import { createPageMetadata } from "@/lib/site-metadata";
 
 const notFoundTitle = "Page not found | Steve Defendre";
@@ -108,6 +109,7 @@ export default async function NotFound() {
           </div>
         </main>
       </div>
+      <PostHogConsent />
       <script defer src="/_vercel/insights/script.js" nonce={nonce} />
     </>
   );

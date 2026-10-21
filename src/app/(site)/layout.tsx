@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import Sidebar from "@/components/Sidebar";
 import MobileNav from "@/components/MobileNav";
 import { ExternalLink } from "@/components/ExternalLink";
+import { PostHogConsent } from "@/components/PostHogConsent";
 
 export default async function RootLayout({
   children,
@@ -50,6 +51,7 @@ export default async function RootLayout({
         </div>
 
         <MobileNav />
+        <PostHogConsent />
         <Analytics />
     </>
   );

@@ -43,6 +43,13 @@ Open `http://localhost:3000`.
 
 No environment variables are required for local development. Set `NEXT_PUBLIC_SITE_URL` when you need to override the canonical origin.
 
+Optional PostHog product analytics stay off until a visitor accepts. Set both of these in Vercel Production and Preview:
+
+- `NEXT_PUBLIC_POSTHOG_KEY`
+- `NEXT_PUBLIC_POSTHOG_HOST` (US Cloud is `https://us.i.posthog.com`)
+
+The site stays usable if they are missing. Do not commit the key.
+
 [`src/lib/site-url.mjs`](src/lib/site-url.mjs) resolves the canonical origin in this order:
 
 1. `NEXT_PUBLIC_SITE_URL`
