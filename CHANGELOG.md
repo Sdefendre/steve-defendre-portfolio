@@ -54,6 +54,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- Docs: AGENTS.md now tells agents to cut taglines, helper text and secondary labels, keeping legal, consent, pricing, accessibility and error text.
+- Docs: AGENTS.md now tells agents to explain the failure mode, likelihood and cost, and get Steve's OK, before adding complexity for speculative race conditions or security edge cases. Real payment, auth and private-data risks are still fixed right away.
 - Apple App Intents Skill now opens its download and installation website, with a screenshot of the live hero as its project preview.
 - Refined the homepage showcase into a clearer public project entry point: it now states the catalog scope, distinguishes live links from prototypes, and offers direct Studio, Client, and Product routes before the selected work cards.
 - Traces project card and homepage CTA now open the live GitHub Pages
