@@ -5,10 +5,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-### Docs
-
-- Docs: AGENTS.md now tells agents to cut taglines, helper text and secondary labels, keeping legal, consent, pricing, accessibility and error text.
-
 ### Fixed
 
 - Updated Next.js and eslint-config-next to 16.4.2 so this site picks up the October 14, 2026 Next.js security patches (including two unauthenticated RCE fixes that were not in 16.3.8). Pinned patched transitive versions of undici, js-yaml, and browserslist. vitest stays on 4.1.11. Project category chips now leave a history entry, so browser back and forward restore the previous filter.
@@ -58,6 +54,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- Docs: AGENTS.md now tells agents to cut taglines, helper text and secondary labels, keeping legal, consent, pricing, accessibility and error text.
+- Docs: AGENTS.md now tells agents to explain the failure mode, likelihood and cost, and get Steve's OK, before adding complexity for speculative race conditions or security edge cases. Real payment, auth and private-data risks are still fixed right away.
 - Apple App Intents Skill now opens its download and installation website, with a screenshot of the live hero as its project preview.
 - Refined the homepage showcase into a clearer public project entry point: it now states the catalog scope, distinguishes live links from prototypes, and offers direct Studio, Client, and Product routes before the selected work cards.
 - Traces project card and homepage CTA now open the live GitHub Pages
