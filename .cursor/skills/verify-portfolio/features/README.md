@@ -10,6 +10,7 @@ This directory is the maintained source for verifying visitor-facing behavior of
 - Catalog source is `src/data/projects.ts`. Current titles in order: Defendre Solutions, FreeVoiceTranscribe, Apple App Intents Skill, BraidsbyRose, Traces, WealthWise, Velocity Care LLC, Command.AI.
 - Counts: All 8, Studio 1, Client 2, Product 5. Status `Live` on 6 rows; Traces and WealthWise are `Prototype`.
 - Public email is `steve@defendresolutions.com`.
+- First visit shows the `Analytics consent` bar (`Accept` / `Decline`). A stored `portfolio-analytics-consent` value hides it. See [Consent](./consent.md).
 - Never drive an instance this run did not start.
 - Never use the live Vercel host as proof of unpublished local work.
 
@@ -50,3 +51,4 @@ Keep implementation details out of the map. Name only user paths, stable handles
 - [About](./about.md) covers bio, how-I-build phases, skills, and skip-link focus.
 - [Projects](./projects.md) covers category filters, the filtered URL, Back/Forward restoring the previous chip, and an inline case study.
 - [Contact](./contact.md) covers validation, the draft-size limit, copy-email, and the mailto draft that does not send.
+- [Consent](./consent.md) covers the first-visit analytics bar, Accept/Decline, and the stored choice.
