@@ -1,6 +1,6 @@
 ---
 name: verify-portfolio
-description: Drive the Steve Defendre portfolio web UI (/, /about, /projects, /contact) the way a visitor does. Use when proving a local UI change, checking launch health, or capturing evidence that filters, case studies, navigation, or the contact draft still work.
+description: Drive the Steve Defendre portfolio web UI (/, /about, /projects, /contact) the way a visitor does. Use when proving a local UI change, checking launch health, or capturing evidence that filters, case studies, navigation, the contact draft, or analytics consent still work.
 ---
 
 # Verify portfolio
@@ -61,6 +61,8 @@ Fail means stop driving. Relaunch this `RUN_ID` after Cleanup, or pick a new `RU
 
 Harness is Playwright in `e2e/`, plus any browser that can click the same roles. Prefer the existing specs when they cover the path. Prefer roles, accessible names, and routes over CSS, coordinates, or tab counts.
 
+A first visit shows role `complementary`, name `Analytics consent`, with `Accept` and `Decline`. Use a fresh context when you need that bar. A stored choice hides it.
+
 Stable handles from this repo:
 
 | What | Handle |
@@ -83,6 +85,7 @@ Stable handles from this repo:
 | Prepare draft | Role `button`, name `Prepare email draft`. Busy name is `Preparing draft`. |
 | Copy email | Role `button`, name `Copy email`, then `Copied`. Status text `steve@defendresolutions.com copied to clipboard.` |
 | Email Steve | Role `link`, name `Email Steve`. `mailto:steve@defendresolutions.com` |
+| Analytics consent | Role `complementary`, name `Analytics consent`. Buttons `Accept` and `Decline`. First visit only until `portfolio-analytics-consent` is set. |
 
 Scripted entry. From the repo root, against the instance you launched:
 
