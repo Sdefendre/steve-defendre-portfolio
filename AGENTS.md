@@ -1,5 +1,7 @@
 # Agent Guidelines
 
+- Use the modern-web-guidance skill for front-end, CSS, HTML, and browser-API work.
+
 ## UI copy
 
 - Cut taglines, helper text and secondary labels. If a screen needs them to make sense, fix the layout. Exception: keep legal, consent, pricing, accessibility and error text.
