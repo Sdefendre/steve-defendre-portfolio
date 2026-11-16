@@ -20,6 +20,7 @@ This directory is the maintained source for verifying visitor-facing behavior of
 - Prefer ARIA roles, accessible names, and routes. The home path `/` is static HTML. Other routes are App Router pages.
 - Treat every command as literal. Keep quoted names and flags unchanged.
 - Scripted proof goes through Playwright (`npx playwright test … --project=chromium`) with `PLAYWRIGHT_TEST_BASE_URL` set to this run's `BASE_URL`.
+- Use retrying Playwright assertions (`toBeVisible`). Reveal animations start at opacity 0, so a one-shot `isVisible()` can miss copy that is already in the DOM.
 - Interactive proof uses the same roles in a browser at the viewport the feature names.
 - Two nodes named `Primary navigation` exist on every page. Drive the visible one.
 - Restore nothing after contact or filter work. There is no server state. Reload `/projects` if you need All again.

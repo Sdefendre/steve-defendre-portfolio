@@ -49,7 +49,7 @@ Preconditions:
 ## Gotchas
 
 - Chip clicks push the `?category=` URL (All goes to `/projects` with no query). The live region and article count can update before the address bar does. Wait for the URL before reading `page.url()`.
-- On `/projects`, status sits in an `uppercase` row. DOM and Playwright `toHaveText` are `Live` or `Prototype`. `innerText()` returns `LIVE` or `PROTOTYPE`. Prefer `toHaveText`.
+- On `/projects`, status and case-study `dt` labels sit in `uppercase` rows. DOM and Playwright `toHaveText` are `Live` / `Prototype` and `Challenge` / `Approach` / `Impact`. `innerText()` returns `LIVE`, `PROTOTYPE`, `CHALLENGE`, `APPROACH`, and `IMPACT`. Prefer `toHaveText`.
 - Filter buttons share names with category chips on each card. Use `getByRole("button", { name: "Client", exact: true })`, not `getByText("Client")`.
 - Count copy is singular for one match: `Showing 1 Studio project`. Do not assert `projects` on Studio.
 - `?category=` is case-sensitive. `client` or `CLIENT` parses as All.

@@ -139,7 +139,7 @@ def proc_listeners(port):
 
     lsof 4.95 (Ubuntu 24.04) silently drops any task whose 15-byte comm holds an
     unbalanced "(" (balanced "(v1)" is fine). `next start` names itself
-    `next-server (v16.3.5)`, which truncates to `next-server (v1`, so lsof alone
+    `next-server (v16.4.5)`, which truncates to `next-server (v1`, so lsof alone
     never sees the server this skill launches. An unowned LISTEN socket fails closed.
     """
     inodes = set()
