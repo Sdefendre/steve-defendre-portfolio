@@ -54,6 +54,21 @@ describe("PostHog config feature detection", () => {
       }),
     ).toBeNull();
   });
+
+  it("reads literal process.env.NEXT_PUBLIC_* references for client bundle inlining", () => {
+    vi.stubEnv("NEXT_PUBLIC_POSTHOG_KEY", "phc_client_key");
+    vi.stubEnv("NEXT_PUBLIC_POSTHOG_HOST", "https://us.i.posthog.com");
+
+    expect(getPostHogConfig()).toEqual({
+      key: "phc_client_key",
+      host: "https://us.i.posthog.com",
+    });
+    expect(getPostHogConfig({})).toBeNull();
+
+    const source = readFileSync("src/lib/posthog-consent.ts", "utf8");
+    expect(source).toContain("process.env.NEXT_PUBLIC_POSTHOG_KEY");
+    expect(source).toContain("process.env.NEXT_PUBLIC_POSTHOG_HOST");
+  });
 });
 
 describe("consent storage", () => {

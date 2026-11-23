@@ -16,10 +16,18 @@ export interface PostHogConfig {
 }
 
 export function getPostHogConfig(
-  env: Record<string, string | undefined> = process.env,
+  env?: Record<string, string | undefined>,
 ): PostHogConfig | null {
-  const key = env.NEXT_PUBLIC_POSTHOG_KEY?.trim() ?? "";
-  const host = env.NEXT_PUBLIC_POSTHOG_HOST?.trim() ?? "";
+  // Read literal process.env.NEXT_PUBLIC_* when env is omitted so Next.js
+  // statically inlines public values into client bundles.
+  const rawKey = env
+    ? env.NEXT_PUBLIC_POSTHOG_KEY
+    : process.env.NEXT_PUBLIC_POSTHOG_KEY;
+  const rawHost = env
+    ? env.NEXT_PUBLIC_POSTHOG_HOST
+    : process.env.NEXT_PUBLIC_POSTHOG_HOST;
+  const key = rawKey?.trim() ?? "";
+  const host = rawHost?.trim() ?? "";
   if (!key || !host) return null;
 
   try {
